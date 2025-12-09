@@ -1,0 +1,2 @@
+version=8.1
+description=Multi-category playlists with Orange/Teal/Lime skins, audio/video delay control, drag-and-drop web interface
