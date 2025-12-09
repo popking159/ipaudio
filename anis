@@ -1,0 +1,260 @@
+{
+    "playlist": [
+        {
+            "channel": "Anis FM1 NEW",
+            "url": "http://anisfm.pp.ua/1"
+        },
+        {
+            "channel": "Anis FM2 NEW",
+            "url": "http://anisfm.pp.ua/2"
+        },
+        {
+            "channel": "Anis FM3 NEW",
+            "url": "http://anisfm.pp.ua/3"
+        },
+        {
+            "channel": "Anis FM4 NEW",
+            "url": "http://anisfm.pp.ua/4"
+        },
+        {
+            "channel": "Anis FM5 NEW",
+            "url": "http://anisfm.pp.ua/5"
+        },
+        {
+            "channel": "Anis FM",
+            "url": "http://anisfm.ddns.net"
+        },
+        {
+            "channel": "Anis FM",
+            "url": "http://anisfm.xyz/1"
+        },
+        {
+            "channel": "Anis FM low",
+            "url": "http://anisfmlow.ddns.net"
+        },
+        {
+            "channel": "Anis FM low2",
+            "url": "http://anisfm.xyz/1L"
+        },
+        {
+            "channel": "Anis FM2",
+            "url": "http://anisfm2.ddns.net"
+        },
+        {
+            "channel": "Anis FM2",
+            "url": "http://anisfm.xyz/2"
+        },
+        {
+            "channel": "Anis FM2 low",
+            "url": "http://anisfm2low.ddns.net"
+        },
+        {
+            "channel": "Anis FM2 low2",
+            "url": "http://anisfm.xyz/2L"
+        },
+        {
+            "channel": "Anis FM3",
+            "url": "http://anisfm3.ddns.net"
+        },
+        {
+            "channel": "Anis FM3",
+            "url": "http://anisfm.xyz/3"
+        },
+        {
+            "channel": "Anis FM3 low",
+            "url": "http://anisfm3low.ddns.net"
+        },
+        {
+            "channel": "Anis FM3 low2",
+            "url": "http://anisfm.xyz/3L"
+        },
+        {
+            "channel": "Anis FM4",
+            "url": "http://anisfm4.ddns.net"
+        },
+        {
+            "channel": "Anis FM4",
+            "url": "http://anisfm.xyz/4"
+        },
+        {
+            "channel": "Anis FM4 low",
+            "url": "http://anisfm4low.ddns.net"
+        },
+        {
+            "channel": "Anis FM4 low2",
+            "url": "http://anisfm.xyz/4L"
+        },
+        {
+            "channel": "صوتية المعلق الكابتن فيصل الشاهر",
+            "url": "http://82.145.63.6:4289/stream"
+        },
+        {
+            "channel": "صوتية المحلل الأخ أحمد يحيى",
+            "url": "http://82.145.63.6:4776/yahia"
+        },
+        {
+            "channel": "Om Kolthom",
+            "url": "https://stream.zeno.fm/puv30d6l1bjtv"
+        },
+        {
+            "channel": "Fayrouz",
+            "url": "http://stream.zeno.fm/c0akqv6cz4zuv"
+        },
+        {
+            "channel": "Abd El-haleem Hafiz",
+            "url": "https://stream.zeno.fm/8a4eqkd0pnhvv"
+        },
+        {
+            "channel": "Fareed Alatrash",
+            "url": "https://stream.zeno.fm/z6u6zgwy868uv"
+        },
+        {
+            "channel": "Mohammed Fawzy",
+            "url": "https://stream.zeno.fm/3zh571nffv8uv"
+        },
+        {
+            "channel": "Sabah",
+            "url": "https://stream.zeno.fm/3p1ec6shguhvv"
+        },
+        {
+            "channel": "Nagat",
+            "url": "https://stream.zeno.fm/qtp67bc3f2zuv"
+        },
+        {
+            "channel": "Warda",
+            "url": "https://stream.zeno.fm/5277mqf2sxhvv"
+        },
+        {
+            "channel": "Layla Morad",
+            "url": "https://stream.zeno.fm/pq7r42662k8uv"
+        },
+        {
+            "channel": "Amr Diab",
+            "url": "https://stream.zeno.fm/xa4yhh4k838uv"
+        },
+        {
+            "channel": "Elissa",
+            "url": "https://stream.zeno.fm/v7n499m8ckhvv"
+        },
+        {
+            "channel": "Mohammed Mohy",
+            "url": "https://stream.zeno.fm/gql4tcwrrxgtv"
+        },
+        {
+            "channel": "Nogoom FM",
+            "url": "https://audio.nrpstream.com/listen/nogoumfm/radio.mp3"
+        },
+        {
+            "channel": "Mega FM",
+            "url": "http://nebula.shoutca.st:8211/stream"
+        },
+        {
+            "channel": "Radio 9090",
+            "url": "http://9090streaming.mobtada.com/9090FMEGYPT"
+        },
+        {
+            "channel": "Nile FM",
+            "url": "https://audio.nrpstream.com/listen/nile_fm/radio.mp3"
+        },
+        {
+            "channel": "Nagham FM",
+            "url": "https://ahmsamir.radioca.st/stream"
+        },
+        {
+            "channel": "Radio HITS",
+            "url": "http://radiohits882.radioca.st:8957/stream/;"
+        },
+        {
+            "channel": "Shaaby FM",
+            "url": "http://radio95.radioca.st:9010/stream"
+        },
+        {
+            "channel": "On Sport FM",
+            "url": "http://carina.streamerr.co:8108/stream"
+        },
+        {
+            "channel": "MAHATET MASR",
+            "url": "https://s3.radio.co/s9cb11828c/listen"
+        },
+        {
+            "channel": "El Gouna Radio",
+            "url": "http://82.201.132.237:8000/;stream.mp3"
+        },
+        {
+            "channel": "Mishary Rashid Alafasy",
+            "url": "https://qurango.net/radio/mishary_alafasi"
+        },
+        {
+            "channel": "Maher Al-Mu'aiqly",
+            "url": "https://backup.qurango.net/radio/maher"
+        },
+        {
+            "channel": "Muhammad Ayyub",
+            "url": "https://qurango.net/radio/mohammed_ayyub"
+        },
+        {
+            "channel": "beIN1",
+            "url": "http://hamid-anisfm.com/beIN1/mpegts"
+        },
+        {
+            "channel": "beIN2",
+            "url": "http://hamid-anisfm.com/beIN2/mpegts"
+        },
+        {
+            "channel": "beIN3",
+            "url": "http://hamid-anisfm.com/beIN3/mpegts"
+        },
+        {
+            "channel": "beIN4",
+            "url": "http://hamid-anisfm.com/beIN4/mpegts"
+        },
+        {
+            "channel": "beIN5",
+            "url": "http://hamid-anisfm.com/beIN5/mpegts"
+        },
+        {
+            "channel": "beIN6",
+            "url": "http://hamid-anisfm.com/beIN6/mpegts"
+        },
+        {
+            "channel": "beIN7",
+            "url": "http://hamid-anisfm.com/beIN7/mpegts"
+        },
+        {
+            "channel": "beIN8",
+            "url": "http://hamid-anisfm.com/beIN8/mpegts"
+        },
+        {
+            "channel": "beIN9",
+            "url": "http://hamid-anisfm.com/beIN9/mpegts"
+        },
+        {
+            "channel": "SSC1",
+            "url": "http://hamid-anisfm.com/SSC1/mpegts"
+        },
+        {
+            "channel": "LiveMix",
+            "url": "http://hamid-anisfm.com/LiveMix/mpegts"
+        },
+        {
+            "channel": "LiveMix delayed",
+            "url": "http://hamid-anisfm.com/HamidFM1Delay/mpegts"
+        },
+        {
+            "channel": "beIN1Low",
+            "url": "http://hamid-anisfm.com/beIN1Low/mpegts"
+        },
+        {
+            "channel": "beIN2Low",
+            "url": "http://hamid-anisfm.com/beIN2Low/mpegts"
+        },
+        {
+            "channel": "beIN3Low",
+            "url": "http://hamid-anisfm.com/beIN3Low/mpegts"
+        },
+        {
+            "channel": "SSC1Low",
+            "url": "http://hamid-anisfm.com/SSC1Low/mpegts"
+        }
+    ]
+}
