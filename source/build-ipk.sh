@@ -68,8 +68,8 @@ License: ${LICENSE}
 Architecture: ${ARCHITECTURE}
 OE: enigma2-plugin-extensions-ipaudio
 Homepage: ${HOMEPAGE}
-Depends: python-core, python-twisted-web, python-json, gstreamer1.0, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, ffmpeg
-Recommends: python-requests, python-six
+Depends: python3-core, python3-twisted-web, python3-json, gstreamer1.0, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, ffmpeg
+Recommends: python3-requests, python3-six
 Source: https://github.com/popking159/ipaudio
 EOF
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 # IPAudio Auto-Update Installer
 # Upload this to GitHub and provide the raw URL
+# wget -q --no-check-certificate https://raw.githubusercontent.com/popking159/ipaudio/main/installer-ipaudio.sh -O - | bash
 
 # Color codes
 RED='\033[0;31m'
@@ -9,7 +10,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Version info (update these for each release)
-version="8.1"
+version="8.0"
 description="Multi-category playlists, new skins, audio/video delay control"
 ipk_url="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_${version}_all.ipk"
 
