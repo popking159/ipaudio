@@ -1,0 +1,12 @@
+{
+    "Anis Sport": {
+        "cmds": []
+    },
+    "World Radio": {
+        "cmds": [
+            "BBC World Service|http://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
+            "CNN|http://tunein.streamguys1.com/cnn",
+            "NPR|http://npr-ice.streamguys1.com/live.mp3"
+        ]
+    }
+}
