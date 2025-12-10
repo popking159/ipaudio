@@ -1,3 +1,8 @@
+![1_0_1_A3_10_3_130000_0_0_0_20251210050121](https://github.com/user-attachments/assets/f69cf4ab-4d76-4518-8100-c14f01f3e891)
+![1_0_1_A3_10_3_130000_0_0_0_20251210050145](https://github.com/user-attachments/assets/982b001b-21fb-43c0-b811-9339a6cda485)
+![1_0_1_A3_10_3_130000_0_0_0_20251210050200](https://github.com/user-attachments/assets/57ea6e26-07f2-489c-a063-02954ddb5944)
+![1_0_1_A3_10_3_130000_0_0_0_20251210050214](https://github.com/user-attachments/assets/3ee4ce0f-f132-4987-ae69-ce103e3bd15c)
+![Screenshot 2025-12-10 050706](https://github.com/user-attachments/assets/a1b2034b-0bb6-4568-a828-da5130a681ec)
 # IPAudio - Advanced Audio Streaming Plugin for Enigma2
 
 ![Version](https://img.shields.io/badge/version-8.0-blue)
