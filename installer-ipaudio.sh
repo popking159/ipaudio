@@ -1,6 +1,7 @@
 #!/bin/bash
 # IPAudio Auto-Update Installer
 # Upload this to GitHub and provide the raw URL
+# wget -q --no-check-certificate https://raw.githubusercontent.com/popking159/ipaudio/main/installer-ipaudio.sh -O - | bash
 
 # Color codes
 RED='\033[0;31m'
