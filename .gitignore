@@ -1,0 +1,22 @@
+# Build artifacts
+build/
+*.ipk
+*.tar.gz
+debian-binary
+*.pyc
+*.pyo
+__pycache__/
+
+# Backup files
+*~
+*.bak
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
