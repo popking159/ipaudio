@@ -62,14 +62,6 @@ if [ $? -eq 0 ]; then
     echo -e "${GREEN}Changes: ${description}${NC}"
     echo ""
     echo -e "${YELLOW}Please restart Enigma2 to use the plugin${NC}"
-    echo -e "${YELLOW}Restart now? (y/n)${NC}"
-    
-    read -r response
-    if [[ "$response" =~ ^[Yy]$ ]]; then
-        echo -e "${GREEN}Restarting Enigma2...${NC}"
-        sleep 2
-        init 4 && sleep 3 && init 3
-    fi
 else
     echo -e "${RED}Installation failed!${NC}"
     rm -rf "$TMP_DIR"
