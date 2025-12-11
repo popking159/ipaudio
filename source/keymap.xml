@@ -24,5 +24,6 @@
         <key id="KEY_7" mapto="audioDelayDown" flags="mr" />
         <key id="KEY_8" mapto="audioDelayReset" flags="mr" />
         <key id="KEY_9" mapto="audioDelayUp" flags="mr" />
+		<key id="KEY_0" mapto="clearVideoDelay" flags="mr" />
 	</map>
 </keymap>

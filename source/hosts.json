@@ -8,5 +8,15 @@
             "CNN|http://tunein.streamguys1.com/cnn",
             "NPR|http://npr-ice.streamguys1.com/live.mp3"
         ]
+    },
+    "Local Radio": {
+        "cmds": [
+            "On Sport FM|http://carina.streamerr.co:8108/stream",
+            "Radio HITS|http://radiohits882.radioca.st:8957/stream/;",
+            "Nagham FM|https://ahmsamir.radioca.st/stream",
+			"Nogoom FM|https://audio.nrpstream.com/listen/nogoumfm/radio.mp3",
+			"Mega FM|http://nebula.shoutca.st:8211/stream",
+			"Radio 9090|http://9090streaming.mobtada.com/9090FMEGYPT"
+        ]
     }
 }

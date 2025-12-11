@@ -66,6 +66,9 @@ def getSkinFHD(color_scheme):
         <widget name="audio_delay" position="340,85" size="300,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="{bg}" halign="left" transparent="0" />
         <widget name="network_status" position="660,85" size="200,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="{bg}" halign="left" transparent="0" />
         
+        <!-- Countdown Display (centered, large font) -->
+        <widget name="countdown" position="460,24" size="200,40" font="Regular;28" foregroundColor="#000000" backgroundColor="{primary}" halign="center" valign="center" transparent="0" zPosition="100" />
+        
         <!-- Channel List (840px width, 500px height = 10 items x 50px) -->
         <widget name="list" position="20,140" size="840,500" backgroundColor="{bg}" foregroundColor="{text}" foregroundColorSelected="#000000" backgroundColorSelected="{primary}" itemHeight="50" scrollbarMode="showOnDemand" scrollbarBorderWidth="1" scrollbarBorderColor="{primary}" scrollbarBackgroundColor="#1a1a1a" scrollbarForegroundColor="{primary}" transparent="0" />
         
@@ -238,6 +241,9 @@ def getSkinHD(color_scheme):
         <widget name="audio_delay" position="231,58" size="204,20" font="Regular;14" foregroundColor="{primary}" backgroundColor="#1a1a1a" halign="left" transparent="0" />
         <widget name="network_status" position="449,58" size="136,20" font="Regular;14" foregroundColor="{primary}" backgroundColor="#1a1a1a" halign="left" transparent="0" />
         
+        <!-- Countdown Display (centered, large font) -->
+        <widget name="countdown" position="231,231" size="136,27" font="Regular;19" foregroundColor="{primary}" backgroundColor="{bg}" halign="center" valign="center" transparent="1" zPosition="10" />
+
         <!-- Channel List (571px width, 340px height = 5.86 items x 58px, round to 6) -->
         <widget name="list" position="14,95" size="571,348" backgroundColor="{bg}" foregroundColor="{text}" itemHeight="58" scrollbarMode="showOnDemand" scrollbarBorderWidth="1" scrollbarBorderColor="{primary}" scrollbarBackgroundColor="#1a1a1a" scrollbarForegroundColor="{primary}" transparent="0" />
         
@@ -386,6 +392,54 @@ def getHelpSkinHD(color_scheme):
         text=c['text'],
         red=b['red']
     )
+
+def getGridSkinFHD(color_scheme):
+    """Generate FHD skin with Grid view"""
+    c = COLORS[color_scheme]
+    b = BUTTON_COLORS
+    
+    return """
+    <screen name="IPAudioScreen" position="center,center" size="880,720" flags="wfNoBorder">
+        <!-- Border layer (bottom) -->
+        <eLabel name="" position="0,0" size="880,720" zPosition="-3" backgroundColor="{border}" />
+        <!-- Black background layer (top, 1px smaller on each side) -->
+        <eLabel name="" position="1,1" size="878,718" zPosition="-2" backgroundColor="{bg}" />
+        
+        <!-- Title -->
+        <widget name="title" position="680,20" size="180,30" font="Regular;22" foregroundColor="{primary}" backgroundColor="{bg}" halign="right" valign="center" transparent="0" />
+        
+        <!-- Header -->
+        <widget name="server" position="20,20" size="640,50" font="Regular;32" foregroundColor="{text}" backgroundColor="{primary}" halign="left" valign="center" transparent="0" />
+        
+        <!-- Info bar -->
+        <widget name="sync" position="20,85" size="300,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="#1a1a1a" halign="left" transparent="0" />
+        <widget name="audio_delay" position="340,85" size="300,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="#1a1a1a" halign="left" transparent="0" />
+        <widget name="network_status" position="660,85" size="200,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="#1a1a1a" halign="left" transparent="0" />
+        
+        <!-- Grid View (6 columns x 3 rows = 18 items visible) -->
+        <!-- Each cell: 135x160 (picon 130x130, text 135x30) -->
+        <widget name="grid" position="20,140" size="840,500" backgroundColor="{bg}" foregroundColor="{text}" scrollbarMode="showOnDemand" scrollbarBorderWidth="1" scrollbarBorderColor="{primary}" scrollbarBackgroundColor="#1a1a1a" scrollbarForegroundColor="{primary}" transparent="0" />
+        
+        <!-- Countdown Display -->
+        <widget name="countdown" position="340,340" size="200,40" font="Regular;28" foregroundColor="{primary}" backgroundColor="{bg}" halign="center" valign="center" transparent="1" zPosition="10" />
+        
+        <!-- Footer Buttons -->
+        <widget name="key_red" position="20,655" size="200,50" font="Regular;22" foregroundColor="#ffffff" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
+        <widget name="key_green" position="240,655" size="200,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{green}" halign="center" valign="center" transparent="0" />
+        <widget name="key_yellow" position="460,655" size="200,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{yellow}" halign="center" valign="center" transparent="0" />
+        <widget name="key_blue" position="680,655" size="180,50" font="Regular;22" foregroundColor="#ffffff" backgroundColor="{blue}" halign="center" valign="center" transparent="0" />
+    </screen>
+    """.format(
+        bg=c['background'],
+        border=c['border'],
+        primary=c['primary'],
+        text=c['text'],
+        red=b['red'],
+        green=b['green'],
+        yellow=b['yellow'],
+        blue=b['blue']
+    )
+
 
 # ===========================
 # Orange Skins
