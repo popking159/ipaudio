@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Version info (update these for each release)
-version="8.0"
+version="8.01"
 description="Multi-category playlists, new skins, audio/video delay control"
 ipk_url="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_${version}_all.ipk"
 
