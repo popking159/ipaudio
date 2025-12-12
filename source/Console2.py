@@ -24,22 +24,19 @@ def isHD():
 class Console2(Screen):
     if isHD():
         skin = '''
-            <screen name="Console2" position="center,center" size="1200,650" title="Console">
-                <widget name="text" position="10,10" size="1180,580" font="Regular;20" scrollbarMode="showOnDemand"/>
-                <ePixmap pixmap="skin_default/buttons/red.png" position="10,610" size="200,40" alphatest="on"/>
-                <ePixmap pixmap="skin_default/buttons/green.png" position="210,610" size="200,40" alphatest="on"/>
-                <widget source="key_red" render="Label" position="10,610" size="200,40" zPosition="1" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1"/>
-                <widget source="key_green" render="Label" position="210,610" size="200,40" zPosition="1" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1"/>
-            </screen>'''
+            <screen name="Console2" position="center,center" size="800,533" title="Console" flags="wfBorder">
+  <widget name="text" position="7,7" size="786,480" font="Regular;18" scrollbarMode="showOnDemand" />
+  <widget name="key_red" position="7,493" size="107,33" font="Regular;15" foregroundColor="#000000" backgroundColor="#ff0069" halign="center" valign="center" transparent="0" />
+  <widget name="key_green" position="120,493" size="107,33" font="Regular;15" foregroundColor="#000000" backgroundColor="#00ffa9" halign="center" valign="center" transparent="0" />
+</screen>
+'''
     else:
         skin = '''
-            <screen name="Console2" position="center,center" size="1800,975" title="Console">
-                <widget name="text" position="15,15" size="1770,870" font="Regular;28" scrollbarMode="showOnDemand"/>
-                <ePixmap pixmap="skin_default/buttons/red.png" position="15,915" size="300,60" alphatest="on"/>
-                <ePixmap pixmap="skin_default/buttons/green.png" position="315,915" size="300,60" alphatest="on"/>
-                <widget source="key_red" render="Label" position="15,915" size="300,60" zPosition="1" font="Regular;28" halign="center" valign="center" backgroundColor="#9f1313" transparent="1"/>
-                <widget source="key_green" render="Label" position="315,915" size="300,60" zPosition="1" font="Regular;28" halign="center" valign="center" backgroundColor="#1f771f" transparent="1"/>
-            </screen>'''
+            <screen name="Console2" position="center,center" size="1200,800" title="Console" flags="wfBorder">
+  <widget name="text" position="10,10" size="1180,720" font="Regular;28" scrollbarMode="showOnDemand" />
+  <widget name="key_red" position="10,740" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="#ff0069" halign="center" valign="center" transparent="0" />
+  <widget name="key_green" position="180,740" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="#00ffa9" halign="center" valign="center" transparent="0" />
+</screen>'''
 
     def __init__(self, session, title='Console', cmdlist=None, finishedCallback=None, closeOnSuccess=False, showStartStopText=True, skin=None):
         Screen.__init__(self, session)

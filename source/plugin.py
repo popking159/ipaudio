@@ -641,7 +641,7 @@ class IPAudioPiconConverter(Screen):
         self.convertPicons(picon_files)
     
     def convertPicons(self, picon_files):
-        """Convert the picons"""
+        """Convert the picons while preserving transparency"""
         from PIL import Image
         
         success_count = 0
@@ -652,24 +652,32 @@ class IPAudioPiconConverter(Screen):
             dest_file = os.path.join(self.dest_path, picon_file)
             
             try:
-                # Open and convert image
+                # Open image
                 img = Image.open(source_file)
                 
-                # Handle transparency
-                if img.mode in ('RGBA', 'LA', 'P'):
-                    background = Image.new('RGB', img.size, (255, 255, 255))
-                    if img.mode == 'P':
-                        img = img.convert('RGBA')
-                    background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
-                    img = background
-                elif img.mode != 'RGB':
-                    img = img.convert('RGB')
+                # PRESERVE ALPHA CHANNEL - Convert mode if needed but keep transparency
+                if img.mode == 'P':
+                    # Palette mode - convert to RGBA to preserve transparency
+                    img = img.convert('RGBA')
+                elif img.mode == 'LA':
+                    # Grayscale with alpha - convert to RGBA
+                    img = img.convert('RGBA')
+                elif img.mode not in ('RGBA', 'RGB'):
+                    # Other modes - convert to RGBA to be safe
+                    img = img.convert('RGBA')
+                # If already RGBA or RGB, keep as is
                 
-                # Resize
+                # Resize with high quality resampling
+                # LANCZOS preserves quality and transparency
                 img_resized = img.resize(self.dest_size, Image.LANCZOS)
                 
-                # Save
-                img_resized.save(dest_file, 'PNG', optimize=True)
+                # Save with transparency preserved
+                if img_resized.mode == 'RGBA':
+                    # Save as RGBA PNG with transparency
+                    img_resized.save(dest_file, 'PNG', optimize=True)
+                else:
+                    # Save as RGB PNG
+                    img_resized.save(dest_file, 'PNG', optimize=True)
                 
                 success_count += 1
                 
