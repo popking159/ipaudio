@@ -138,17 +138,7 @@ if [ $? -eq 0 ]; then
     echo -e "  1. From GUI: Menu > Standby > Restart GUI"
     echo -e "  2. Command: killall -9 enigma2"
     echo ""
-    
-    # Ask if user wants to restart now
-    read -p "Restart Enigma2 now? (y/n): " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "${GREEN}Restarting Enigma2 in 3 seconds...${NC}"
-        sleep 3
-        killall -9 enigma2
-    else
-        echo -e "${YELLOW}Please restart manually when ready${NC}"
-    fi
+
 else
     echo -e "${RED}Installation failed!${NC}"
     rm -rf "$TMP_DIR"
