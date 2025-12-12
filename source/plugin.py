@@ -3083,6 +3083,19 @@ class IPAudioScreenGrid(Screen):
             cprint("[IPAudio] Error parsing Anis data: {}".format(str(e)))
             self.radioList = []
             self['server'].setText('Error loading Anis Sport')
+
+    def installupdate(self, answer=False):
+        """Install update from GitHub"""
+        if answer:
+            url = "https://raw.githubusercontent.com/popking159/ipaudio/main/installer-ipaudio.sh"
+            cmdlist = []
+            cmdlist.append('wget -q --no-check-certificate {} -O - | bash'.format(url))
+            self.session.open(
+                Console2, 
+                title="Update IPAudio", 
+                cmdlist=cmdlist, 
+                closeOnSuccess=False
+            )
     
     def callUrl(self, url, callback):
         try:
@@ -3114,8 +3127,50 @@ class IPAudioScreenGrid(Screen):
     
     def checkVer(self, data):
         """Parse version from installer script"""
-        # Copy exactly from IPAudioScreen
-        pass
+        try:
+            if PY3:
+                data = data.decode('utf-8')
+            else:
+                data = data.encode('utf-8')
+            
+            if data:
+                lines = data.split('\n')
+                self.newversion = None
+                self.newdescription = ""
+                
+                for line in lines:
+                    line = line.strip()
+                    if line.startswith('version='):
+                        # Extract version: version="8.1"
+                        self.newversion = line.split('=')[1].strip('"').strip("'")
+                    elif line.startswith('description='):
+                        # Extract description: description="New features"
+                        self.newdescription = line.split('=')[1].strip('"').strip("'")
+                
+                if self.newversion:
+                    cprint("[IPAudio] Current version: {}, New version: {}".format(Ver, self.newversion))
+                    
+                    # Compare versions
+                    try:
+                        current = float(Ver)
+                        new = float(self.newversion)
+                        
+                        if new > current:
+                            msg = "New version {} is available.\n\n{}\n\nDo you want to install it now?".format(
+                                self.newversion, 
+                                self.newdescription
+                            )
+                            self.session.openWithCallback(
+                                self.installupdate, 
+                                MessageBox, 
+                                msg, 
+                                MessageBox.TYPE_YESNO
+                            )
+                    except ValueError:
+                        cprint("[IPAudio] Could not compare versions")
+        except Exception as e:
+            cprint("[IPAudio] Error checking version: {}".format(str(e)))
+            trace_error()
     
     def exit(self, ret=False):
         """Exit IPAudio plugin"""
