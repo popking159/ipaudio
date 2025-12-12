@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 from __future__ import print_function
-
 from enigma import eConsoleAppContainer
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
@@ -10,6 +8,10 @@ from Components.ScrollLabel import ScrollLabel
 from Components.Sources.StaticText import StaticText
 from Screens.MessageBox import MessageBox
 from enigma import getDesktop
+from sys import version_info
+
+# Python version detection
+PY3 = version_info[0] == 3
 
 def getDesktopSize():
     s = getDesktop(0).size()
@@ -21,29 +23,25 @@ def isHD():
 
 class Console2(Screen):
     if isHD():
-    	skin = '''<screen position="17,center" size="1245,681" title="Command execution..." backgroundColor="#16000000" flags="wfNoBorder">
-			<widget name="text" position="9,48" size="1237,587" backgroundColor="#16000000" foregroundColor="#00ffffff" font="Console;24"/>
-			<eLabel text="Command execution..." font="Regular;30" size="1000,40" position="8,3" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="4"/>
-			<eLabel position="10,674" size="165,5" backgroundColor="#00ff2525" zPosition="1"/>
-			<eLabel position="238,674" size="165,5" backgroundColor="#00389416" zPosition="1"/>
-			<eLabel position="1068,674" size="165,5" backgroundColor="#000080ff" zPosition="1"/>
-			<eLabel text="Cancel" position="10,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
-			<eLabel text="Hide/Show" position="238,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
-			<eLabel text="Restart GUI" position="1068,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
-		</screen>'''
+        skin = '''
+            <screen name="Console2" position="center,center" size="1200,650" title="Console">
+                <widget name="text" position="10,10" size="1180,580" font="Regular;20" scrollbarMode="showOnDemand"/>
+                <ePixmap pixmap="skin_default/buttons/red.png" position="10,610" size="200,40" alphatest="on"/>
+                <ePixmap pixmap="skin_default/buttons/green.png" position="210,610" size="200,40" alphatest="on"/>
+                <widget source="key_red" render="Label" position="10,610" size="200,40" zPosition="1" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1"/>
+                <widget source="key_green" render="Label" position="210,610" size="200,40" zPosition="1" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1"/>
+            </screen>'''
     else:
-    	skin = '''<screen position="center,center" size="1886,1051" title="Command execution..." backgroundColor="#16000000" flags="wfNoBorder">
-			<widget name="text" position="9,93" size="1868,897" backgroundColor="#16000000" foregroundColor="#00ffffff" font="Console;33"/>
-			<eLabel text="Command execution..." font="Regular;45" size="1163,80" position="8,3" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="4"/>
-			<eLabel position="10,1043" size="250,5" backgroundColor="#00ff2525" zPosition="1"/>
-			<eLabel position="353,1043" size="250,5" backgroundColor="#00389416" zPosition="1"/>
-			<eLabel position="1626,1043" size="250,5" backgroundColor="#000080ff" zPosition="1"/>
-			<eLabel text="Cancel" position="10,1004" zPosition="2" size="250,40" font="Regular;28" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
-			<eLabel text="Hide/Show" render="Label" position="353,1004" zPosition="2" size="250,40" font="Regular;28" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
-			<eLabel text="Restart GUI" position="1626,1004" zPosition="2" size="250,40" font="Regular;28" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
-		</screen>'''
+        skin = '''
+            <screen name="Console2" position="center,center" size="1800,975" title="Console">
+                <widget name="text" position="15,15" size="1770,870" font="Regular;28" scrollbarMode="showOnDemand"/>
+                <ePixmap pixmap="skin_default/buttons/red.png" position="15,915" size="300,60" alphatest="on"/>
+                <ePixmap pixmap="skin_default/buttons/green.png" position="315,915" size="300,60" alphatest="on"/>
+                <widget source="key_red" render="Label" position="15,915" size="300,60" zPosition="1" font="Regular;28" halign="center" valign="center" backgroundColor="#9f1313" transparent="1"/>
+                <widget source="key_green" render="Label" position="315,915" size="300,60" zPosition="1" font="Regular;28" halign="center" valign="center" backgroundColor="#1f771f" transparent="1"/>
+            </screen>'''
 
-    def __init__(self, session, title = 'Console', cmdlist = None, finishedCallback = None, closeOnSuccess = False, showStartStopText = True, skin = None):
+    def __init__(self, session, title='Console', cmdlist=None, finishedCallback=None, closeOnSuccess=False, showStartStopText=True, skin=None):
         Screen.__init__(self, session)
         self.finishedCallback = finishedCallback
         self.closeOnSuccess = closeOnSuccess
@@ -54,16 +52,16 @@ class Console2(Screen):
         self['text'] = ScrollLabel('')
         self['key_red'] = StaticText(_('Cancel'))
         self['key_green'] = StaticText(_('Hide'))
-        self["actions"] = ActionMap(["WizardActions", "DirectionActions",'ColorActions'],
-            {
-		"ok": self.cancel,
-		"up": self["text"].pageUp,
-		"down": self["text"].pageDown,
-		"red": self.cancel,
-		"green": self.toggleHideShow,
-		"blue": self.restartenigma,
-		"exit": self.cancel,
-            }, -1)
+        self["actions"] = ActionMap(["WizardActions", "DirectionActions", 'ColorActions'],
+        {
+            "ok": self.cancel,
+            "up": self["text"].pageUp,
+            "down": self["text"].pageDown,
+            "red": self.cancel,
+            "green": self.toggleHideShow,
+            "blue": self.restartenigma,
+            "exit": self.cancel,
+        }, -1)
         self.cmdlist = isinstance(cmdlist, list) and cmdlist or [cmdlist]
         self.newtitle = title == 'Console' and _('Console') or title
         self.cancel_msg = None
@@ -71,12 +69,12 @@ class Console2(Screen):
         self.container = eConsoleAppContainer()
         self.run = 0
         self.finished = False
-        try: ## DreamOS By RAED
-        	self.container.appClosed.append(self.runFinished)
-        	self.container.dataAvail.append(self.dataAvail)
+        try:  ## DreamOS By RAED
+            self.container.appClosed.append(self.runFinished)
+            self.container.dataAvail.append(self.dataAvail)
         except:
-            	self.container.appClosed_conn = self.container.appClosed.connect(self.runFinished)
-            	self.container.dataAvail_conn = self.container.dataAvail.connect(self.dataAvail)
+            self.container.appClosed_conn = self.container.appClosed.connect(self.runFinished)
+            self.container.dataAvail_conn = self.container.dataAvail.connect(self.dataAvail)
         self.onLayoutFinish.append(self.startRun)
 
     def updateTitle(self):
@@ -92,7 +90,7 @@ class Console2(Screen):
     def runFinished(self, retval):
         if retval:
             self.errorOcurred = True
-            self.show()
+        self.show()
         self.run += 1
         if self.run != len(self.cmdlist):
             if self.container.execute(self.cmdlist[self.run]):
@@ -101,9 +99,9 @@ class Console2(Screen):
             self.show()
             self.finished = True
             try:
-                  lastpage = self['text'].isAtLastPage()
+                lastpage = self['text'].isAtLastPage()
             except:
-                  lastpage = self['text']
+                lastpage = self['text']
             if self.cancel_msg:
                 self.cancel_msg.close()
             if self.showStartStopText:
@@ -131,10 +129,10 @@ class Console2(Screen):
         else:
             self.cancel_msg = self.session.openWithCallback(self.cancelCallback, MessageBox, _('Cancel execution?'), type=MessageBox.TYPE_YESNO, default=False)
 
-    def cancelCallback(self, ret = None):
+    def cancelCallback(self, ret=None):
         self.cancel_msg = None
         if ret:
-            try: ## DreamOS By RAED
+            try:  ## DreamOS By RAED
                 self.container.appClosed.remove(self.runFinished)
                 self.container.dataAvail.remove(self.dataAvail)
             except:
@@ -145,7 +143,7 @@ class Console2(Screen):
 
     def closeConsole(self):
         if self.finished:
-            try: ## DreamOS By RAED
+            try:  ## DreamOS By RAED
                 self.container.appClosed.remove(self.runFinished)
                 self.container.dataAvail.remove(self.dataAvail)
             except:
@@ -156,6 +154,16 @@ class Console2(Screen):
             self.show()
 
     def dataAvail(self, str):
+        """Handle console output - fixed for Python 2/3 compatibility"""
+        # FIX: Convert bytes to string if needed (Python 3)
+        if PY3 and isinstance(str, bytes):
+            try:
+                str = str.decode('utf-8')
+            except UnicodeDecodeError:
+                # Fallback to latin-1 if utf-8 fails
+                str = str.decode('latin-1', errors='ignore')
+        
+        # Now safely append the string
         self['text'].appendText(str)
 
     def restartenigma(self):

@@ -81,6 +81,43 @@ config.plugins.IPAudio.equalizer = ConfigSelection(default="off", choices=[
     ("classical", _("Classical")),
     ("jazz", _("Jazz")),
 ])
+# Picon path configuration
+config.plugins.IPAudio.piconPath = ConfigSelection(default="/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/", choices=[
+    ("/usr/share/enigma2/ipaudio/picon/", _("/usr/share/enigma2/ipaudio/picon/")),
+    ("/media/hdd/ipaudio/ipaudio/picon/", _("/media/hdd/ipaudio/picon/")),
+    ("/media/usb/ipaudio/ipudio/picon/", _("/media/usb/ipaudio/picon/")),
+    ("/media/mmc/ipaudio/picon/", _("/media/mmc/ipaudio/picon/")),
+    ("/media/sdcard/ipaudio/picon/", _("/media/sdcard/ipaaudio/picon/")),
+    ("/media/sda1/ipaudio/picon/", _("/media/sda1/ipaudio/picon/")),
+    ("/etc/enigma2/ipaudio/picon/", _("/etc/enigma2/ipaudio/picon/")),
+    ("/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/", _("Plugin Folder"))
+])
+# Settings directory configuration
+config.plugins.IPAudio.settingsPath = ConfigSelection(default="/etc/enigma2/ipaudio/", choices=[
+    ("/etc/enigma2/ipaudio/", _("/etc/enigma2/ipaudio/")),
+    ("/media/hdd/ipaudio/", _("/media/hdd/ipaudio/")),
+    ("/media/usb/ipaudio/", _("/media/usb/ipaudio/")),
+    ("/media/mmc/ipaudio/", _("/media/mmc/ipaudio/")),
+    ("/media/sdcard/ipaudio/", _("/media/sdcard/ipaudio/")),
+    ("/media/sda1/ipaudio/", _("/media/sda1/ipaudio/")),
+    ("/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/settings/", _("Plugin Folder"))
+])
+def validateConfigValues():
+    """Ensure all config values are valid on startup"""
+    if config.plugins.IPAudio.tsDelay.value is None:
+        config.plugins.IPAudio.tsDelay.value = 5
+        config.plugins.IPAudio.tsDelay.save()
+    
+    if config.plugins.IPAudio.audioDelay.value is None:
+        config.plugins.IPAudio.audioDelay.value = 0
+        config.plugins.IPAudio.audioDelay.save()
+    
+    if config.plugins.IPAudio.volLevel.value is None:
+        config.plugins.IPAudio.volLevel.value = 50
+        config.plugins.IPAudio.volLevel.save()
+
+# Call on plugin load
+validateConfigValues()
 REDC = '\033[31m'
 ENDC = '\033[m'
 
@@ -98,19 +135,32 @@ def trace_error():
     except:
         pass
 
-PLAYLIST_DIR = '/etc/enigma2/ipaudio/'
+def getPlaylistDir():
+    """Get the configured playlist directory"""
+    path = config.plugins.IPAudio.settingsPath.value
+    if not os.path.exists(path):
+        try:
+            os.makedirs(path)
+        except:
+            pass
+    return path
 
 def getPlaylistFiles():
     """Get all playlist JSON files from the ipaudio directory"""
     import glob
     
+    # Use configurable directory
+    playlist_dir = getPlaylistDir()
+    
     # Create directory if it doesn't exist
-    if not os.path.exists(PLAYLIST_DIR):
-        os.makedirs(PLAYLIST_DIR)
+    if not os.path.exists(playlist_dir):
+        try:
+            os.makedirs(playlist_dir)
+        except:
+            pass
     
-    playlist_files = glob.glob(PLAYLIST_DIR + 'ipaudio_*.json')
+    playlist_files = glob.glob(playlist_dir + 'ipaudio_*.json')
     playlists = []
-    
     for filepath in sorted(playlist_files):
         # Extract category name from filename: ipaudio_sport.json -> Sport
         filename = os.path.basename(filepath)
@@ -123,7 +173,8 @@ def getPlaylistFiles():
 def getPlaylist(category_file=None):
     """Load playlist from specific file or default"""
     if category_file is None:
-        category_file = '/etc/enigma2/ipaudio.json'  # Legacy support
+        # Use configurable path for default
+        category_file = os.path.join(config.plugins.IPAudio.settingsPath.value, 'ipaudio.json')
     
     if fileExists(category_file):
         with open(category_file, 'r') as f:
@@ -156,9 +207,10 @@ Ver = getversioninfo()
 
 def getPiconPath(serviceName):
     """Find picon for service name"""
+    # Use configurable picon path plus plugin default
     picon_paths = [
-        '/etc/enigma2/picon/',
-        '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons'
+        config.plugins.IPAudio.piconPath.value,  # User configured path
+        '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/'  # Plugin default
     ]
     
     # Clean service name for picon filename
@@ -184,56 +236,69 @@ def getPiconPath(serviceName):
     default_picon = '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/default_picon.png'
     if os.path.exists(default_picon):
         return default_picon
+    
     return None
 
-VIDEODELAYFILE = '/etc/enigma2/ipaudio/video_delay_channels.json'
+def getVideoDelayFile():
+    """Get the configured video delay file path"""
+    return os.path.join(config.plugins.IPAudio.settingsPath.value, 'video_delay_channels.json')
 
 def loadVideoDelayData():
     """Load video delay data from JSON file"""
-    if not os.path.exists(os.path.dirname(VIDEODELAYFILE)):
-        os.makedirs(os.path.dirname(VIDEODELAYFILE))
+    videodelayfile = getVideoDelayFile()
+    settings_dir = config.plugins.IPAudio.settingsPath.value
     
-    if fileExists(VIDEODELAYFILE):
+    if not os.path.exists(settings_dir):
         try:
-            with open(VIDEODELAYFILE, 'r') as f:
+            os.makedirs(settings_dir)
+        except:
+            pass
+    
+    if fileExists(videodelayfile):
+        try:
+            with open(videodelayfile, 'r') as f:
                 return json.load(f)
         except:
-            traceerror()
-    
+            trace_error()
     return {}
 
 def saveVideoDelayData(data):
     """Save video delay data to JSON file"""
+    videodelayfile = getVideoDelayFile()
+    settings_dir = config.plugins.IPAudio.settingsPath.value
+    
     try:
-        if not os.path.exists(os.path.dirname(VIDEODELAYFILE)):
-            os.makedirs(os.path.dirname(VIDEODELAYFILE))
-        
-        with open(VIDEODELAYFILE, 'w') as f:
+        if not os.path.exists(settings_dir):
+            os.makedirs(settings_dir)
+        with open(videodelayfile, 'w') as f:
             json.dump(data, f, indent=4)
         return True
     except:
-        traceerror()
-        return False
+        trace_error()
+    return False
 
 def getVideoDelayForChannel(service_ref, fallback=None):
     """Get saved video delay for a specific channel with fallback"""
     if not service_ref:
-        return fallback
+        return fallback if fallback is not None else 5  # Default to 5 seconds
     
     ref_str = service_ref.toString()
     data = loadVideoDelayData()
     
     if ref_str in data:
         delay_value = data[ref_str]
-        cprint("[IPAudio] Found saved video delay for channel: {} = {}".format(ref_str, delay_value))
-        return delay_value
+        # Validate the value
+        if delay_value is not None and isinstance(delay_value, (int, float)):
+            cprint("[IPAudio] Found saved video delay for channel: {} = {}".format(ref_str, delay_value))
+            return int(delay_value)
     
     # No saved delay for this channel, use fallback
     if fallback is not None:
         cprint("[IPAudio] No saved delay for channel, using fallback: {}".format(fallback))
         return fallback
     
-    return None
+    # Final fallback
+    return 5  # Default 5 seconds
 
 def saveVideoDelayForChannel(service_ref, delay_value):
     """Save video delay for a specific channel"""
@@ -249,6 +314,61 @@ def saveVideoDelayForChannel(service_ref, delay_value):
         return True
     
     return False
+
+def getAudioBitrate(url):
+    """Get audio bitrate from stream URL using ffprobe"""
+    try:
+        # Use ffprobe to get audio bitrate
+        cmd = [
+            'ffprobe',
+            '-v', 'error',
+            '-select_streams', 'a:0',  # First audio stream
+            '-show_entries', 'stream=bit_rate',
+            '-of', 'default=noprint_wrappers=1:nokey=1',
+            url
+        ]
+        
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=5
+        )
+        
+        if result.returncode == 0:
+            bitrate_bps = result.stdout.decode('utf-8').strip()
+            if bitrate_bps and bitrate_bps != 'N/A':
+                # Convert bps to kbps
+                bitrate_kbps = int(bitrate_bps) // 1000
+                return bitrate_kbps
+        
+        # Fallback: Try to get format bitrate if stream bitrate not available
+        cmd_format = [
+            'ffprobe',
+            '-v', 'error',
+            '-show_entries', 'format=bit_rate',
+            '-of', 'default=noprint_wrappers=1:nokey=1',
+            url
+        ]
+        
+        result = subprocess.run(
+            cmd_format,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=5
+        )
+        
+        if result.returncode == 0:
+            bitrate_bps = result.stdout.decode('utf-8').strip()
+            if bitrate_bps and bitrate_bps != 'N/A':
+                bitrate_kbps = int(bitrate_bps) // 1000
+                return bitrate_kbps
+        
+    except Exception as e:
+        cprint("[IPAudio] Error getting bitrate: {}".format(str(e)))
+    
+    return None  # Unknown bitrate
+
 
 def isMutable():
     if fileExists('/proc/stb/info/boxtype') and open('/proc/stb/info/boxtype').read().strip() in ('sf8008', 'sf8008m', 'viper4kv20', 'beyonwizv2', 'ustym4kpro', 'gbtrio4k', 'spider-x',):
@@ -317,6 +437,8 @@ class IPAudioSetup(Screen, ConfigListScreen):
         self.list.append(getConfigListEntry(_("Keep original channel audio"), config.plugins.IPAudio.keepaudio))
         self.list.append(getConfigListEntry(_("Video Delay"), config.plugins.IPAudio.tsDelay))
         self.list.append(getConfigListEntry(_("Audio Delay"), config.plugins.IPAudio.audioDelay))
+        self.list.append(getConfigListEntry(_("Picons Folder"), config.plugins.IPAudio.piconPath))
+        self.list.append(getConfigListEntry(_("Settings Folder"), config.plugins.IPAudio.settingsPath))
         self.list.append(getConfigListEntry(_("Remove/Reset Playlist"), config.plugins.IPAudio.playlist))
         self.list.append(getConfigListEntry(_("Enable/Disable online update"), config.plugins.IPAudio.update))
         self.list.append(getConfigListEntry(_("Show IPAudio in main menu"), config.plugins.IPAudio.mainmenu))
@@ -329,14 +451,36 @@ class IPAudioSetup(Screen, ConfigListScreen):
         if current[1] == config.plugins.IPAudio.playlist:
             self.session.open(IPAudioPlaylist)
         else:
+            # Check if paths changed
+            old_picon_path = config.plugins.IPAudio.piconPath.value
+            old_settings_path = config.plugins.IPAudio.settingsPath.value
+            
             for x in self["config"].list:
                 if len(x) > 1:
                     x[1].save()
             configfile.save()
             
-            # Check if skin changed - notify user
+            # Create directories if they don't exist
+            new_settings_path = config.plugins.IPAudio.settingsPath.value
+            new_picon_path = config.plugins.IPAudio.piconPath.value
+            
+            if not os.path.exists(new_settings_path):
+                try:
+                    os.makedirs(new_settings_path)
+                    self.session.open(MessageBox, _("Settings folder created: {}".format(new_settings_path)), MessageBox.TYPE_INFO, timeout=3)
+                except:
+                    self.session.open(MessageBox, _("Failed to create settings folder: {}".format(new_settings_path)), MessageBox.TYPE_ERROR, timeout=5)
+            
+            if not os.path.exists(new_picon_path):
+                self.session.open(MessageBox, _("Picon folder does not exist: {}\nPlease create it manually.".format(new_picon_path)), MessageBox.TYPE_WARNING, timeout=5)
+            
+            # Check if skin changed
             if self.currentSkin != config.plugins.IPAudio.skin.value:
                 self.session.open(MessageBox, _("Skin changed! Please restart IPAudio plugin for changes to take effect."), MessageBox.TYPE_INFO, timeout=5)
+            
+            # Check if paths changed
+            if old_settings_path != new_settings_path:
+                self.session.open(MessageBox, _("Settings folder changed! Existing playlists and delays in old location will not be moved automatically."), MessageBox.TYPE_INFO, timeout=8)
             
             # Close only settings screen, not the main plugin
             self.close(False)
@@ -392,17 +536,27 @@ class IPAudioScreen(Screen):
 
         # NEW: Load video delay for current channel with fallback to config value
         current_service = self.session.nav.getCurrentlyPlayingServiceReference()
+        # Ensure config has valid value
+        if config.plugins.IPAudio.tsDelay.value is None:
+            config.plugins.IPAudio.tsDelay.value = 5
+            config.plugins.IPAudio.tsDelay.save()
         current_delay = config.plugins.IPAudio.tsDelay.value  # Current config value as fallback
         
         # Try to get saved delay for this channel, fallback to current config
         loaded_delay = getVideoDelayForChannel(current_service, fallback=current_delay)
+        # Ensure loaded_delay is valid
+        if loaded_delay is None:
+            loaded_delay = 5
         
         # Update config with loaded delay (either saved or fallback)
         config.plugins.IPAudio.tsDelay.value = loaded_delay
         
         # Display real seconds (no conversion)
         self['sync'].setText('Video Delay: {}s'.format(config.plugins.IPAudio.tsDelay.value))
-        
+        # Ensure audio delay is also valid
+        if config.plugins.IPAudio.audioDelay.value is None:
+            config.plugins.IPAudio.audioDelay.value = 0
+            config.plugins.IPAudio.audioDelay.save()        
         self['audio_delay'] = Label()
         # Display audio delay in seconds
         self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
@@ -458,6 +612,13 @@ class IPAudioScreen(Screen):
         self.currentDelaySeconds = 0  # Current active delay
         self.targetDelaySeconds = 0   # Target delay we want to reach
         self.countdownValue = 0
+        # NEW: Add bitrate tracking
+        self.currentBitrate = None
+        self.bitrateCheckTimer = eTimer()
+        try:
+            self.bitrateCheckTimer.callback.append(self.checkAudioBitrate)
+        except:
+            self.bitrateCheckTimer_conn = self.bitrateCheckTimer.timeout.connect(self.checkAudioBitrate)        
         
         if HAVE_EALSA:
             self.alsa = eAlsaOutput.getInstance()
@@ -513,16 +674,43 @@ class IPAudioScreen(Screen):
         self.session.open(IPAudioHelp)
 
     def checkNetworkStatus(self):
-        """Check if audio stream is still playing"""
+        """Check if audio stream is still playing with bitrate info"""
         if self.audio_process:
             # Check if process is still running
             if self.audio_process.poll() is None:
-                self['network_status'].setText('● Playing')
+                # Process is running
+                if self.currentBitrate is not None:
+                    self['network_status'].setText('● Playing {}kb/s'.format(self.currentBitrate))
+                else:
+                    self['network_status'].setText('● Playing')
             else:
                 self['network_status'].setText('✗ Stopped')
                 self.audio_process = None
+                self.currentBitrate = None
         else:
             self['network_status'].setText('')
+            self.currentBitrate = None
+
+    def checkAudioBitrate(self):
+        """Check audio bitrate of current stream"""
+        if hasattr(self, 'url') and self.url and config.plugins.IPAudio.running.value:
+            cprint("[IPAudio] Checking bitrate for: {}".format(self.url))
+            
+            # Get bitrate in background thread to avoid blocking
+            bitrate = getAudioBitrate(self.url)
+            
+            if bitrate:
+                self.currentBitrate = bitrate
+                cprint("[IPAudio] Detected bitrate: {} kb/s".format(bitrate))
+                # Update display immediately
+                if self.audio_process and self.audio_process.poll() is None:
+                    self['network_status'].setText('● Playing {}kb/s'.format(self.currentBitrate))
+            else:
+                cprint("[IPAudio] Could not detect bitrate")
+                self.currentBitrate = None
+        
+        # Stop timer after first check
+        self.bitrateCheckTimer.stop()
 
     def getTimeshift(self):
         service = self.session.nav.getCurrentService()
@@ -615,6 +803,10 @@ class IPAudioScreen(Screen):
 
     def delayUP(self):
         """Increase TimeShift delay by 1 second"""
+        # Safety check
+        if config.plugins.IPAudio.tsDelay.value is None:
+            config.plugins.IPAudio.tsDelay.value = 5
+        
         if config.plugins.IPAudio.tsDelay.value < 300:  # Max 300 seconds
             config.plugins.IPAudio.tsDelay.value += 1  # Add 1 second
             config.plugins.IPAudio.tsDelay.save()
@@ -628,6 +820,10 @@ class IPAudioScreen(Screen):
 
     def delayDown(self):
         """Decrease TimeShift delay by 1 second"""
+        # Safety check
+        if config.plugins.IPAudio.tsDelay.value is None:
+            config.plugins.IPAudio.tsDelay.value = 5
+        
         if config.plugins.IPAudio.tsDelay.value > 0:  # Min 0 seconds
             config.plugins.IPAudio.tsDelay.value -= 1  # Subtract 1 second
             config.plugins.IPAudio.tsDelay.save()
@@ -914,7 +1110,8 @@ class IPAudioScreen(Screen):
         else:
             # Custom playlist category
             category_lower = current.lower()
-            playlist_file = PLAYLIST_DIR + 'ipaudio_{}.json'.format(category_lower)
+            playlist_dir = getPlaylistDir()  # Use configurable path
+            playlist_file = playlist_dir + 'ipaudio_{}.json'.format(category_lower)
             
             if fileExists(playlist_file):
                 playlist = getPlaylist(playlist_file)
@@ -1179,8 +1376,12 @@ class IPAudioScreen(Screen):
                 
                 cprint("[IPAudio] FFmpeg command: {}".format(cmd))
                 cprint("[IPAudio] Volume level: {} = {}x".format(config.plugins.IPAudio.volLevel.value, volume))
-            
+
             self.runCmd(cmd)
+            # NEW: Check bitrate after starting audio
+            # Wait 2 seconds for stream to stabilize, then check bitrate
+            self.currentBitrate = None
+            self.bitrateCheckTimer.start(2000, True)  # Single shot after 2 seconds
         else:
             self.session.open(MessageBox, _("Cannot play url, player is missing !!"), MessageBox.TYPE_ERROR, timeout=5)
 
@@ -1236,7 +1437,11 @@ class IPAudioScreen(Screen):
         # Stop status monitoring
         if self.statusTimer.isActive():
             self.statusTimer.stop()
+        # NEW: Stop bitrate check
+        if self.bitrateCheckTimer.isActive():
+            self.bitrateCheckTimer.stop()
         
+        self.currentBitrate = None  # Clear bitrate        
         # Kill audio process if running - aggressive approach
         if self.audio_process:
             try:
@@ -1363,6 +1568,10 @@ class IPAudioScreen(Screen):
 
     def audioDelayUp(self):
         """Increase audio delay by 1 second"""
+        # Safety check
+        if config.plugins.IPAudio.audioDelay.value is None:
+            config.plugins.IPAudio.audioDelay.value = 0
+        
         if config.plugins.IPAudio.audioDelay.value < 60:  # Max 60 seconds
             config.plugins.IPAudio.audioDelay.value += 1  # Add 1 second
             config.plugins.IPAudio.audioDelay.save()
@@ -1374,6 +1583,10 @@ class IPAudioScreen(Screen):
 
     def audioDelayDown(self):
         """Decrease audio delay by 1 second"""
+        # Safety check
+        if config.plugins.IPAudio.audioDelay.value is None:
+            config.plugins.IPAudio.audioDelay.value = 0
+        
         if config.plugins.IPAudio.audioDelay.value > -10:  # Min -10 seconds
             config.plugins.IPAudio.audioDelay.value -= 1  # Subtract 1 second
             config.plugins.IPAudio.audioDelay.save()
@@ -1507,6 +1720,8 @@ class IPAudioScreen(Screen):
         if self.statusTimer.isActive():  # ADD THIS
             self.statusTimer.stop()
         
+        if self.bitrateCheckTimer.isActive():  # NEW
+            self.bitrateCheckTimer.stop()        
         # Just close the plugin GUI - audio continues
         if ret and not self.timeShiftTimer.isActive():
             self.close()

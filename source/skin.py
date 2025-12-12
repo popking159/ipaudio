@@ -59,7 +59,7 @@ def getSkinFHD(color_scheme):
         <widget name="title" position="680,20" size="180,50" font="Regular;22" foregroundColor="{primary}" backgroundColor="{bg}" halign="center" valign="center" transparent="0" />
         
         <!-- Header -->
-        <widget name="server" position="20,20" size="640,50" font="Regular;32" foregroundColor="#000000" backgroundColor="{primary}" halign="center" valign="center" transparent="0" />
+        <widget name="server" position="20,20" size="460,50" font="Regular;32" foregroundColor="#000000" backgroundColor="{primary}" halign="center" valign="center" transparent="0" />
         
         <!-- Info bar -->
         <widget name="sync" position="20,85" size="300,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="{bg}" halign="left" transparent="0" />
@@ -67,7 +67,7 @@ def getSkinFHD(color_scheme):
         <widget name="network_status" position="660,85" size="200,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="{bg}" halign="left" transparent="0" />
         
         <!-- Countdown Display (centered, large font) -->
-        <widget name="countdown" position="460,24" size="200,40" font="Regular;28" foregroundColor="#000000" backgroundColor="{primary}" halign="center" valign="center" transparent="0" zPosition="100" />
+        <widget name="countdown" position="478,20" size="200,50" font="Regular;28" foregroundColor="#000000" backgroundColor="{primary}" halign="center" valign="center" transparent="0" zPosition="100" />
         
         <!-- Channel List (840px width, 500px height = 10 items x 50px) -->
         <widget name="list" position="20,140" size="840,500" backgroundColor="{bg}" foregroundColor="{text}" foregroundColorSelected="#000000" backgroundColorSelected="{primary}" itemHeight="50" scrollbarMode="showOnDemand" scrollbarBorderWidth="1" scrollbarBorderColor="{primary}" scrollbarBackgroundColor="#1a1a1a" scrollbarForegroundColor="{primary}" transparent="0" />

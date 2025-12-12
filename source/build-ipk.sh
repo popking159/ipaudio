@@ -11,7 +11,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 PLUGIN_NAME="enigma2-plugin-extensions-ipaudio"
-VERSION="8.01"
+VERSION="8.02"
 MAINTAINER="popking159"
 DESCRIPTION="IPAudio - Multi-format audio streaming plugin with custom playlists"
 HOMEPAGE="https://github.com/popking159/ipaudio"
