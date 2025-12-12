@@ -12,7 +12,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Version info (update these for each release)
-version="8.01"
+version="8.02"
 description="Fixed Python 3 compatibility, config corruption handling, configurable paths"
 ipk_url="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_${version}_all.ipk"
 
