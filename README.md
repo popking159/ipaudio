@@ -1,3 +1,4 @@
+![1_0_1_A_3B_800_DC00000_0_0_0_20251212180431](https://github.com/user-attachments/assets/2789f97c-0f3c-4c48-b9a6-6f1425c29421)
 ![1_0_1_A3_10_3_130000_0_0_0_20251210050121](https://github.com/user-attachments/assets/f69cf4ab-4d76-4518-8100-c14f01f3e891)
 ![1_0_1_A3_10_3_130000_0_0_0_20251210050145](https://github.com/user-attachments/assets/982b001b-21fb-43c0-b811-9339a6cda485)
 ![1_0_1_A3_10_3_130000_0_0_0_20251210050200](https://github.com/user-attachments/assets/57ea6e26-07f2-489c-a063-02954ddb5944)
@@ -34,6 +35,8 @@
 
 📺 **Channel Features**
 - Picon support
+- Picon Converter "Grid To Simple and vice versa"
+- Grid list
 - Network status monitoring
 - Multiple stream formats
 - Custom external links
