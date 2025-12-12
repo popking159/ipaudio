@@ -6,6 +6,7 @@ from Components.Button import Button
 from Screens.MessageBox import MessageBox
 from Components.MenuList import MenuList
 from Tools.BoundFunction import boundFunction
+from Components.Pixmap import Pixmap, MovingPixmap
 from GlobalActions import globalActionMap
 try:
     from keymapparser import readKeymap
@@ -38,6 +39,8 @@ from datetime import datetime
 from .skin import *
 from sys import version_info
 from collections import OrderedDict
+from PIL import Image
+from Screens.ChoiceBox import ChoiceBox
 
 PY3 = version_info[0] == 3
 # ADD THIS LINE - Define maximum delay
@@ -81,17 +84,34 @@ config.plugins.IPAudio.equalizer = ConfigSelection(default="off", choices=[
     ("classical", _("Classical")),
     ("jazz", _("Jazz")),
 ])
-# Picon path configuration
-config.plugins.IPAudio.piconPath = ConfigSelection(default="/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/", choices=[
-    ("/usr/share/enigma2/ipaudio/picon/", _("/usr/share/enigma2/ipaudio/picon/")),
-    ("/media/hdd/ipaudio/ipaudio/picon/", _("/media/hdd/ipaudio/picon/")),
-    ("/media/usb/ipaudio/ipudio/picon/", _("/media/usb/ipaudio/picon/")),
-    ("/media/mmc/ipaudio/picon/", _("/media/mmc/ipaudio/picon/")),
-    ("/media/sdcard/ipaudio/picon/", _("/media/sdcard/ipaaudio/picon/")),
-    ("/media/sda1/ipaudio/picon/", _("/media/sda1/ipaudio/picon/")),
-    ("/etc/enigma2/ipaudio/picon/", _("/etc/enigma2/ipaudio/picon/")),
-    ("/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/", _("Plugin Folder"))
-])
+# Picon path options - Simple List View
+PICON_PATH_SIMPLE_CHOICES = [
+    ("/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/simple/", _("Plugin Default (Simple)")),
+    ("/usr/share/enigma2/picon/", _("System Picons (/usr/share/enigma2/picon/)")),
+    ("/media/usb/picons/simple/", _("USB - Simple")),
+    ("/media/hdd/picons/simple/", _("HDD - Simple")),
+    ("/etc/enigma2/picons/simple/", _("Enigma2 Config - Simple")),
+]
+
+# Picon path options - Grid View
+PICON_PATH_GRID_CHOICES = [
+    ("/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/grid/", _("Plugin Default (Grid)")),
+    ("/usr/share/enigma2/picon/", _("System Picons (/usr/share/enigma2/picon/)")),
+    ("/media/usb/picons/grid/", _("USB - Grid")),
+    ("/media/hdd/picons/grid/", _("HDD - Grid")),
+    ("/etc/enigma2/picons/grid/", _("Enigma2 Config - Grid")),
+]
+
+# Replace ConfigText with ConfigSelection:
+config.plugins.IPAudio.piconPathSimple = ConfigSelection(
+    default="/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/simple/",
+    choices=PICON_PATH_SIMPLE_CHOICES
+)
+
+config.plugins.IPAudio.piconPathGrid = ConfigSelection(
+    default="/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/grid/",
+    choices=PICON_PATH_GRID_CHOICES
+)
 # Settings directory configuration
 config.plugins.IPAudio.settingsPath = ConfigSelection(default="/etc/enigma2/ipaudio/", choices=[
     ("/etc/enigma2/ipaudio/", _("/etc/enigma2/ipaudio/")),
@@ -102,6 +122,38 @@ config.plugins.IPAudio.settingsPath = ConfigSelection(default="/etc/enigma2/ipau
     ("/media/sda1/ipaudio/", _("/media/sda1/ipaudio/")),
     ("/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/settings/", _("Plugin Folder"))
 ])
+# View mode configuration
+config.plugins.IPAudio.viewMode = ConfigSelection(default="list", choices=[
+    ("list", _("List View")),
+    ("grid", _("Grid View"))
+])
+
+# After config definitions, add migration code:
+
+# Migrate old single piconPath to new separate paths
+if hasattr(config.plugins.IPAudio, 'piconPath'):
+    # Old config exists, migrate it
+    old_path = config.plugins.IPAudio.piconPath.value
+    
+    # Set both new paths to old path initially
+    if not config.plugins.IPAudio.piconPathSimple.value or config.plugins.IPAudio.piconPathSimple.value == "/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/simple/":
+        # Check if old path has a 'simple' subfolder
+        if os.path.exists(os.path.join(old_path, 'simple')):
+            config.plugins.IPAudio.piconPathSimple.value = os.path.join(old_path, 'simple/')
+        else:
+            config.plugins.IPAudio.piconPathSimple.value = old_path
+        config.plugins.IPAudio.piconPathSimple.save()
+    
+    if not config.plugins.IPAudio.piconPathGrid.value or config.plugins.IPAudio.piconPathGrid.value == "/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/grid/":
+        # Check if old path has a 'grid' subfolder
+        if os.path.exists(os.path.join(old_path, 'grid')):
+            config.plugins.IPAudio.piconPathGrid.value = os.path.join(old_path, 'grid/')
+        else:
+            config.plugins.IPAudio.piconPathGrid.value = old_path
+        config.plugins.IPAudio.piconPathGrid.save()
+    
+    cprint("[IPAudio] Migrated old piconPath to separate simple/grid paths")
+
 def validateConfigValues():
     """Ensure all config values are valid on startup"""
     if config.plugins.IPAudio.tsDelay.value is None:
@@ -206,11 +258,13 @@ def getversioninfo():
 Ver = getversioninfo()
 
 def getPiconPath(serviceName):
-    """Find picon for service name"""
-    # Use configurable picon path plus plugin default
+    """Find picon for service name - SIMPLE LIST VIEW"""
+    # Use configurable picon path plus plugin defaults
     picon_paths = [
-        config.plugins.IPAudio.piconPath.value,  # User configured path
-        '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/'  # Plugin default
+        config.plugins.IPAudio.piconPathSimple.value,  # User configured simple path
+        '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/simple/',  # Plugin simple picons
+        '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/',  # Fallback to main picons folder
+        '/usr/share/enigma2/picon/'  # System picons as last resort
     ]
     
     # Clean service name for picon filename
@@ -218,7 +272,7 @@ def getPiconPath(serviceName):
     clean_name = ''.join(c for c in clean_name if c.isalnum() or c == '_')
     
     for path in picon_paths:
-        if os.path.exists(path):
+        if path and os.path.exists(path):
             # Try exact match
             picon_file = os.path.join(path, clean_name + '.png')
             if os.path.exists(picon_file):
@@ -232,8 +286,44 @@ def getPiconPath(serviceName):
             except:
                 pass
     
-    # Return default picon if not found
+    # Return default simple picon if not found
     default_picon = '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/default_picon.png'
+    if os.path.exists(default_picon):
+        return default_picon
+    
+    return None
+
+def getPiconPathGrid(serviceName):
+    """Find picon for service name - GRID VIEW (larger picons)"""
+    # Use configurable picon path plus plugin defaults
+    picon_paths = [
+        config.plugins.IPAudio.piconPathGrid.value,  # User configured grid path
+        '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/grid/',  # Plugin grid picons
+        '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/',  # Fallback to main picons folder
+        '/usr/share/enigma2/picon/'  # System picons as last resort
+    ]
+    
+    # Clean service name for picon filename
+    clean_name = serviceName.lower().replace(' ', '_').replace('+', 'plus')
+    clean_name = ''.join(c for c in clean_name if c.isalnum() or c == '_')
+    
+    for path in picon_paths:
+        if path and os.path.exists(path):
+            # Try exact match
+            picon_file = os.path.join(path, clean_name + '.png')
+            if os.path.exists(picon_file):
+                return picon_file
+            
+            # Try finding partial match
+            try:
+                for filename in os.listdir(path):
+                    if clean_name in filename.lower() and filename.endswith('.png'):
+                        return os.path.join(path, filename)
+            except:
+                pass
+    
+    # Return default grid picon if not found
+    default_picon = '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/default_grid_picon.png'
     if os.path.exists(default_picon):
         return default_picon
     
@@ -369,6 +459,28 @@ def getAudioBitrate(url):
     
     return None  # Unknown bitrate
 
+def getGridPositions(resolution="FHD"):
+    """Get grid positions for picons - 5 columns x 3 rows = 15 items"""
+    if resolution == "FHD":
+        # FHD: 1920x1080
+        positions = [
+            # Row 1
+            (100, 180), (420, 180), (740, 180), (1060, 180), (1380, 180),
+            # Row 2
+            (100, 440), (420, 440), (740, 440), (1060, 440), (1380, 440),
+            # Row 3
+            (100, 700), (420, 700), (740, 700), (1060, 700), (1380, 700)
+        ]
+    else:  # HD: 1280x720
+        positions = [
+            # Row 1 (y=80)
+            (30, 80), (245, 80), (460, 80), (675, 80), (890, 80),
+            # Row 2 (y=260)
+            (30, 260), (245, 260), (460, 260), (675, 260), (890, 260),
+            # Row 3 (y=440)
+            (30, 440), (245, 440), (460, 440), (675, 440), (890, 440)
+        ]
+    return positions
 
 def isMutable():
     if fileExists('/proc/stb/info/boxtype') and open('/proc/stb/info/boxtype').read().strip() in ('sf8008', 'sf8008m', 'viper4kv20', 'beyonwizv2', 'ustym4kpro', 'gbtrio4k', 'spider-x',):
@@ -387,12 +499,218 @@ def isHD():
     desktopSize = getDesktopSize()
     return desktopSize[0] == 1280
 
+def getPiconBasePath(view_mode="simple"):
+    """Get the actual picon base path based on selection"""
+    if view_mode == "simple":
+        selection = config.plugins.IPAudio.piconPathSimpleSelect.value
+        
+        if selection == "plugin_default":
+            return "/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/simple/"
+        elif selection == "system":
+            return "/usr/share/enigma2/picon/"
+        elif selection == "usb":
+            return "/media/usb/picons/simple/"
+        elif selection == "hdd":
+            return "/media/hdd/picons/simple/"
+        elif selection == "custom":
+            return config.plugins.IPAudio.piconPathSimpleCustom.value
+        else:
+            return "/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/simple/"
+    
+    else:  # grid
+        selection = config.plugins.IPAudio.piconPathGridSelect.value
+        
+        if selection == "plugin_default":
+            return "/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/grid/"
+        elif selection == "system":
+            return "/usr/share/enigma2/picon/"
+        elif selection == "usb":
+            return "/media/usb/picons/grid/"
+        elif selection == "hdd":
+            return "/media/hdd/picons/grid/"
+        elif selection == "custom":
+            return config.plugins.IPAudio.piconPathGridCustom.value
+        else:
+            return "/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/grid/"
+
+class IPAudioPiconConverter(Screen):
+    """Convert picons between simple and grid sizes"""
+    
+    def __init__(self, session, conversion_type):
+        Screen.__init__(self, session)
+        self.session = session
+        self.conversion_type = conversion_type
+        
+        # Simple skin for processing screen
+        self.skin = """
+            <screen name="IPAudioPiconConverter" position="center,center" size="600,400" title="Converting Picons...">
+                <widget name="status" position="20,20" size="560,360" font="Regular;22" halign="center" valign="center" transparent="1"/>
+            </screen>
+        """
+        
+        self["status"] = Label(_("Converting picons, please wait..."))
+        
+        self["actions"] = ActionMap(["OkCancelActions"],
+        {
+            "ok": self.close,
+            "cancel": self.close,
+        }, -2)
+        
+        # Determine source and destination
+        if conversion_type == "simple_to_grid":
+            self.source_path = config.plugins.IPAudio.piconPathSimple.value
+            self.dest_path = config.plugins.IPAudio.piconPathGrid.value
+            self.source_size = (110, 56)
+            self.dest_size = (270, 200) if not isHD() else (190, 130)
+            self.title_text = "Converting Simple → Grid Picons"
+        else:  # grid_to_simple
+            self.source_path = config.plugins.IPAudio.piconPathGrid.value
+            self.dest_path = config.plugins.IPAudio.piconPathSimple.value
+            self.source_size = (270, 200) if not isHD() else (190, 130)
+            self.dest_size = (110, 56)
+            self.title_text = "Converting Grid → Simple Picons"
+        
+        # Start conversion after screen is shown
+        self.onLayoutFinish.append(self.startConversion)
+    
+    def startConversion(self):
+        """Start the conversion process"""
+        # Check PIL first
+        try:
+            from PIL import Image
+        except ImportError:
+            self["status"].setText(
+                _("ERROR: Python PIL/Pillow not found!\n\n"
+                  "Install with:\n"
+                  "opkg update && opkg install python3-pillow")
+            )
+            return
+        
+        # Validate paths
+        if self.source_path == self.dest_path:
+            self["status"].setText(
+                _("ERROR: Source and destination are the same!\n\n"
+                  "Configure different paths in settings.")
+            )
+            return
+        
+        if not os.path.exists(self.source_path):
+            self["status"].setText(
+                _("ERROR: Source directory not found:\n{}").format(self.source_path)
+            )
+            return
+        
+        # Get picon files
+        try:
+            picon_files = [f for f in os.listdir(self.source_path) if f.lower().endswith('.png')]
+        except Exception as e:
+            self["status"].setText(
+                _("ERROR: Cannot read source directory:\n{}\n\n{}").format(self.source_path, str(e))
+            )
+            return
+        
+        if len(picon_files) == 0:
+            self["status"].setText(
+                _("No PNG picons found in:\n{}").format(self.source_path)
+            )
+            return
+        
+        # Create destination directory
+        if not os.path.exists(self.dest_path):
+            try:
+                os.makedirs(self.dest_path)
+            except Exception as e:
+                self["status"].setText(
+                    _("ERROR: Cannot create destination:\n{}\n\n{}").format(self.dest_path, str(e))
+                )
+                return
+        
+        # Update status
+        self["status"].setText(
+            _("Converting {} picons...\n\n"
+              "From: {}x{}\n"
+              "To: {}x{}\n\n"
+              "Please wait...").format(
+                len(picon_files),
+                self.source_size[0], self.source_size[1],
+                self.dest_size[0], self.dest_size[1]
+            )
+        )
+        
+        # Do conversion
+        self.convertPicons(picon_files)
+    
+    def convertPicons(self, picon_files):
+        """Convert the picons"""
+        from PIL import Image
+        
+        success_count = 0
+        fail_count = 0
+        
+        for picon_file in picon_files:
+            source_file = os.path.join(self.source_path, picon_file)
+            dest_file = os.path.join(self.dest_path, picon_file)
+            
+            try:
+                # Open and convert image
+                img = Image.open(source_file)
+                
+                # Handle transparency
+                if img.mode in ('RGBA', 'LA', 'P'):
+                    background = Image.new('RGB', img.size, (255, 255, 255))
+                    if img.mode == 'P':
+                        img = img.convert('RGBA')
+                    background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                    img = background
+                elif img.mode != 'RGB':
+                    img = img.convert('RGB')
+                
+                # Resize
+                img_resized = img.resize(self.dest_size, Image.LANCZOS)
+                
+                # Save
+                img_resized.save(dest_file, 'PNG', optimize=True)
+                
+                success_count += 1
+                
+            except Exception as e:
+                cprint("[IPAudio] Error converting {}: {}".format(picon_file, str(e)))
+                fail_count += 1
+        
+        # Show results
+        if self.conversion_type == "simple_to_grid":
+            conversion_text = "Simple → Grid\n({}x{} → {}x{})".format(
+                self.source_size[0], self.source_size[1],
+                self.dest_size[0], self.dest_size[1]
+            )
+        else:
+            conversion_text = "Grid → Simple\n({}x{} → {}x{})".format(
+                self.source_size[0], self.source_size[1],
+                self.dest_size[0], self.dest_size[1]
+            )
+        
+        result_text = _(
+            "Conversion Complete!\n\n"
+            "{}\n\n"
+            "✓ Success: {}\n"
+            "✗ Failed: {}\n"
+            "Total: {}\n\n"
+            "Press OK to close"
+        ).format(
+            conversion_text,
+            success_count,
+            fail_count,
+            len(picon_files)
+        )
+        
+        self["status"].setText(result_text)
+
 class IPAudioSetup(Screen, ConfigListScreen):
     def __init__(self, session):
         Screen.__init__(self, session)
         self.currentSkin = config.plugins.IPAudio.skin.value
         
-        # REPLACE THIS SECTION:
+        # Load appropriate skin
         if isHD():
             if config.plugins.IPAudio.skin.value == 'orange':
                 self.skin = SKIN_IPAudioSetup_ORANGE_HD
@@ -416,33 +734,91 @@ class IPAudioSetup(Screen, ConfigListScreen):
         self.onChangedEntry = []
         self.list = []
         ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
+        
+        # FIXED: Use separate ActionMaps
         self["actions"] = ActionMap(["SetupActions"],
             {
                 "cancel": self.keyCancel,
                 "save": self.apply,
                 "ok": self.apply,
             }, -2)
-        # ADD THESE LINES FOR BUTTONS:
+        
+        # Add ColorActions for blue button
+        self["colorActions"] = ActionMap(["ColorActions"],
+            {
+                "blue": self.openPiconConverter,
+            }, -2)
+        
         self["key_green"] = StaticText(_("Save"))
         self["key_red"] = StaticText(_("Cancel"))
+        self["key_blue"] = StaticText(_("Convert Picons"))
+        
         self.configChanged = False
         self.createSetup()
 
+    def openPiconConverter(self):
+        """Open picon converter choice menu"""
+        choices = [
+            (_("Convert Simple → Grid (110x56 → 270x200)"), "simple_to_grid"),
+            (_("Convert Grid → Simple (270x200 → 110x56)"), "grid_to_simple"),
+        ]
+        
+        self.session.openWithCallback(
+            self.piconConverterCallback,
+            ChoiceBox,
+            title=_("Select Picon Conversion Type"),
+            list=choices
+        )
+    
+    def piconConverterCallback(self, choice):
+        """Handle picon converter choice"""
+        if choice:
+            conversion_type = choice[1]
+            
+            # Check if PIL is available
+            try:
+                from PIL import Image
+                # Open converter
+                self.session.open(IPAudioPiconConverter, conversion_type)
+            except ImportError:
+                self.session.open(MessageBox, 
+                    _("Python PIL/Pillow library not found!\n\n"
+                      "Install it with:\n"
+                      "opkg update && opkg install python3-pillow\n\n"
+                      "Or if using Python 2:\n"
+                      "opkg update && opkg install python-imaging"), 
+                    MessageBox.TYPE_ERROR, timeout=15)
+
     def createSetup(self):
+        """Create settings menu with dynamic picon path based on view mode"""
         self.list = [getConfigListEntry(_("Player"), config.plugins.IPAudio.player)]
+        
         if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
             self.list.append(getConfigListEntry(_("Sync Audio using"), config.plugins.IPAudio.sync))
-            self.list.append(getConfigListEntry(_("Audio Equalizer"), config.plugins.IPAudio.equalizer))  # NEW
+        
+        self.list.append(getConfigListEntry(_("Audio Equalizer"), config.plugins.IPAudio.equalizer))
         self.list.append(getConfigListEntry(_("External links volume level"), config.plugins.IPAudio.volLevel))
         self.list.append(getConfigListEntry(_("Keep original channel audio"), config.plugins.IPAudio.keepaudio))
         self.list.append(getConfigListEntry(_("Video Delay"), config.plugins.IPAudio.tsDelay))
         self.list.append(getConfigListEntry(_("Audio Delay"), config.plugins.IPAudio.audioDelay))
-        self.list.append(getConfigListEntry(_("Picons Folder"), config.plugins.IPAudio.piconPath))
+        
+        # View mode selection
+        self.list.append(getConfigListEntry(_("View Mode"), config.plugins.IPAudio.viewMode))
+        
+        # Show picon path based on current view mode
+        if config.plugins.IPAudio.viewMode.value == "grid":
+            self.list.append(getConfigListEntry(_("Grid Picons Folder (270x200)"), config.plugins.IPAudio.piconPathGrid))
+        else:
+            self.list.append(getConfigListEntry(_("List Picons Folder (110x56)"), config.plugins.IPAudio.piconPathSimple))
+        
+        # Settings folder
         self.list.append(getConfigListEntry(_("Settings Folder"), config.plugins.IPAudio.settingsPath))
+        
         self.list.append(getConfigListEntry(_("Remove/Reset Playlist"), config.plugins.IPAudio.playlist))
         self.list.append(getConfigListEntry(_("Enable/Disable online update"), config.plugins.IPAudio.update))
         self.list.append(getConfigListEntry(_("Show IPAudio in main menu"), config.plugins.IPAudio.mainmenu))
         self.list.append(getConfigListEntry(_("Select Your IPAudio Skin"), config.plugins.IPAudio.skin))
+        
         self["config"].list = self.list
         self["config"].setList(self.list)
 
@@ -451,10 +827,12 @@ class IPAudioSetup(Screen, ConfigListScreen):
         if current[1] == config.plugins.IPAudio.playlist:
             self.session.open(IPAudioPlaylist)
         else:
-            # Check if paths changed
-            old_picon_path = config.plugins.IPAudio.piconPath.value
+            # Get old values before saving
             old_settings_path = config.plugins.IPAudio.settingsPath.value
+            old_picon_simple = config.plugins.IPAudio.piconPathSimple.value
+            old_picon_grid = config.plugins.IPAudio.piconPathGrid.value
             
+            # Save all settings
             for x in self["config"].list:
                 if len(x) > 1:
                     x[1].save()
@@ -462,25 +840,51 @@ class IPAudioSetup(Screen, ConfigListScreen):
             
             # Create directories if they don't exist
             new_settings_path = config.plugins.IPAudio.settingsPath.value
-            new_picon_path = config.plugins.IPAudio.piconPath.value
             
+            # Create settings directory
             if not os.path.exists(new_settings_path):
                 try:
                     os.makedirs(new_settings_path)
-                    self.session.open(MessageBox, _("Settings folder created: {}".format(new_settings_path)), MessageBox.TYPE_INFO, timeout=3)
-                except:
-                    self.session.open(MessageBox, _("Failed to create settings folder: {}".format(new_settings_path)), MessageBox.TYPE_ERROR, timeout=5)
+                    self.session.open(MessageBox, _("Settings folder created: {}").format(new_settings_path), MessageBox.TYPE_INFO, timeout=3)
+                except Exception as e:
+                    self.session.open(MessageBox, _("Failed to create settings folder: {}\nError: {}").format(new_settings_path, str(e)), MessageBox.TYPE_ERROR, timeout=5)
             
+            # Check picon folders based on view mode
+            if config.plugins.IPAudio.viewMode.value == "grid":
+                new_picon_path = config.plugins.IPAudio.piconPathGrid.value
+                picon_type = "Grid (270x200)"
+            else:
+                new_picon_path = config.plugins.IPAudio.piconPathSimple.value
+                picon_type = "List (110x56)"
+            
+            # Create picon directory if it doesn't exist
             if not os.path.exists(new_picon_path):
-                self.session.open(MessageBox, _("Picon folder does not exist: {}\nPlease create it manually.".format(new_picon_path)), MessageBox.TYPE_WARNING, timeout=5)
+                try:
+                    os.makedirs(new_picon_path)
+                    self.session.open(MessageBox, _("{} picon folder created: {}").format(picon_type, new_picon_path), MessageBox.TYPE_INFO, timeout=5)
+                except Exception as e:
+                    self.session.open(MessageBox, _("{} picon folder does not exist: {}\nPlease create it manually.\nError: {}").format(picon_type, new_picon_path, str(e)), MessageBox.TYPE_WARNING, timeout=8)
             
             # Check if skin changed
             if self.currentSkin != config.plugins.IPAudio.skin.value:
                 self.session.open(MessageBox, _("Skin changed! Please restart IPAudio plugin for changes to take effect."), MessageBox.TYPE_INFO, timeout=5)
             
-            # Check if paths changed
+            # Check if settings path changed
             if old_settings_path != new_settings_path:
-                self.session.open(MessageBox, _("Settings folder changed! Existing playlists and delays in old location will not be moved automatically."), MessageBox.TYPE_INFO, timeout=8)
+                self.session.open(MessageBox, _("Settings folder changed!\nOld: {}\nNew: {}\n\nExisting playlists and delays in old location will not be moved automatically.").format(old_settings_path, new_settings_path), MessageBox.TYPE_INFO, timeout=10)
+            
+            # Check if picon paths changed
+            path_changed = False
+            if old_picon_simple != config.plugins.IPAudio.piconPathSimple.value:
+                path_changed = True
+            if old_picon_grid != config.plugins.IPAudio.piconPathGrid.value:
+                path_changed = True
+            
+            if path_changed:
+                self.session.open(MessageBox, _("Picon folder paths updated:\n\nList view: {}\nGrid view: {}").format(
+                    config.plugins.IPAudio.piconPathSimple.value,
+                    config.plugins.IPAudio.piconPathGrid.value
+                ), MessageBox.TYPE_INFO, timeout=8)
             
             # Close only settings screen, not the main plugin
             self.close(False)
@@ -493,13 +897,21 @@ class IPAudioSetup(Screen, ConfigListScreen):
         self.close(False)
 
     def changedEntry(self):
-        # This is called when any setting changes
+        """Called when any setting changes"""
         for x in self.onChangedEntry:
             x()
-        # Rebuild the list when player changes to show/hide sync option
+        
+        # Get current item
         current = self["config"].getCurrent()
-        if current[1] == config.plugins.IPAudio.player:
-            self.createSetup()
+        
+        # Rebuild the list when player or view mode changes
+        if current and len(current) > 1:
+            if current[1] == config.plugins.IPAudio.player:
+                # Player changed - rebuild to show/hide sync option
+                self.createSetup()
+            elif current[1] == config.plugins.IPAudio.viewMode:
+                # View mode changed - rebuild to show correct picon path
+                self.createSetup()
 
 class IPAudioScreen(Screen):
 
@@ -1728,6 +2140,1008 @@ class IPAudioScreen(Screen):
         else:
             self.close()
 
+class IPAudioScreenGrid(Screen):
+    """Grid view for IPAudio - 5x3 grid with picons"""
+    
+    def __init__(self, session):
+        Screen.__init__(self, session)
+        self.session = session
+        
+        # Load appropriate skin
+        if isHD():
+            if config.plugins.IPAudio.skin.value == 'orange':
+                self.skin = SKIN_IPAudioScreenGrid_ORANGE_HD
+            elif config.plugins.IPAudio.skin.value == 'teal':
+                self.skin = SKIN_IPAudioScreenGrid_TEAL_HD
+            elif config.plugins.IPAudio.skin.value == 'lime':
+                self.skin = SKIN_IPAudioScreenGrid_LIME_HD
+            else:
+                self.skin = SKIN_IPAudioScreenGrid_ORANGE_HD
+        else:
+            if config.plugins.IPAudio.skin.value == 'orange':
+                self.skin = SKIN_IPAudioScreenGrid_ORANGE_FHD
+            elif config.plugins.IPAudio.skin.value == 'teal':
+                self.skin = SKIN_IPAudioScreenGrid_TEAL_FHD
+            elif config.plugins.IPAudio.skin.value == 'lime':
+                self.skin = SKIN_IPAudioScreenGrid_LIME_FHD
+            else:
+                self.skin = SKIN_IPAudioScreenGrid_ORANGE_FHD
+        
+        self.choices = list(self.getHosts())
+        self.plIndex = 0
+        
+        # Info labels
+        self['title'] = Label()
+        self['title'].setText('IPAudio v{}'.format(Ver))
+        self['server'] = Label()
+        self['sync'] = Label()
+        
+        # Load video delay
+        current_service = self.session.nav.getCurrentlyPlayingServiceReference()
+        current_delay = config.plugins.IPAudio.tsDelay.value
+        loaded_delay = getVideoDelayForChannel(current_service, fallback=current_delay)
+        config.plugins.IPAudio.tsDelay.value = loaded_delay
+        self['sync'].setText('Video Delay: {}s'.format(config.plugins.IPAudio.tsDelay.value))
+        
+        self['audio_delay'] = Label()
+        self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
+        self['network_status'] = Label()
+        self['network_status'].setText('')
+        self['countdown'] = Label()
+        self['countdown'].setText('')
+        
+        # Buttons
+        self["key_red"] = Button(_("Exit"))
+        self["key_green"] = Button(_("Reset Audio"))
+        self["key_yellow"] = Button(_("Help"))
+        self["key_blue"] = Button(_("Info"))
+        self["key_menu"] = Button(_("Menu"))
+        
+        # Grid widgets - 15 picons and labels
+        self.ITEMS_PER_PAGE = 15
+        for i in range(1, self.ITEMS_PER_PAGE + 1):
+            self['pixmap_{}'.format(i)] = Pixmap()
+            self['label_{}'.format(i)] = Label()
+        
+        # Selection frame
+        self['frame'] = MovingPixmap()
+        
+        # Grid positions
+        if isHD():
+            self.positions = getGridPositions("HD")
+            self.frame_offset = (-5, -5)  # Frame border offset
+        else:
+            self.positions = getGridPositions("FHD")
+            self.frame_offset = (-5, -5)
+        
+        # Actions
+        self["IPAudioAction"] = ActionMap(["IPAudioActions", "ColorActions"],
+        {
+            "ok": self.ok,
+            "ok_long": boundFunction(self.ok, long=True),
+            "cancel": self.exit,
+            "menu": self.openConfig,
+            "red": self.exit,
+            "green": self.resetAudio,
+            "yellow": self.showHelp,
+            "blue": self.showInfo,
+            "right": self.gridRight,
+            "left": self.gridLeft,
+            "up": self.gridUp,
+            "down": self.gridDown,
+            "pause": self.pause,
+            "pauseAudio": self.pauseAudioProcess,
+            "delayUP": self.delayUP,
+            "delayDown": self.delayDown,
+            "audioDelayDown": self.audioDelayDown,
+            "audioDelayReset": self.audioDelayReset,
+            "audioDelayUp": self.audioDelayUp,
+            "clearVideoDelay": self.clearVideoDelay,
+            "nextBouquet": self.nextPlaylist,
+            "prevBouquet": self.prevPlaylist,
+        }, -1)
+        
+        # Initialize variables
+        self.alsa = None
+        self.audioPaused = False
+        self.audio_process = None
+        self.radioList = []
+        self.guide = dict()
+        self.currentDelaySeconds = 0
+        self.targetDelaySeconds = 0
+        self.countdownValue = 0
+        self.currentBitrate = None
+        
+        # Grid navigation
+        self.index = 0  # Current selected index in full list
+        self.page = 0   # Current page number
+        self.maxPages = 0
+        
+        if HAVE_EALSA:
+            self.alsa = eAlsaOutput.getInstance()
+        
+        # Initialize timers (same as list view)
+        self.timeShiftTimer = eTimer()
+        self.guideTimer = eTimer()
+        self.statusTimer = eTimer()
+        self.countdownTimer = eTimer()
+        self.bitrateCheckTimer = eTimer()
+        
+        try:
+            self.timeShiftTimer.callback.append(self.unpauseService)
+            self.guideTimer.callback.append(self.getGuide)
+            self.statusTimer.callback.append(self.checkNetworkStatus)
+            self.countdownTimer.callback.append(self.updateCountdown)
+            self.bitrateCheckTimer.callback.append(self.checkAudioBitrate)
+        except:
+            self.timeShiftTimer_conn = self.timeShiftTimer.timeout.connect(self.unpauseService)
+            self.guideTimer_conn = self.guideTimer.timeout.connect(self.getGuide)
+            self.statusTimer_conn = self.statusTimer.timeout.connect(self.checkNetworkStatus)
+            self.countdownTimer_conn = self.countdownTimer.timeout.connect(self.updateCountdown)
+            self.bitrateCheckTimer_conn = self.bitrateCheckTimer.timeout.connect(self.checkAudioBitrate)
+        
+        self.lastservice = self.session.nav.getCurrentlyPlayingServiceReference()
+        
+        if config.plugins.IPAudio.update.value:
+            self.checkupdates()
+        
+        self.onLayoutFinish.append(self.getGuide)
+        self.onLayoutFinish.append(self.loadFrame)
+        self.onShown.append(self.onWindowShow)
+
+    def loadFrame(self):
+        """Load selection frame image based on skin color"""
+        # Get frame path based on selected color
+        color = config.plugins.IPAudio.skin.value  # orange, teal, or lime
+        frame_path = '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/frame_{}.png'.format(color)
+        
+        if fileExists(frame_path):
+            try:
+                self['frame'].instance.setPixmapFromFile(frame_path)
+                cprint("[IPAudio] Frame loaded from: {}".format(frame_path))
+            except Exception as e:
+                cprint("[IPAudio] Error loading frame: {}".format(str(e)))
+        else:
+            cprint("[IPAudio] Frame image not found at: {}".format(frame_path))
+    
+    def onWindowShow(self):
+        """Initialize grid on window show"""
+        self.onShown.remove(self.onWindowShow)
+        self.guideTimer.start(30000)
+        
+        # Load video delay
+        current_service = self.session.nav.getCurrentlyPlayingServiceReference()
+        current_delay = config.plugins.IPAudio.tsDelay.value
+        loaded_delay = getVideoDelayForChannel(current_service, fallback=current_delay)
+        config.plugins.IPAudio.tsDelay.value = loaded_delay
+        self['sync'].setText('Video Delay: {}s'.format(config.plugins.IPAudio.tsDelay.value))
+        
+        # Try to restore last position
+        if config.plugins.IPAudio.lastidx.value:
+            try:
+                lastplaylist, lastchannel = map(int, config.plugins.IPAudio.lastidx.value.split(','))
+                self.plIndex = lastplaylist
+                self.changePlaylist()
+                self.index = lastchannel
+                self.page = self.index // self.ITEMS_PER_PAGE
+                self.updateGrid()
+            except:
+                self.setPlaylist()
+        else:
+            self.setPlaylist()
+    
+    def updateGrid(self):
+        """Update grid display for current page"""
+        if not self.radioList:
+            # Clear all items
+            for i in range(1, self.ITEMS_PER_PAGE + 1):
+                self['pixmap_{}'.format(i)].hide()
+                self['label_{}'.format(i)].setText('')
+            return
+        
+        # Calculate page info
+        total_items = len(self.radioList)
+        self.maxPages = (total_items + self.ITEMS_PER_PAGE - 1) // self.ITEMS_PER_PAGE
+        start_idx = self.page * self.ITEMS_PER_PAGE
+        end_idx = min(start_idx + self.ITEMS_PER_PAGE, total_items)
+        
+        # Default picon path
+        default_picon = '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/default_grid_picon.png'
+        
+        # Update grid items
+        for i in range(self.ITEMS_PER_PAGE):
+            item_idx = start_idx + i
+            pixmap_widget = self['pixmap_{}'.format(i + 1)]
+            label_widget = self['label_{}'.format(i + 1)]
+            
+            if item_idx < end_idx:
+                # Show item
+                channel_name = self.radioList[item_idx][0]
+                label_widget.setText(channel_name)
+                
+                # Load picon
+                picon_path = getPiconPathGrid(channel_name)
+                if picon_path and fileExists(picon_path):
+                    pixmap_widget.instance.setPixmapFromFile(picon_path)
+                elif fileExists(default_picon):
+                    pixmap_widget.instance.setPixmapFromFile(default_picon)
+                
+                pixmap_widget.show()
+            else:
+                # Hide empty slots
+                pixmap_widget.hide()
+                label_widget.setText('')
+        
+        # Update selection frame
+        self.paintFrame()
+    
+    def paintFrame(self):
+        """Move selection frame to current index"""
+        if not self.radioList:
+            return
+        
+        # Calculate position in grid (0-14)
+        grid_pos = self.index % self.ITEMS_PER_PAGE
+        
+        # Get position from positions array
+        pos_x, pos_y = self.positions[grid_pos]
+        
+        # Move frame with offset
+        self['frame'].moveTo(pos_x + self.frame_offset[0], pos_y + self.frame_offset[1], 1)
+        self['frame'].startMoving()
+
+    def nextPlaylist(self):
+        """Switch to next playlist (Channel Up button)"""
+        self.plIndex += 1
+        if self.plIndex >= len(self.choices):
+            self.plIndex = 0
+        
+        cprint("[IPAudio] Switching to playlist: {}".format(self.choices[self.plIndex]))
+        self.changePlaylist()
+
+    def prevPlaylist(self):
+        """Switch to previous playlist (Channel Down button)"""
+        self.plIndex -= 1
+        if self.plIndex < 0:
+            self.plIndex = len(self.choices) - 1
+        
+        cprint("[IPAudio] Switching to playlist: {}".format(self.choices[self.plIndex]))
+        self.changePlaylist()
+    
+    def gridRight(self):
+        """Move selection right"""
+        if not self.radioList:
+            return
+        
+        total_items = len(self.radioList)
+        
+        # Move to next item
+        if self.index < total_items - 1:
+            self.index += 1
+            
+            # Check if we need to change page
+            new_page = self.index // self.ITEMS_PER_PAGE
+            if new_page != self.page:
+                self.page = new_page
+                self.updateGrid()
+            else:
+                self.paintFrame()
+        else:
+            # Wrap to first item
+            self.index = 0
+            self.page = 0
+            self.updateGrid()
+    
+    def gridLeft(self):
+        """Move selection left"""
+        if not self.radioList:
+            return
+        
+        # Move to previous item
+        if self.index > 0:
+            self.index -= 1
+            
+            # Check if we need to change page
+            new_page = self.index // self.ITEMS_PER_PAGE
+            if new_page != self.page:
+                self.page = new_page
+                self.updateGrid()
+            else:
+                self.paintFrame()
+        else:
+            # Wrap to last item
+            self.index = len(self.radioList) - 1
+            self.page = self.index // self.ITEMS_PER_PAGE
+            self.updateGrid()
+    
+    def gridUp(self):
+        """Move selection up (5 items up in grid)"""
+        if not self.radioList:
+            return
+        
+        total_items = len(self.radioList)
+        
+        # Move up one row (5 items)
+        new_index = self.index - 5
+        
+        if new_index >= 0:
+            self.index = new_index
+        else:
+            # Wrap to bottom, same column
+            grid_col = self.index % 5
+            last_page_items = total_items % self.ITEMS_PER_PAGE
+            if last_page_items == 0:
+                last_page_items = self.ITEMS_PER_PAGE
+            
+            # Calculate bottom position in same column
+            self.index = total_items - (5 - grid_col)
+            if self.index < 0 or self.index >= total_items:
+                self.index = total_items - 1
+        
+        # Update page if needed
+        new_page = self.index // self.ITEMS_PER_PAGE
+        if new_page != self.page:
+            self.page = new_page
+            self.updateGrid()
+        else:
+            self.paintFrame()
+    
+    def gridDown(self):
+        """Move selection down (5 items down in grid)"""
+        if not self.radioList:
+            return
+        
+        total_items = len(self.radioList)
+        
+        # Move down one row (5 items)
+        new_index = self.index + 5
+        
+        if new_index < total_items:
+            self.index = new_index
+        else:
+            # Wrap to top, same column
+            grid_col = self.index % 5
+            self.index = grid_col
+        
+        # Update page if needed
+        new_page = self.index // self.ITEMS_PER_PAGE
+        if new_page != self.page:
+            self.page = new_page
+            self.updateGrid()
+        else:
+            self.paintFrame()
+    
+    # Copy all other methods from IPAudioScreen class
+    # (getHosts, setPlaylist, changePlaylist, ok, pause, delayUP, delayDown, etc.)
+    # These are identical to list view, just navigation is different
+    
+    def getHosts(self):
+        """Get all available playlists including custom categories"""
+        hosts = resolveFilename(SCOPE_PLUGINS, "Extensions/IPAudio/hosts.json")
+        self.hosts = None
+        if fileExists(hosts):
+            hosts = open(hosts, 'r').read()
+            self.hosts = json.loads(hosts, object_pairs_hook=OrderedDict)
+            for host in self.hosts:
+                yield host
+        
+        # Add custom playlist categories
+        custom_playlists = getPlaylistFiles()
+        for playlist in custom_playlists:
+            yield playlist['name']
+    
+    def setPlaylist(self):
+        """Load and display playlist"""
+        current = self.choices[self.plIndex]
+        
+        if current in self.hosts:
+            if current in ["Anis Sport"]:
+                self.getAnisUrls()
+                self['server'].setText(str(current))
+            else:
+                list = []
+                for cmd in self.hosts[current]['cmds']:
+                    list.append([cmd.split('|')[0], cmd.split('|')[1]])
+                
+                if len(list) > 0:
+                    self.radioList = list
+                    self['server'].setText(str(current))
+                    self.index = 0
+                    self.page = 0
+                    self.updateGrid()
+                else:
+                    self.radioList = []
+                    self['server'].setText('Playlist is empty')
+        else:
+            # Custom playlist
+            category_lower = current.lower()
+            playlist_file = getPlaylistDir() + 'ipaudio_{}.json'.format(category_lower)
+            
+            if fileExists(playlist_file):
+                playlist = getPlaylist(playlist_file)
+                if playlist:
+                    list = []
+                    for channel in playlist['playlist']:
+                        try:
+                            list.append([str(channel['channel']), str(channel['url'])])
+                        except KeyError:
+                            pass
+                    
+                    if len(list) > 0:
+                        self.radioList = list
+                        self['server'].setText(current)
+                        self.index = 0
+                        self.page = 0
+                        self.updateGrid()
+                    else:
+                        self.radioList = []
+                        self['server'].setText('{} - Playlist is empty'.format(current))
+            else:
+                self.radioList = []
+                self['server'].setText('Playlist file not found')
+    
+    def changePlaylist(self):
+        """Change to next/previous playlist"""
+        if self.plIndex > len(self.choices) - 1:
+            self.plIndex = 0
+        if self.plIndex < 0:
+            self.plIndex = len(self.choices) - 1
+        
+        self.radioList = []
+        self.setPlaylist()
+    
+    # Include all other methods from IPAudioScreen:
+    # ok(), pause(), delayUP(), delayDown(), audioDelayUp(), audioDelayDown(),
+    # resetAudio(), exit(), checkNetworkStatus(), etc.
+    # Add these methods to IPAudioScreenGrid class (continued from previous)
+    
+    def ok(self, long=False):
+        """Play selected channel"""
+        # Check if there are any items in the list
+        if not hasattr(self, 'radioList') or len(self.radioList) == 0:
+            self.session.open(MessageBox, _("Playlist is empty! Please add channels first."), MessageBox.TYPE_INFO, timeout=5)
+            return
+        
+        # Check if valid selection
+        if self.index is None or self.index < 0 or self.index >= len(self.radioList):
+            self.session.open(MessageBox, _("Please select a channel first."), MessageBox.TYPE_INFO, timeout=5)
+            return
+        
+        # Determine which player to use
+        if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
+            player_check = '/usr/bin/gst-launch-1.0'
+        else:
+            player_check = '/usr/bin/ffmpeg'
+        
+        if fileExists(player_check):
+            currentAudioTrack = 0
+            if long:
+                service = self.session.nav.getCurrentService()
+                if not service.streamed():
+                    currentAudioTrack = service.audioTracks().getCurrentTrack()
+                self.url = 'http://127.0.0.1:8001/{}'.format(self.lastservice.toString())
+                config.plugins.IPAudio.lastplayed.value = "e2_service"
+            else:
+                try:
+                    self.url = self.radioList[self.index][1]
+                    config.plugins.IPAudio.lastplayed.value = self.url
+                    config.plugins.IPAudio.lastidx.value = '{},{}'.format(self.plIndex, self.index)
+                    config.plugins.IPAudio.lastidx.save()
+                    
+                    # Save last audio channel
+                    config.plugins.IPAudio.lastAudioChannel.value = self.url
+                    config.plugins.IPAudio.lastAudioChannel.save()
+                    cprint("[IPAudio] Saved last audio channel: {}".format(self.url))
+                except (IndexError, KeyError) as e:
+                    cprint("[IPAudio] Error accessing radioList: {}".format(str(e)))
+                    self.session.open(MessageBox, _("Error selecting channel."), MessageBox.TYPE_ERROR, timeout=5)
+                    return
+            
+            if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
+                # Build equalizer string
+                eq_filter = self.getEqualizerFilter()
+                
+                # Calculate volume
+                volume = config.plugins.IPAudio.volLevel.value / 50.0
+                
+                # Use the WORKING GStreamer command
+                sink = config.plugins.IPAudio.sync.value
+                cmd = 'gst-launch-1.0 -e uridecodebin uri="{}" ! audioconvert ! audioresample ! '.format(self.url)
+                
+                # Always add volume control
+                cmd += 'volume volume={} ! '.format(volume)
+                
+                # Add equalizer if enabled
+                if eq_filter:
+                    cmd += '{} ! '.format(eq_filter)
+                
+                # Add audio delay buffer if needed
+                delay_ms = config.plugins.IPAudio.audioDelay.value * 1000
+                if delay_ms != 0:
+                    delay_ns = abs(delay_ms) * 1000000
+                    if delay_ms > 0:
+                        cmd += 'audiobuffersplit output-buffer-duration={} ! '.format(delay_ns)
+                    else:
+                        cmd += 'queue max-size-buffers=1 max-size-time=1000000 ! '
+                
+                cmd += '{} sync=false'.format(sink)
+                
+                cprint("[IPAudio] GStreamer command: {}".format(cmd))
+                cprint("[IPAudio] Volume level: {} = {}x".format(config.plugins.IPAudio.volLevel.value, volume))
+            else:
+                # FFmpeg command with audio delay AND volume
+                delay_sec = config.plugins.IPAudio.audioDelay.value
+                volume = config.plugins.IPAudio.volLevel.value / 50.0
+                
+                if delay_sec > 0:
+                    delay_ms = delay_sec * 1000
+                    cmd = 'ffmpeg -i "{}" -af "adelay={}|{},volume={}" -vn -f alsa default'.format(
+                        self.url, delay_ms, delay_ms, volume)
+                elif delay_sec < 0:
+                    trim_sec = abs(delay_sec)
+                    cmd = 'ffmpeg -ss {} -i "{}" -af "volume={}" -vn -f alsa default'.format(
+                        trim_sec, self.url, volume)
+                else:
+                    cmd = 'ffmpeg -i "{}" -af "volume={}" -vn -f alsa default'.format(self.url, volume)
+                
+                if currentAudioTrack > 0:
+                    cmd = cmd.replace('-i', '-i').replace('-vn', '-map 0:a:{} -vn'.format(currentAudioTrack))
+                
+                cprint("[IPAudio] FFmpeg command: {}".format(cmd))
+                cprint("[IPAudio] Volume level: {} = {}x".format(config.plugins.IPAudio.volLevel.value, volume))
+            
+            self.runCmd(cmd)
+            
+            # Check bitrate after starting audio
+            self.currentBitrate = None
+            self.bitrateCheckTimer.start(2000, True)
+        else:
+            self.session.open(MessageBox, _("Cannot play url, player is missing !!"), MessageBox.TYPE_ERROR, timeout=5)
+    
+    def getEqualizerFilter(self):
+        """Build GStreamer equalizer filter string"""
+        eq_preset = config.plugins.IPAudio.equalizer.value
+        
+        if eq_preset == "off":
+            return ""
+        
+        # Equalizer presets (10-band equalizer)
+        presets = {
+            "bass_boost": "equalizer-10bands band0=12.0 band1=9.0 band2=7.0 band3=3.0 band4=0.0 band5=0.0 band6=0.0 band7=0.0 band8=0.0 band9=0.0",
+            "treble_boost": "equalizer-10bands band0=0.0 band1=0.0 band2=0.0 band3=0.0 band4=0.0 band5=0.0 band6=3.0 band7=7.0 band8=9.0 band9=12.0",
+            "vocal": "equalizer-10bands band0=-3.0 band1=-2.0 band2=0.0 band3=4.0 band4=5.0 band5=4.0 band6=0.0 band7=-2.0 band8=-3.0 band9=-3.0",
+            "rock": "equalizer-10bands band0=8.0 band1=6.0 band2=2.0 band3=-2.0 band4=-4.0 band5=-2.0 band6=2.0 band7=6.0 band8=8.0 band9=10.0",
+            "pop": "equalizer-10bands band0=-2.0 band1=2.0 band2=4.0 band3=6.0 band4=6.0 band5=6.0 band6=4.0 band7=2.0 band8=-2.0 band9=-2.0",
+            "classical": "equalizer-10bands band0=6.0 band1=5.0 band2=3.0 band3=0.0 band4=-2.0 band5=-2.0 band6=0.0 band7=3.0 band8=5.0 band9=6.0",
+            "jazz": "equalizer-10bands band0=4.0 band1=3.0 band2=1.0 band3=2.0 band4=-2.0 band5=-2.0 band6=0.0 band7=2.0 band8=4.0 band9=5.0"
+        }
+        
+        return presets.get(eq_preset, "")
+    
+    # Copy these methods from IPAudioScreen (identical functionality):
+    
+    def pause(self):
+        """Activate TimeShift with smart delay calculation"""
+        # COPY EXACTLY from IPAudioScreen
+        if config.plugins.IPAudio.running.value:
+            ts = self.getTimeshift()
+            if ts is None:
+                return
+            
+            self.targetDelaySeconds = config.plugins.IPAudio.tsDelay.value
+            
+            if not ts.isTimeshiftEnabled():
+                cprint("[IPAudio] Starting TimeShift with {}s delay".format(self.targetDelaySeconds))
+                ts.startTimeshift()
+                ts.activateTimeshift()
+                delay_ms = int(self.targetDelaySeconds * 1000)
+                self.timeShiftTimer.start(delay_ms, False)
+                self.startCountdown(self.targetDelaySeconds)
+                self.currentDelaySeconds = self.targetDelaySeconds
+            elif ts.isTimeshiftEnabled() and not self.timeShiftTimer.isActive():
+                delay_difference = self.targetDelaySeconds - self.currentDelaySeconds
+                
+                if abs(delay_difference) < 0.5:
+                    cprint("[IPAudio] Already at target delay {}s".format(self.targetDelaySeconds))
+                    return
+                
+                if delay_difference > 0:
+                    cprint("[IPAudio] Increasing delay by {}s (from {}s to {}s)".format(
+                        delay_difference, self.currentDelaySeconds, self.targetDelaySeconds))
+                    
+                    service = self.session.nav.getCurrentService()
+                    pauseable = service.pause()
+                    if pauseable:
+                        pauseable.pause()
+                    
+                    additional_delay_ms = int(delay_difference * 1000)
+                    self.timeShiftTimer.start(additional_delay_ms, False)
+                    self.startCountdown(delay_difference)
+                    self.currentDelaySeconds = self.targetDelaySeconds
+                else:
+                    cprint("[IPAudio] Decreasing delay to {}s (was {}s)".format(
+                        self.targetDelaySeconds, self.currentDelaySeconds))
+                    
+                    ts.stopTimeshift()
+                    ts.startTimeshift()
+                    ts.activateTimeshift()
+                    delay_ms = int(self.targetDelaySeconds * 1000)
+                    self.timeShiftTimer.start(delay_ms, False)
+                    self.startCountdown(self.targetDelaySeconds)
+                    self.currentDelaySeconds = self.targetDelaySeconds
+    
+    def delayUP(self):
+        """Increase TimeShift delay by 1 second"""
+        if config.plugins.IPAudio.tsDelay.value is None:
+            config.plugins.IPAudio.tsDelay.value = 5
+        
+        if config.plugins.IPAudio.tsDelay.value < 300:
+            config.plugins.IPAudio.tsDelay.value += 1
+            config.plugins.IPAudio.tsDelay.save()
+            self['sync'].setText('Video Delay: {}s'.format(config.plugins.IPAudio.tsDelay.value))
+            
+            current_service = self.session.nav.getCurrentlyPlayingServiceReference()
+            saveVideoDelayForChannel(current_service, config.plugins.IPAudio.tsDelay.value)
+    
+    def delayDown(self):
+        """Decrease TimeShift delay by 1 second"""
+        if config.plugins.IPAudio.tsDelay.value is None:
+            config.plugins.IPAudio.tsDelay.value = 5
+        
+        if config.plugins.IPAudio.tsDelay.value > 0:
+            config.plugins.IPAudio.tsDelay.value -= 1
+            config.plugins.IPAudio.tsDelay.save()
+            self['sync'].setText('Video Delay: {}s'.format(config.plugins.IPAudio.tsDelay.value))
+            
+            current_service = self.session.nav.getCurrentlyPlayingServiceReference()
+            saveVideoDelayForChannel(current_service, config.plugins.IPAudio.tsDelay.value)
+    
+    def audioDelayUp(self):
+        """Increase audio delay by 1 second"""
+        if config.plugins.IPAudio.audioDelay.value is None:
+            config.plugins.IPAudio.audioDelay.value = 0
+        
+        if config.plugins.IPAudio.audioDelay.value < 60:
+            config.plugins.IPAudio.audioDelay.value += 1
+            config.plugins.IPAudio.audioDelay.save()
+            self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
+            
+            if config.plugins.IPAudio.running.value:
+                self.restartAudioWithDelay()
+    
+    def audioDelayDown(self):
+        """Decrease audio delay by 1 second"""
+        if config.plugins.IPAudio.audioDelay.value is None:
+            config.plugins.IPAudio.audioDelay.value = 0
+        
+        if config.plugins.IPAudio.audioDelay.value > -10:
+            config.plugins.IPAudio.audioDelay.value -= 1
+            config.plugins.IPAudio.audioDelay.save()
+            self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
+            
+            if config.plugins.IPAudio.running.value:
+                self.restartAudioWithDelay()
+    
+    def audioDelayReset(self):
+        """Reset audio delay to 0"""
+        config.plugins.IPAudio.audioDelay.value = 0
+        config.plugins.IPAudio.audioDelay.save()
+        self['audio_delay'].setText('Audio Delay: 0s')
+        
+        if config.plugins.IPAudio.running.value:
+            self.restartAudioWithDelay()
+    
+    def restartAudioWithDelay(self):
+        """Restart audio stream with new delay setting"""
+        if hasattr(self, 'url') and self.url and config.plugins.IPAudio.running.value:
+            cprint("[IPAudio] Restarting audio with new delay: {}s".format(config.plugins.IPAudio.audioDelay.value))
+            
+            # Stop current audio
+            if self.audio_process:
+                try:
+                    self.audio_process.terminate()
+                    self.audio_process.wait(timeout=1)
+                except:
+                    pass
+                self.audio_process = None
+            
+            # Restart with ok() method
+            self.ok()
+    
+    def resetAudio(self):
+        """Reset audio playback"""
+        cprint("[IPAudio] resetAudio called")
+        
+        if self.statusTimer.isActive():
+            self.statusTimer.stop()
+        
+        if self.bitrateCheckTimer.isActive():
+            self.bitrateCheckTimer.stop()
+        
+        self.currentBitrate = None
+        
+        if self.audio_process:
+            try:
+                self.audio_process.terminate()
+                try:
+                    self.audio_process.wait(timeout=1)
+                except:
+                    self.audio_process.kill()
+            except:
+                pass
+            self.audio_process = None
+        
+        os.system("killall -9 gst-launch-1.0 ffmpeg 2>/dev/null")
+        
+        if IPAudioHandler.container.running():
+            IPAudioHandler.container.kill()
+        
+        self['network_status'].setText('')
+        
+        if not self.alsa:
+            if fileExists('/dev/dvb/adapter0/audio10') and not isMutable():
+                try:
+                    os.rename('/dev/dvb/adapter0/audio10', '/dev/dvb/adapter0/audio0')
+                except:
+                    pass
+            
+            self.session.nav.stopService()
+            self.restoreTimer = eTimer()
+            try:
+                self.restoreTimer.callback.append(self.restoreService)
+            except:
+                self.restoreTimer_conn = self.restoreTimer.timeout.connect(self.restoreService)
+            self.restoreTimer.start(100, True)
+        
+        config.plugins.IPAudio.running.value = False
+        config.plugins.IPAudio.running.save()
+    
+    def runCmd(self, cmd):
+        """Execute audio command"""
+        cprint("[IPAudio] runCmd called with: {}".format(cmd))
+        
+        if self.audio_process:
+            try:
+                self.audio_process.terminate()
+                try:
+                    self.audio_process.wait(timeout=1)
+                except:
+                    self.audio_process.kill()
+            except:
+                pass
+            self.audio_process = None
+        
+        if IPAudioHandler.container.running():
+            IPAudioHandler.container.kill()
+        
+        if self.alsa:
+            self.alsa.stop()
+            self.alsa.close()
+        else:
+            if not config.plugins.IPAudio.keepaudio.value:
+                if fileExists('/dev/dvb/adapter0/audio0') and not isMutable():
+                    self.session.nav.stopService()
+                    try:
+                        os.rename('/dev/dvb/adapter0/audio0', '/dev/dvb/adapter0/audio10')
+                    except:
+                        pass
+                    self.session.nav.playService(self.lastservice)
+        
+        try:
+            self.audio_process = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            cprint("[IPAudio] Process started with PID: {}".format(self.audio_process.pid))
+        except Exception as e:
+            cprint("[IPAudio] ERROR starting process: {}".format(str(e)))
+            self.audio_process = None
+        
+        config.plugins.IPAudio.running.value = True
+        config.plugins.IPAudio.running.save()
+        
+        if not self.statusTimer.isActive():
+            self.statusTimer.start(2000)
+    
+    def checkNetworkStatus(self):
+        """Check if audio stream is still playing with bitrate info"""
+        if self.audio_process:
+            if self.audio_process.poll() is None:
+                if self.currentBitrate is not None:
+                    self['network_status'].setText('● Playing {}kb/s'.format(self.currentBitrate))
+                else:
+                    self['network_status'].setText('● Playing')
+            else:
+                self['network_status'].setText('✗ Stopped')
+                self.audio_process = None
+                self.currentBitrate = None
+        else:
+            self['network_status'].setText('')
+            self.currentBitrate = None
+    
+    def checkAudioBitrate(self):
+        """Check audio bitrate of current stream"""
+        if hasattr(self, 'url') and self.url and config.plugins.IPAudio.running.value:
+            cprint("[IPAudio] Checking bitrate for: {}".format(self.url))
+            bitrate = getAudioBitrate(self.url)
+            
+            if bitrate:
+                self.currentBitrate = bitrate
+                cprint("[IPAudio] Detected bitrate: {} kb/s".format(bitrate))
+                if self.audio_process and self.audio_process.poll() is None:
+                    self['network_status'].setText('● Playing {}kb/s'.format(self.currentBitrate))
+            else:
+                self.currentBitrate = None
+        
+        self.bitrateCheckTimer.stop()
+    
+    # Copy remaining utility methods from IPAudioScreen:
+    # getTimeshift, unpauseService, startCountdown, updateCountdown,
+    # pauseAudioProcess, showInfo, showHelp, openConfig, exit, etc.
+    
+    def getTimeshift(self):
+        service = self.session.nav.getCurrentService()
+        return service and service.timeshift()
+    
+    def unpauseService(self):
+        self.timeShiftTimer.stop()
+        service = self.session.nav.getCurrentService()
+        pauseable = service.pause()
+        if pauseable:
+            pauseable.unpause()
+    
+    def startCountdown(self, seconds):
+        """Start countdown timer"""
+        if seconds > 0:
+            self.countdownValue = int(seconds)
+            self.countdownTimer.start(100, True)
+            self.updateCountdown()
+    
+    def updateCountdown(self):
+        """Update countdown display every second"""
+        if self.countdownValue > 0:
+            self['countdown'].setText('TimeShift: {}s'.format(self.countdownValue))
+            self.countdownValue -= 1
+            self.countdownTimer.start(1000, True)
+        else:
+            self['countdown'].setText('')
+            self.countdownTimer.stop()
+    
+    def pauseAudioProcess(self):
+        if config.plugins.IPAudio.running.value and IPAudioHandler.container.running():
+            pid = IPAudioHandler.container.getPID()
+            if not self.audioPaused:
+                cmd = "kill -STOP {}".format(pid)
+                self.audioPaused = True
+            else:
+                cmd = "kill -CONT {}".format(pid)
+                self.audioPaused = False
+            eConsoleAppContainer().execute(cmd)
+    
+    def showInfo(self):
+        """Open info/about screen"""
+        self.session.open(IPAudioInfo)
+    
+    def showHelp(self):
+        """Open help screen"""
+        self.session.open(IPAudioHelp)
+    
+    def openConfig(self):
+        """Open settings screen"""
+        self.session.open(IPAudioSetup)
+    
+    def clearVideoDelay(self):
+        """Clear saved video delay for current channel"""
+        current_service = self.session.nav.getCurrentlyPlayingServiceReference()
+        if current_service:
+            ref_str = current_service.toString()
+            data = loadVideoDelayData()
+            if ref_str in data:
+                del data[ref_str]
+                saveVideoDelayData(data)
+                cprint("[IPAudio] Cleared saved delay for channel: {}".format(ref_str))
+                self.session.open(MessageBox, _("Video delay cleared for this channel"), MessageBox.TYPE_INFO, timeout=3)
+            else:
+                self.session.open(MessageBox, _("No saved delay for this channel"), MessageBox.TYPE_INFO, timeout=3)
+    
+    def restoreService(self):
+        """Restore video service after short delay"""
+        cprint("[IPAudio] Restoring service")
+        self.session.nav.playService(self.lastservice)
+    
+    def getAnisUrls(self):
+        """Fetch Anis playlist from GitHub"""
+        url = "https://raw.githubusercontent.com/popking159/ipaudio/refs/heads/main/ipaudio_anis.json"
+        self.callUrl(url, self.parseAnisData)
+    
+    def parseAnisData(self, data):
+        """Parse Anis JSON data from GitHub"""
+        try:
+            if isinstance(data, bytes):
+                data = data.decode('utf-8')
+            playlist_data = json.loads(data)
+            list = []
+            if 'playlist' in playlist_data:
+                for channel in playlist_data['playlist']:
+                    try:
+                        list.append([str(channel['channel']), str(channel['url'])])
+                    except KeyError:
+                        pass
+            
+            if len(list) > 0:
+                self.radioList = list
+                self['server'].setText('Anis Sport')
+                self.index = 0
+                self.page = 0
+                self.updateGrid()
+            else:
+                self.radioList = []
+                self['server'].setText('Anis Sport - Playlist is empty')
+        except Exception as e:
+            cprint("[IPAudio] Error parsing Anis data: {}".format(str(e)))
+            self.radioList = []
+            self['server'].setText('Error loading Anis Sport')
+    
+    def callUrl(self, url, callback):
+        try:
+            from twisted.web.client import getPage
+            getPage(str.encode(url), headers={b'Content-Type': b'application/x-www-form-urlencoded'}).addCallback(callback).addErrback(self.addErrback)
+        except:
+            pass
+    
+    def addErrback(self, error=None):
+        pass
+    
+    def getGuide(self):
+        url = 'http://ipkinstall.ath.cx/ipaudio/epg.json'
+        self.callUrl(url, self.parseGuide)
+    
+    def parseGuide(self, data):
+        if PY3:
+            data = data.decode("utf-8")
+        else:
+            data = data.encode("utf-8")
+        self.guide = json.loads(data)
+        if self.guide != {}:
+            self.setPlaylist()
+    
+    def checkupdates(self):
+        """Check for plugin updates from GitHub"""
+        url = "https://raw.githubusercontent.com/popking159/ipaudio/main/installer-ipaudio.sh"
+        self.callUrl(url, self.checkVer)
+    
+    def checkVer(self, data):
+        """Parse version from installer script"""
+        # Copy exactly from IPAudioScreen
+        pass
+    
+    def exit(self, ret=False):
+        """Exit IPAudio plugin"""
+        cprint("[IPAudio] exit() called")
+        
+        # Stop all timers
+        if self.guideTimer.isActive():
+            self.guideTimer.stop()
+        
+        if self.statusTimer.isActive():
+            self.statusTimer.stop()
+        
+        if self.bitrateCheckTimer.isActive():
+            self.bitrateCheckTimer.stop()
+        
+        # Save current position
+        if len(self.radioList) > 0:
+            config.plugins.IPAudio.lastidx.value = '{},{}'.format(self.plIndex, self.index)
+            config.plugins.IPAudio.lastidx.save()
+        
+        # Just close the plugin GUI - audio continues
+        if ret and not self.timeShiftTimer.isActive():
+            self.close()
+        else:
+            self.close()
+
 
 class IPAudioPlaylist(IPAudioScreen):
 
@@ -2115,7 +3529,11 @@ def sessionstart(reason, session=None, **kwargs):
             traceback.print_exc()
 
 def main(session, **kwargs):
-    session.open(IPAudioScreen)
+    """Main entry point - choose view mode based on settings"""
+    if config.plugins.IPAudio.viewMode.value == "grid":
+        session.open(IPAudioScreenGrid)
+    else:
+        session.open(IPAudioScreen)
 
 
 def showInmenu(menuid, **kwargs):

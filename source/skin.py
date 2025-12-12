@@ -111,6 +111,7 @@ def getSetupSkinFHD(color_scheme):
         <!-- Footer Buttons -->
         <widget source="key_green" render="Label" position="190,595" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{green}" halign="center" valign="center" transparent="0" />
         <widget source="key_red" render="Label" position="20,595" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
+        <widget source="key_blue" render="Label" position="530,595" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{blue}" halign="center" valign="center" transparent="0" />
     </screen>
     """.format(
         bg=c['background'],
@@ -118,7 +119,8 @@ def getSetupSkinFHD(color_scheme):
         primary=c['primary'],
         text=c['text'],
         red=b['red'],
-        green=b['green']
+        green=b['green'],
+        blue=b['blue']
     )
 
 def getPlaylistSkinFHD(color_scheme):
@@ -284,7 +286,8 @@ def getSetupSkinHD(color_scheme):
         
         <!-- Footer Buttons -->
         <widget source="key_green" render="Label" position="170,404" size="122,34" font="Regular;15" foregroundColor="#000000" backgroundColor="{green}" halign="center" valign="center" transparent="0" />
-        <widget source="key_red" render="Label" position="306,404" size="122,34" font="Regular;15" foregroundColor="#ffffff" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
+        <widget source="key_red" render="Label" position="40,404" size="122,34" font="Regular;15" foregroundColor="#000000" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
+        <widget source="key_blue" render="Label" position="442,404" size="122,34" font="Regular;15" foregroundColor="#000000" backgroundColor="{blue}" halign="center" valign="center" transparent="0" />
     </screen>
     """.format(
         bg=c['background'],
@@ -292,7 +295,8 @@ def getSetupSkinHD(color_scheme):
         primary=c['primary'],
         text=c['text'],
         red=b['red'],
-        green=b['green']
+        green=b['green'],
+        blue=b['blue']
     )
 
 def getPlaylistSkinHD(color_scheme):
@@ -399,36 +403,71 @@ def getGridSkinFHD(color_scheme):
     b = BUTTON_COLORS
     
     return """
-    <screen name="IPAudioScreen" position="center,center" size="880,720" flags="wfNoBorder">
-        <!-- Border layer (bottom) -->
-        <eLabel name="" position="0,0" size="880,720" zPosition="-3" backgroundColor="{border}" />
-        <!-- Black background layer (top, 1px smaller on each side) -->
-        <eLabel name="" position="1,1" size="878,718" zPosition="-2" backgroundColor="{bg}" />
-        
-        <!-- Title -->
-        <widget name="title" position="680,20" size="180,30" font="Regular;22" foregroundColor="{primary}" backgroundColor="{bg}" halign="right" valign="center" transparent="0" />
-        
-        <!-- Header -->
-        <widget name="server" position="20,20" size="640,50" font="Regular;32" foregroundColor="{text}" backgroundColor="{primary}" halign="left" valign="center" transparent="0" />
-        
-        <!-- Info bar -->
-        <widget name="sync" position="20,85" size="300,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="#1a1a1a" halign="left" transparent="0" />
-        <widget name="audio_delay" position="340,85" size="300,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="#1a1a1a" halign="left" transparent="0" />
-        <widget name="network_status" position="660,85" size="200,30" font="Regular;20" foregroundColor="{primary}" backgroundColor="#1a1a1a" halign="left" transparent="0" />
-        
-        <!-- Grid View (6 columns x 3 rows = 18 items visible) -->
-        <!-- Each cell: 135x160 (picon 130x130, text 135x30) -->
-        <widget name="grid" position="20,140" size="840,500" backgroundColor="{bg}" foregroundColor="{text}" scrollbarMode="showOnDemand" scrollbarBorderWidth="1" scrollbarBorderColor="{primary}" scrollbarBackgroundColor="#1a1a1a" scrollbarForegroundColor="{primary}" transparent="0" />
-        
-        <!-- Countdown Display -->
-        <widget name="countdown" position="340,340" size="200,40" font="Regular;28" foregroundColor="{primary}" backgroundColor="{bg}" halign="center" valign="center" transparent="1" zPosition="10" />
-        
-        <!-- Footer Buttons -->
-        <widget name="key_red" position="20,655" size="200,50" font="Regular;22" foregroundColor="#ffffff" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
-        <widget name="key_green" position="240,655" size="200,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{green}" halign="center" valign="center" transparent="0" />
-        <widget name="key_yellow" position="460,655" size="200,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{yellow}" halign="center" valign="center" transparent="0" />
-        <widget name="key_blue" position="680,655" size="180,50" font="Regular;22" foregroundColor="#ffffff" backgroundColor="{blue}" halign="center" valign="center" transparent="0" />
-    </screen>
+    <screen name="IPAudioScreenGrid" position="80,24" size="1730,1020" title="IPAudio Grid" backgroundColor="#80808080" flags="wfNoBorder">
+    <widget name="title" position="1385,120" size="270,40" font="Regular;38" foregroundColor="#FFA500" transparent="1" halign="left" />
+    <widget name="server" position="110,65" size="600,50" font="Regular;32" foregroundColor="#FFFFFF" transparent="1" halign="left" />
+    <widget name="sync" position="830,120" size="250,40" font="Regular;28" foregroundColor="#00FF00" transparent="1" halign="left" />
+    <widget name="audio_delay" position="1100,120" size="250,40" font="Regular;24" foregroundColor="#00FFFF" transparent="1" halign="left" />
+    <widget name="network_status" position="95,120" size="400,40" font="Regular;24" foregroundColor="#FFFF00" transparent="1" />
+    <widget name="countdown" position="510,120" size="300,40" font="Regular;24" foregroundColor="#FF6600" transparent="1" />
+    
+    <!-- Selection frame (moves with selection) -->
+    <widget name="frame" position="95,175" size="290,250" zPosition="1" alphatest="blend" transparent="1" />
+    
+    <!-- Grid: 5 columns x 3 rows = 15 items per page -->
+    <widget name="pixmap_1" position="105,180" size="270,200" alphatest="blend" />
+    <widget name="label_1" position="105,385" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_2" position="425,180" size="270,200" alphatest="blend" />
+    <widget name="label_2" position="425,385" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_3" position="745,180" size="270,200" alphatest="blend" />
+    <widget name="label_3" position="745,385" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_4" position="1065,180" size="270,200" alphatest="blend" />
+    <widget name="label_4" position="1065,385" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_5" position="1385,180" size="270,200" alphatest="blend" />
+    <widget name="label_5" position="1385,385" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <!-- Row 2 -->
+    <widget name="pixmap_6" position="105,440" size="270,200" alphatest="blend" />
+    <widget name="label_6" position="105,645" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_7" position="425,440" size="270,200" alphatest="blend" />
+    <widget name="label_7" position="425,645" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_8" position="745,440" size="270,200" alphatest="blend" />
+    <widget name="label_8" position="745,645" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_9" position="1065,440" size="270,200" alphatest="blend" />
+    <widget name="label_9" position="1065,645" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_10" position="1385,440" size="270,200" alphatest="blend" />
+    <widget name="label_10" position="1385,645" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <!-- Row 3 -->
+    <widget name="pixmap_11" position="105,700" size="270,200" alphatest="blend" />
+    <widget name="label_11" position="105,905" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_12" position="425,700" size="270,200" alphatest="blend" />
+    <widget name="label_12" position="425,905" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_13" position="745,700" size="270,200" alphatest="blend" />
+    <widget name="label_13" position="745,905" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_14" position="1065,700" size="270,200" alphatest="blend" />
+    <widget name="label_14" position="1065,905" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_15" position="1385,700" size="270,200" alphatest="blend" />
+    <widget name="label_15" position="1385,905" size="270,35" font="Regular;24" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    <!-- Footer Buttons (Red, Green, Yellow, Blue) -->
+        <widget name="key_red" position="160,960" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
+        <widget name="key_green" position="330,960" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{green}" halign="center" valign="center" transparent="0" />
+        <widget name="key_yellow" position="500,960" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{yellow}" halign="center" valign="center" transparent="0" />
+        <widget name="key_blue" position="670,960" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{blue}" halign="center" valign="center" transparent="0" />
+        <widget name="key_menu" position="840,960" size="160,50" font="Regular;22" foregroundColor="#ffffff" backgroundColor="{bg}" halign="center" valign="center" transparent="0" />
+</screen>
     """.format(
         bg=c['background'],
         border=c['border'],
@@ -440,6 +479,90 @@ def getGridSkinFHD(color_scheme):
         blue=b['blue']
     )
 
+def getGridSkinHD(color_scheme):
+    """Generate FHD skin with Grid view"""
+    c = COLORS[color_scheme]
+    b = BUTTON_COLORS
+    
+    return """
+    <screen name="IPAudioScreenGrid720" position="center,center" size="1280,720" title="IPAudio Grid" backgroundColor="#55808080" flags="wfNoBorder">
+    <!-- Top info bar -->
+    <widget name="title" position="30,10" size="400,30" font="Regular;24" foregroundColor="#FF6B35" transparent="1" halign="left" />
+    <widget name="server" position="450,10" size="400,30" font="Regular;20" foregroundColor="#FFFFFF" transparent="1" halign="left" />
+    <widget name="sync" position="900,10" size="200,30" font="Regular;18" foregroundColor="#00FF00" transparent="1" halign="right" />
+    <widget name="audio_delay" position="1100,10" size="150,30" font="Regular;16" foregroundColor="#00FFFF" transparent="1" halign="right" />
+    <widget name="network_status" position="30,45" size="300,25" font="Regular;16" foregroundColor="#FFFF00" transparent="1" />
+    <widget name="countdown" position="350,45" size="200,25" font="Regular;16" foregroundColor="#FF6600" transparent="1" />
+    
+    <!-- Selection frame (moves with selection) -->
+    <widget name="frame" position="28,78" size="194,174" zPosition="1" alphatest="blend" transparent="1" />
+    
+    <!-- Grid: 5 columns x 3 rows = 15 items per page -->
+    <!-- Row 1 -->
+    <widget name="pixmap_1" position="30,80" size="190,130" alphatest="blend" />
+    <widget name="label_1" position="30,215" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_2" position="245,80" size="190,130" alphatest="blend" />
+    <widget name="label_2" position="245,215" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_3" position="460,80" size="190,130" alphatest="blend" />
+    <widget name="label_3" position="460,215" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_4" position="675,80" size="190,130" alphatest="blend" />
+    <widget name="label_4" position="675,215" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_5" position="890,80" size="190,130" alphatest="blend" />
+    <widget name="label_5" position="890,215" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <!-- Row 2 -->
+    <widget name="pixmap_6" position="30,260" size="190,130" alphatest="blend" />
+    <widget name="label_6" position="30,395" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_7" position="245,260" size="190,130" alphatest="blend" />
+    <widget name="label_7" position="245,395" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_8" position="460,260" size="190,130" alphatest="blend" />
+    <widget name="label_8" position="460,395" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_9" position="675,260" size="190,130" alphatest="blend" />
+    <widget name="label_9" position="675,395" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_10" position="890,260" size="190,130" alphatest="blend" />
+    <widget name="label_10" position="890,395" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <!-- Row 3 -->
+    <widget name="pixmap_11" position="30,440" size="190,130" alphatest="blend" />
+    <widget name="label_11" position="30,575" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_12" position="245,440" size="190,130" alphatest="blend" />
+    <widget name="label_12" position="245,575" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_13" position="460,440" size="190,130" alphatest="blend" />
+    <widget name="label_13" position="460,575" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_14" position="675,440" size="190,130" alphatest="blend" />
+    <widget name="label_14" position="675,575" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <widget name="pixmap_15" position="890,440" size="190,130" alphatest="blend" />
+    <widget name="label_15" position="890,575" size="190,22" font="Regular;16" halign="center" transparent="1" foregroundColor="#FFFFFF" />
+    
+    <!-- Bottom buttons -->
+    <widget name="key_red" position="30,650" size="140,30" foregroundColor="#000000" backgroundColor="{red}" font="Regular;18" halign="center" valign="center" />
+    <widget name="key_green" position="190,650" size="140,30" foregroundColor="#000000" backgroundColor="{green}" font="Regular;18" halign="center" valign="center" />
+    <widget name="key_yellow" position="350,650" size="140,30" foregroundColor="#000000" backgroundColor="{yellow}" font="Regular;18" halign="center" valign="center" />
+    <widget name="key_blue" position="510,650" size="140,30" foregroundColor="#000000" backgroundColor="{blue}" font="Regular;18" halign="center" valign="center" />
+    <widget name="key_menu" position="670,650" size="140,30" foregroundColor="#ffffff" backgroundColor="{bg}" font="Regular;18" halign="center" valign="center" />
+</screen>
+    """.format(
+        bg=c['background'],
+        border=c['border'],
+        primary=c['primary'],
+        text=c['text'],
+        red=b['red'],
+        green=b['green'],
+        yellow=b['yellow'],
+        blue=b['blue']
+    )
 
 # ===========================
 # Orange Skins
@@ -449,12 +572,14 @@ SKIN_IPAudioSetup_ORANGE_FHD = getSetupSkinFHD('orange')
 SKIN_IPAudioPlaylist_ORANGE_FHD = getPlaylistSkinFHD('orange')
 SKIN_IPAudioInfo_ORANGE_FHD = getInfoSkinFHD('orange')
 SKIN_IPAudioHelp_ORANGE_FHD = getHelpSkinFHD('orange')
+SKIN_IPAudioScreenGrid_ORANGE_FHD = getGridSkinFHD('orange')
 
 SKIN_IPAudioScreen_ORANGE_HD = getSkinHD('orange')
 SKIN_IPAudioSetup_ORANGE_HD = getSetupSkinHD('orange')
 SKIN_IPAudioPlaylist_ORANGE_HD = getPlaylistSkinHD('orange')
 SKIN_IPAudioInfo_ORANGE_HD = getInfoSkinHD('orange')
 SKIN_IPAudioHelp_ORANGE_HD = getHelpSkinHD('orange')
+SKIN_IPAudioScreenGrid_ORANGE_HD = getGridSkinHD('orange')
 
 # ===========================
 # Teal Skins
@@ -464,12 +589,14 @@ SKIN_IPAudioSetup_TEAL_FHD = getSetupSkinFHD('teal')
 SKIN_IPAudioPlaylist_TEAL_FHD = getPlaylistSkinFHD('teal')
 SKIN_IPAudioInfo_TEAL_FHD = getInfoSkinFHD('teal')
 SKIN_IPAudioHelp_TEAL_FHD = getHelpSkinFHD('teal')
+SKIN_IPAudioScreenGrid_TEAL_FHD = getGridSkinFHD('teal')
 
 SKIN_IPAudioScreen_TEAL_HD = getSkinHD('teal')
 SKIN_IPAudioSetup_TEAL_HD = getSetupSkinHD('teal')
 SKIN_IPAudioPlaylist_TEAL_HD = getPlaylistSkinHD('teal')
 SKIN_IPAudioInfo_TEAL_HD = getInfoSkinHD('teal')
 SKIN_IPAudioHelp_TEAL_HD = getHelpSkinHD('teal')
+SKIN_IPAudioScreenGrid_TEAL_HD = getGridSkinHD('teal')
 
 # ===========================
 # Lime Skins
@@ -479,9 +606,11 @@ SKIN_IPAudioSetup_LIME_FHD = getSetupSkinFHD('lime')
 SKIN_IPAudioPlaylist_LIME_FHD = getPlaylistSkinFHD('lime')
 SKIN_IPAudioInfo_LIME_FHD = getInfoSkinFHD('lime')
 SKIN_IPAudioHelp_LIME_FHD = getHelpSkinFHD('lime')
+SKIN_IPAudioScreenGrid_LIME_FHD = getGridSkinFHD('lime')
 
 SKIN_IPAudioScreen_LIME_HD = getSkinHD('lime')
 SKIN_IPAudioSetup_LIME_HD = getSetupSkinHD('lime')
 SKIN_IPAudioPlaylist_LIME_HD = getPlaylistSkinHD('lime')
 SKIN_IPAudioInfo_LIME_HD = getInfoSkinHD('lime')
 SKIN_IPAudioHelp_LIME_HD = getHelpSkinHD('lime')
+SKIN_IPAudioScreenGrid_LIME_HD = getGridSkinHD('lime')
