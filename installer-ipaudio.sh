@@ -2,8 +2,8 @@
 
 # IPAudio Auto-Update Installer
 # Version info (update these for each release)
-version="8.03"
-description="Fixed Python 3 compatibility, config corruption handling, configurable paths"
+version="8.04"
+description="Fix wed ui to deal with all avaialble settings paths"
 
 ipk_url="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_${version}_all.ipk"
 
