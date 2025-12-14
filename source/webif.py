@@ -4,13 +4,21 @@
 IPAudio Web Interface for Multi-Category Playlist Management
 Access at: http://box-ip:8080/ipaudio
 """
-
+from Components.config import config
+from Plugins.Extensions.IPAudio.plugin import getPlaylistDir
 from twisted.web import resource, server
 import json
 import os
 import glob
 
-PLAYLIST_DIR = '/etc/enigma2/ipaudio/'
+def getPlaylistDirWeb():
+    path = config.plugins.IPAudio.settingsPath.value
+    if not os.path.exists(path):
+        try:
+            os.makedirs(path)
+        except:
+            pass
+    return path
 
 class IPAudioAPI(resource.Resource):
     """API endpoints for playlist management"""
@@ -53,12 +61,13 @@ class IPAudioAPI(resource.Resource):
     def getCategories(self):
         """Return list of all playlist categories"""
         try:
+            playlist_dir = getPlaylistDirWeb()
             # Create directory if not exists
-            if not os.path.exists(PLAYLIST_DIR):
-                os.makedirs(PLAYLIST_DIR)
+            if not os.path.exists(playlist_dir):
+                os.makedirs(playlist_dir)
             
             categories = []
-            files = glob.glob(PLAYLIST_DIR + 'ipaudio_*.json')
+            files = glob.glob(playlist_dir + 'ipaudio_*.json')
             
             for filepath in sorted(files):
                 filename = os.path.basename(filepath)
@@ -85,11 +94,12 @@ class IPAudioAPI(resource.Resource):
     
     def getPlaylist(self, category):
         """Return playlist for specific category"""
+        playlist_dir = getPlaylistDirWeb()
         try:
             if not category:
                 return b'{"error": "No category specified"}'
             
-            filepath = PLAYLIST_DIR + 'ipaudio_{}.json'.format(category)
+            filepath = playlist_dir + 'ipaudio_{}.json'.format(category)
             
             if os.path.exists(filepath):
                 with open(filepath, 'r') as f:
@@ -102,6 +112,7 @@ class IPAudioAPI(resource.Resource):
     
     def savePlaylist(self, request):
         """Save playlist for category"""
+        playlist_dir = getPlaylistDirWeb()
         try:
             content = request.content.read()
             data = json.loads(content.decode('utf-8'))
@@ -112,7 +123,7 @@ class IPAudioAPI(resource.Resource):
             if not category:
                 return b'{"success": false, "error": "No category specified"}'
             
-            filepath = PLAYLIST_DIR + 'ipaudio_{}.json'.format(category)
+            filepath = playlist_dir + 'ipaudio_{}.json'.format(category)
             
             with open(filepath, 'w') as f:
                 json.dump({'playlist': playlist}, f, indent=4)
@@ -123,6 +134,7 @@ class IPAudioAPI(resource.Resource):
     
     def createCategory(self, request):
         """Create new category"""
+        playlist_dir = getPlaylistDirWeb()
         try:
             content = request.content.read()
             data = json.loads(content.decode('utf-8'))
@@ -136,7 +148,7 @@ class IPAudioAPI(resource.Resource):
             if not category.replace('_', '').isalnum():
                 return b'{"success": false, "error": "Invalid category name"}'
             
-            filepath = PLAYLIST_DIR + 'ipaudio_{}.json'.format(category)
+            filepath = playlist_dir + 'ipaudio_{}.json'.format(category)
             
             if os.path.exists(filepath):
                 return b'{"success": false, "error": "Category already exists"}'
@@ -151,6 +163,7 @@ class IPAudioAPI(resource.Resource):
     
     def deleteCategory(self, request):
         """Delete category"""
+        playlist_dir = getPlaylistDirWeb()
         try:
             content = request.content.read()
             data = json.loads(content.decode('utf-8'))
@@ -160,7 +173,7 @@ class IPAudioAPI(resource.Resource):
             if not category:
                 return b'{"success": false, "error": "Category name required"}'
             
-            filepath = PLAYLIST_DIR + 'ipaudio_{}.json'.format(category)
+            filepath = playlist_dir + 'ipaudio_{}.json'.format(category)
             
             if os.path.exists(filepath):
                 os.remove(filepath)
@@ -172,6 +185,7 @@ class IPAudioAPI(resource.Resource):
     
     def renameCategory(self, request):
         """Rename category"""
+        playlist_dir = getPlaylistDirWeb()
         try:
             content = request.content.read()
             data = json.loads(content.decode('utf-8'))
@@ -186,8 +200,8 @@ class IPAudioAPI(resource.Resource):
             if not new_name.replace('_', '').isalnum():
                 return b'{"success": false, "error": "Invalid category name"}'
             
-            old_file = PLAYLIST_DIR + 'ipaudio_{}.json'.format(old_name)
-            new_file = PLAYLIST_DIR + 'ipaudio_{}.json'.format(new_name)
+            old_file = playlist_dir + 'ipaudio_{}.json'.format(old_name)
+            new_file = playlist_dir + 'ipaudio_{}.json'.format(new_name)
             
             if not os.path.exists(old_file):
                 return b'{"success": false, "error": "Category not found"}'
