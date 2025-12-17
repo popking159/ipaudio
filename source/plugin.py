@@ -3,11 +3,12 @@ from Screens.Screen import Screen
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Components.Button import Button
-from Screens.MessageBox import MessageBox
 from Components.MenuList import MenuList
 from Tools.BoundFunction import boundFunction
 from Components.Pixmap import Pixmap, MovingPixmap
 from GlobalActions import globalActionMap
+import urllib.request
+import urllib.error
 try:
     from keymapparser import readKeymap
 except:
@@ -31,8 +32,9 @@ try:
 except ImportError:
     HAVE_EALSA = False
 from Plugins.Extensions.IPAudio.Console2 import Console2
-import os
-import json
+from Screens.MessageBox import MessageBox
+from Screens.ChoiceBox import ChoiceBox
+import json, os, re
 import subprocess
 import signal
 from datetime import datetime
@@ -40,7 +42,6 @@ from .skin import *
 from sys import version_info
 from collections import OrderedDict
 from PIL import Image
-from Screens.ChoiceBox import ChoiceBox
 
 PY3 = version_info[0] == 3
 # ADD THIS LINE - Define maximum delay
@@ -143,6 +144,10 @@ config.plugins.IPAudio.epgOffset = ConfigSelection(
         ("3",  "UTC+06:00"),
     ]
 )
+config.plugins.IPAudio.orange_user = ConfigText(default="", fixed_size=False)
+config.plugins.IPAudio.orange_pass = ConfigText(default="", fixed_size=False)
+config.plugins.IPAudio.satfamily_user = ConfigText(default="", fixed_size=False)
+config.plugins.IPAudio.satfamily_pass = ConfigText(default="", fixed_size=False)
 
 # After config definitions, add migration code:
 
@@ -202,6 +207,28 @@ def trace_error():
         traceback.print_exc(file=open('/tmp/IPAudio.log', 'a'))
     except:
         pass
+
+def simpleDownloadM3U(url, timeout=10):
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = resp.read()
+    except urllib.error.HTTPError as e:
+        raise Exception("HTTP error %s: %s" % (e.code, e.reason))
+    except urllib.error.URLError as e:
+        raise Exception("URL error: %s" % e.reason)
+    except Exception as e:
+        raise Exception("Network error: %s" % e)
+
+    if not data:
+        raise Exception("Empty response from server")
+
+    try:
+        text = data.decode("utf-8")
+    except Exception:
+        text = data.decode("latin-1", "ignore")
+    return text
 
 def getPlaylistDir():
     """Get the configured playlist directory"""
@@ -541,7 +568,7 @@ def getGridPositions(resolution="FHD"):
     return positions
 
 def isMutable():
-    if fileExists('/proc/stb/info/boxtype') and open('/proc/stb/info/boxtype').read().strip() in ('sf8004', 'sf8008m', 'viper4kv20', 'beyonwizv2', 'ustym4kpro', 'gbtrio4k', 'spider-x',):
+    if fileExists('/proc/stb/info/boxtype') and open('/proc/stb/info/boxtype').read().strip() in ('sf8008', 'sf8008m', 'viper4kv20', 'beyonwizv2', 'ustym4kpro', 'gbtrio4k', 'spider-x',):
         return True
     else:
         return False
@@ -885,6 +912,10 @@ class IPAudioSetup(Screen, ConfigListScreen):
         self.list.append(getConfigListEntry(_("Show IPAudio in main menu"), config.plugins.IPAudio.mainmenu))
         self.list.append(getConfigListEntry(_("Select Your IPAudio Skin"), config.plugins.IPAudio.skin))
         self.list.append(getConfigListEntry(_("EPG Time Zone (base UTC+03:00)"), config.plugins.IPAudio.epgOffset))
+        self.list.append(getConfigListEntry(_("Orange username"), config.plugins.IPAudio.orange_user))
+        self.list.append(getConfigListEntry(_("Orange password"), config.plugins.IPAudio.orange_pass))
+        self.list.append(getConfigListEntry(_("SatFamily username"), config.plugins.IPAudio.satfamily_user))
+        self.list.append(getConfigListEntry(_("SatFamily password"), config.plugins.IPAudio.satfamily_pass))
         
         self["config"].list = self.list
         self["config"].setList(self.list)
@@ -1057,7 +1088,8 @@ class IPAudioScreen(Screen):
         self["key_red"] = Button(_("Exit"))
         self["key_green"] = Button(_("Reset Audio"))
         self["key_yellow"] = Button(_("Help"))
-        self["key_blue"] = Button(_("Info"))
+        self["key_blue"] = Button(_("Download List"))
+        self["key_info"] = Button(_("Info"))
         self["key_menu"] = Button(_("Menu"))
         self["key_epg"] = Button(_("EPG"))
         self["IPAudioAction"] = ActionMap(["IPAudioActions", "ColorActions"],
@@ -1069,7 +1101,8 @@ class IPAudioScreen(Screen):
                 "red": self.exit,        # ADD THIS - Red button exits
                 "green": self.resetAudio,
                 "yellow": self.showHelp,  # ADD THIS
-                "blue": self.showInfo,    # ADD THIS
+                "blue": self.downloadList,    # ADD THIS
+                "info": self.showInfo,
                 "right": self.right,
                 "left": self.left,
                 "pause": self.pause,
@@ -1123,6 +1156,181 @@ class IPAudioScreen(Screen):
             self.checkupdates()
 
         self.onShown.append(self.onWindowShow)
+
+    def downloadList(self):
+        """Blue button: download provider M3U and convert to IPAudio JSON."""
+        choices = [
+            (_("Orange (beIN MENA)"), "orange"),
+            (_("SATFamily (beIN MENA)"), "satfamily"),
+        ]
+        self.session.openWithCallback(
+            self.downloadListChoice,
+            ChoiceBox,
+            title=_("Select list to download"),
+            list=choices
+        )
+
+    def downloadListChoice(self, choice):
+        if not choice:
+            return
+        provider = choice[1]
+
+        if provider == "orange":
+            base_name = "orange"
+            username = config.plugins.IPAudio.orange_user.value.strip()
+            password = config.plugins.IPAudio.orange_pass.value.strip()
+            if not username or not password:
+                self.session.open(
+                    MessageBox,
+                    _("Please enter Orange username/password."),
+                    MessageBox.TYPE_ERROR, timeout=5
+                )
+                return
+            m3u_url = "https://goradio.top/tv/playlists/%s?token=%s&type=mpegts" % (username, password)
+        elif provider == "satfamily":
+            base_name = "satfamily"
+            username = config.plugins.IPAudio.satfamily_user.value.strip()
+            password = config.plugins.IPAudio.satfamily_pass.value.strip()
+            if not username or not password:
+                self.session.open(
+                    MessageBox,
+                    _("Please enter SatFamily username/password."),
+                    MessageBox.TYPE_ERROR, timeout=5
+                )
+                return
+            m3u_url = "https://stereofm.live/tv/playlists/%s?token=%s" % (username, password)
+        else:
+            return
+
+        cprint("[IPAudio] Downloading %s M3U from: %s" % (provider, m3u_url))
+        try:
+            m3u_text = simpleDownloadM3U(m3u_url)
+        except Exception as e:
+            self.session.open(
+                MessageBox,
+                _("Download failed:\n%s") % str(e),
+                MessageBox.TYPE_ERROR, timeout=5
+            )
+            return
+
+        json_data, count = self.m3uToIPAudioJson(m3u_text, base_name)
+        if count == 0:
+            self.session.open(
+                MessageBox,
+                _("No channels found in downloaded list."),
+                MessageBox.TYPE_INFO, timeout=5
+            )
+            return
+
+        json_data = self.applyProviderRenames(json_data, base_name)
+
+        out_dir = config.plugins.IPAudio.settingsPath.value
+        try:
+            if not os.path.exists(out_dir):
+                os.makedirs(out_dir)
+            out_path = os.path.join(out_dir, "ipaudio_%s.json" % base_name)
+            with open(out_path, "w") as f:
+                json.dump(json_data, f, indent=4)
+        except Exception as e:
+            self.session.open(
+                MessageBox,
+                _("Save failed:\n%s") % str(e),
+                MessageBox.TYPE_ERROR, timeout=5
+            )
+            return
+
+        msg = _("Download and conversion successful!\n\n"
+                "Provider: %s\n"
+                "Channels: %d\n"
+                "Saved to:\n%s") % (choice[0], count, out_path)
+        self.session.open(MessageBox, msg, MessageBox.TYPE_INFO, timeout=7)
+
+    def m3uToIPAudioJson(self, m3u_text, base_name):
+        lines = m3u_text.splitlines()
+        playlist = []
+        last_name = None
+
+        for line in lines:
+            line = line.strip()
+            if not line or line.startswith("#EXTM3U"):
+                continue
+            if line.startswith("#EXTINF"):
+                parts = line.split(",", 1)
+                if len(parts) == 2:
+                    last_name = parts[1].strip()
+            elif line.startswith("http://") or line.startswith("https://"):
+                url = line
+                if not last_name:
+                    continue
+                playlist.append({"channel": last_name, "url": url})
+                last_name = None
+
+        return {"playlist": playlist}, len(playlist)
+
+    def applyProviderRenames(self, json_data, base_name):
+        """
+        Apply simple name mapping rules per provider.
+        base_name: "orange" or "satfamily".
+        """
+        if "playlist" not in json_data:
+            return json_data
+
+        for ch in json_data["playlist"]:
+            name = ch.get("channel", "")
+
+            if base_name == "orange":
+                # Orange / Middle / Delay Audio → SPORTS
+                if "Orange Audio" in name:
+                    name = name.replace("Orange Audio", "Orange SPORTS")
+                if "Middle Audio" in name:
+                    name = name.replace("Middle Audio", "Middle SPORTS")
+                if "Delay Audio" in name:
+                    name = name.replace("Delay Audio", "Delay SPORTS")
+
+            elif base_name == "satfamily":
+                # SatFamily-4k-N / SatFamily-4k-XtraN → 4k SPORTS N / 4k SPORTS Xtra N
+                if name.startswith("SatFamily-4k-"):
+                    tail = name[len("SatFamily-4k-"):].strip()  # e.g. "1" or "Xtra1"
+
+                    if tail.lower().startswith("xtra"):
+                        # Xtra inside 4K: Xtra1 → Xtra 1
+                        suffix = tail[4:].strip()
+                        if suffix:
+                            tail = "Xtra %s" % suffix
+                        else:
+                            tail = "Xtra"
+
+                    name = "4k SPORTS %s" % tail
+
+                # SatFamily-N-VIP → VIP SPORTS N
+                if "SatFamily-" in name and "-VIP" in name:
+                    try:
+                        middle = name.split("SatFamily-")[1]  # "3-VIP"
+                        n = middle.split("-VIP")[0].strip()
+                        name = "VIP SPORTS %s" % n
+                    except Exception:
+                        pass
+
+                # SatFamily-N-Low / SatFamily-XtraN-Low → LOW SPORTS N / LOW SPORTS Xtra N
+                if "SatFamily-" in name and "-Low" in name:
+                    try:
+                        middle = name.split("SatFamily-")[1]  # "5-Low" or "Xtra1-Low"
+                        core = middle.split("-Low")[0].strip()  # "5" or "Xtra1"
+
+                        if core.lower().startswith("xtra"):
+                            suffix = core[4:].strip()
+                            if suffix:
+                                core = "Xtra %s" % suffix
+                            else:
+                                core = "Xtra"
+
+                        name = "LOW SPORTS %s" % core
+                    except Exception:
+                        pass
+
+            ch["channel"] = name
+
+        return json_data
 
     def fetchEPG(self):
         from .beinepg import fetch_and_build_simple_epg
@@ -1779,7 +1987,7 @@ class IPAudioScreen(Screen):
                 
                 # FIXED: Calculate volume with better range
                 # Level 1 = 0.2 (20%), Level 5 = 1.0 (100%), Level 10 = 2.0 (200%)
-                volume = config.plugins.IPAudio.volLevel.value / 0.5
+                volume = config.plugins.IPAudio.volLevel.value / 10.0
                 
                 # Use the WORKING GStreamer command
                 sink = config.plugins.IPAudio.sync.value
@@ -1813,7 +2021,7 @@ class IPAudioScreen(Screen):
                 delay_sec = config.plugins.IPAudio.audioDelay.value
                 
                 # FIXED: Calculate volume with better range
-                volume = config.plugins.IPAudio.volLevel.value / 0.5
+                volume = config.plugins.IPAudio.volLevel.value / 10.0
                 
                 if delay_sec > 0:
                     # Positive delay with volume
@@ -2143,7 +2351,7 @@ class IPAudioScreen(Screen):
             # Apply volume for custom playlists (unchanged)
             if hasattr(self, 'plIndex') and self.plIndex < len(self.choices):
                 if self.choices[self.plIndex] not in self.hosts:
-                    volume = config.plugins.IPAudio.volLevel.value / 0.5
+                    volume = config.plugins.IPAudio.volLevel.value / 10.0
                     cmd = cmd.replace(
                         'audioresample !',
                         'audioresample ! volume volume={} !'.format(volume)
@@ -2264,7 +2472,8 @@ class IPAudioScreenGrid(Screen):
         self["key_red"] = Button(_("Exit"))
         self["key_green"] = Button(_("Reset Audio"))
         self["key_yellow"] = Button(_("Help"))
-        self["key_blue"] = Button(_("Info"))
+        self["key_blue"] = Button(_("Download List"))
+        self["key_info"] = Button(_("Info"))
         self["key_menu"] = Button(_("Menu"))
         self["key_epg"] = Button(_("EPG"))
         
@@ -2296,7 +2505,8 @@ class IPAudioScreenGrid(Screen):
             "red": self.exit,
             "green": self.resetAudio,
             "yellow": self.showHelp,
-            "blue": self.showInfo,
+            "blue": self.downloadList,    # ADD THIS
+            "info": self.showInfo,
             "right": self.gridRight,
             "left": self.gridLeft,
             "up": self.gridUp,
@@ -2371,7 +2581,182 @@ class IPAudioScreenGrid(Screen):
                 cprint("[IPAudio] Error loading frame: {}".format(str(e)))
         else:
             cprint("[IPAudio] Frame image not found at: {}".format(frame_path))
-    
+
+    def downloadList(self):
+        """Blue button: download provider M3U and convert to IPAudio JSON."""
+        choices = [
+            (_("Orange (beIN MENA)"), "orange"),
+            (_("SATFamily (beIN MENA)"), "satfamily"),
+        ]
+        self.session.openWithCallback(
+            self.downloadListChoice,
+            ChoiceBox,
+            title=_("Select list to download"),
+            list=choices
+        )
+
+    def downloadListChoice(self, choice):
+        if not choice:
+            return
+        provider = choice[1]
+
+        if provider == "orange":
+            base_name = "orange"
+            username = config.plugins.IPAudio.orange_user.value.strip()
+            password = config.plugins.IPAudio.orange_pass.value.strip()
+            if not username or not password:
+                self.session.open(
+                    MessageBox,
+                    _("Please enter Orange username/password."),
+                    MessageBox.TYPE_ERROR, timeout=5
+                )
+                return
+            m3u_url = "https://goradio.top/tv/playlists/%s?token=%s&type=mpegts" % (username, password)
+        elif provider == "satfamily":
+            base_name = "satfamily"
+            username = config.plugins.IPAudio.satfamily_user.value.strip()
+            password = config.plugins.IPAudio.satfamily_pass.value.strip()
+            if not username or not password:
+                self.session.open(
+                    MessageBox,
+                    _("Please enter SatFamily username/password."),
+                    MessageBox.TYPE_ERROR, timeout=5
+                )
+                return
+            m3u_url = "https://stereofm.live/tv/playlists/%s?token=%s" % (username, password)
+        else:
+            return
+
+        cprint("[IPAudio] Downloading %s M3U from: %s" % (provider, m3u_url))
+        try:
+            m3u_text = simpleDownloadM3U(m3u_url)
+        except Exception as e:
+            self.session.open(
+                MessageBox,
+                _("Download failed:\n%s") % str(e),
+                MessageBox.TYPE_ERROR, timeout=5
+            )
+            return
+
+        json_data, count = self.m3uToIPAudioJson(m3u_text, base_name)
+        if count == 0:
+            self.session.open(
+                MessageBox,
+                _("No channels found in downloaded list."),
+                MessageBox.TYPE_INFO, timeout=5
+            )
+            return
+
+        json_data = self.applyProviderRenames(json_data, base_name)
+
+        out_dir = config.plugins.IPAudio.settingsPath.value
+        try:
+            if not os.path.exists(out_dir):
+                os.makedirs(out_dir)
+            out_path = os.path.join(out_dir, "ipaudio_%s.json" % base_name)
+            with open(out_path, "w") as f:
+                json.dump(json_data, f, indent=4)
+        except Exception as e:
+            self.session.open(
+                MessageBox,
+                _("Save failed:\n%s") % str(e),
+                MessageBox.TYPE_ERROR, timeout=5
+            )
+            return
+
+        msg = _("Download and conversion successful!\n\n"
+                "Provider: %s\n"
+                "Channels: %d\n"
+                "Saved to:\n%s") % (choice[0], count, out_path)
+        self.session.open(MessageBox, msg, MessageBox.TYPE_INFO, timeout=7)
+
+    def m3uToIPAudioJson(self, m3u_text, base_name):
+        lines = m3u_text.splitlines()
+        playlist = []
+        last_name = None
+
+        for line in lines:
+            line = line.strip()
+            if not line or line.startswith("#EXTM3U"):
+                continue
+            if line.startswith("#EXTINF"):
+                parts = line.split(",", 1)
+                if len(parts) == 2:
+                    last_name = parts[1].strip()
+            elif line.startswith("http://") or line.startswith("https://"):
+                url = line
+                if not last_name:
+                    continue
+                playlist.append({"channel": last_name, "url": url})
+                last_name = None
+
+        return {"playlist": playlist}, len(playlist)
+
+    def applyProviderRenames(self, json_data, base_name):
+        """
+        Apply simple name mapping rules per provider.
+        base_name: "orange" or "satfamily".
+        """
+        if "playlist" not in json_data:
+            return json_data
+
+        for ch in json_data["playlist"]:
+            name = ch.get("channel", "")
+
+            if base_name == "orange":
+                # Orange / Middle / Delay Audio → SPORTS
+                if "Orange Audio" in name:
+                    name = name.replace("Orange Audio", "Orange SPORTS")
+                if "Middle Audio" in name:
+                    name = name.replace("Middle Audio", "Middle SPORTS")
+                if "Delay Audio" in name:
+                    name = name.replace("Delay Audio", "Delay SPORTS")
+
+            elif base_name == "satfamily":
+                # SatFamily-4k-N / SatFamily-4k-XtraN → 4k SPORTS N / 4k SPORTS Xtra N
+                if name.startswith("SatFamily-4k-"):
+                    tail = name[len("SatFamily-4k-"):].strip()  # e.g. "1" or "Xtra1"
+
+                    if tail.lower().startswith("xtra"):
+                        # Xtra inside 4K: Xtra1 → Xtra 1
+                        suffix = tail[4:].strip()
+                        if suffix:
+                            tail = "Xtra %s" % suffix
+                        else:
+                            tail = "Xtra"
+
+                    name = "4k SPORTS %s" % tail
+
+                # SatFamily-N-VIP → VIP SPORTS N
+                if "SatFamily-" in name and "-VIP" in name:
+                    try:
+                        middle = name.split("SatFamily-")[1]  # "3-VIP"
+                        n = middle.split("-VIP")[0].strip()
+                        name = "VIP SPORTS %s" % n
+                    except Exception:
+                        pass
+
+                # SatFamily-N-Low / SatFamily-XtraN-Low → LOW SPORTS N / LOW SPORTS Xtra N
+                if "SatFamily-" in name and "-Low" in name:
+                    try:
+                        middle = name.split("SatFamily-")[1]  # "5-Low" or "Xtra1-Low"
+                        core = middle.split("-Low")[0].strip()  # "5" or "Xtra1"
+
+                        if core.lower().startswith("xtra"):
+                            suffix = core[4:].strip()
+                            if suffix:
+                                core = "Xtra %s" % suffix
+                            else:
+                                core = "Xtra"
+
+                        name = "LOW SPORTS %s" % core
+                    except Exception:
+                        pass
+
+            ch["channel"] = name
+
+        return json_data
+
     def onWindowShow(self):
         """Initialize grid on window show"""
         self.onShown.remove(self.onWindowShow)
@@ -2747,7 +3132,7 @@ class IPAudioScreenGrid(Screen):
                 eq_filter = self.getEqualizerFilter()
                 
                 # Calculate volume
-                volume = config.plugins.IPAudio.volLevel.value / 50.0
+                volume = config.plugins.IPAudio.volLevel.value / 10.0
                 
                 # Use the WORKING GStreamer command
                 sink = config.plugins.IPAudio.sync.value
@@ -2776,7 +3161,7 @@ class IPAudioScreenGrid(Screen):
             else:
                 # FFmpeg command with audio delay AND volume
                 delay_sec = config.plugins.IPAudio.audioDelay.value
-                volume = config.plugins.IPAudio.volLevel.value / 50.0
+                volume = config.plugins.IPAudio.volLevel.value / 10.0
                 
                 if delay_sec > 0:
                     delay_ms = delay_sec * 1000

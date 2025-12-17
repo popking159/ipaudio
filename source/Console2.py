@@ -23,20 +23,37 @@ def isHD():
 
 class Console2(Screen):
     if isHD():
-        skin = '''
-            <screen name="Console2" position="center,center" size="800,533" title="Console" flags="wfBorder">
-  <widget name="text" position="7,7" size="786,480" font="Regular;18" scrollbarMode="showOnDemand" />
-  <widget name="key_red" position="7,493" size="107,33" font="Regular;15" foregroundColor="#000000" backgroundColor="#ff0069" halign="center" valign="center" transparent="0" />
-  <widget name="key_green" position="120,493" size="107,33" font="Regular;15" foregroundColor="#000000" backgroundColor="#00ffa9" halign="center" valign="center" transparent="0" />
-</screen>
-'''
+        skin = """
+        <screen name="Console2" position="center,center" size="1000,700" title="Console">
+            <widget name="text" position="20,20" size="960,620"
+                    font="Regular;20" halign="left" valign="top"
+                    foregroundColor="#FFFFFF" />
+            <widget name="key_red" position="30,660" size="150,30"
+                    font="Regular;20" halign="center" valign="center"
+                    foregroundColor="#000000" backgroundColor="#ff0069"
+                    transparent="0" />
+            <widget name="key_green" position="200,660" size="150,30"
+                    font="Regular;20" halign="center" valign="center"
+                    foregroundColor="#000000" backgroundColor="#00ffa9"
+                    transparent="0" />
+        </screen>
+        """
     else:
-        skin = '''
-            <screen name="Console2" position="center,center" size="1200,800" title="Console" flags="wfBorder">
-  <widget name="text" position="10,10" size="1180,720" font="Regular;28" scrollbarMode="showOnDemand" />
-  <widget name="key_red" position="10,740" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="#ff0069" halign="center" valign="center" transparent="0" />
-  <widget name="key_green" position="180,740" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="#00ffa9" halign="center" valign="center" transparent="0" />
-</screen>'''
+        skin = """
+        <screen name="Console2" position="center,center" size="1500,1050" title="Console">
+            <widget name="text" position="30,30" size="1440,960"
+                    font="Regular;26" halign="left" valign="top"
+                    foregroundColor="#FFFFFF" />
+            <widget name="key_red" position="50,1000" size="220,40"
+                    font="Regular;24" halign="center" valign="center"
+                    foregroundColor="#000000" backgroundColor="#ff0069"
+                    transparent="0" />
+            <widget name="key_green" position="300,1000" size="220,40"
+                    font="Regular;24" halign="center" valign="center"
+                    foregroundColor="#000000" backgroundColor="#00ffa9"
+                    transparent="0" />
+        </screen>
+        """
 
     def __init__(self, session, title='Console', cmdlist=None, finishedCallback=None, closeOnSuccess=False, showStartStopText=True, skin=None):
         Screen.__init__(self, session)
@@ -46,19 +63,22 @@ class Console2(Screen):
         if skin:
             self.skinName = [skin, 'Console2']
         self.errorOcurred = False
-        self['text'] = ScrollLabel('')
-        self['key_red'] = StaticText(_('Cancel'))
-        self['key_green'] = StaticText(_('Hide'))
-        self["actions"] = ActionMap(["WizardActions", "DirectionActions", 'ColorActions'],
-        {
-            "ok": self.cancel,
-            "up": self["text"].pageUp,
-            "down": self["text"].pageDown,
-            "red": self.cancel,
-            "green": self.toggleHideShow,
-            "blue": self.restartenigma,
-            "exit": self.cancel,
-        }, -1)
+        self["text"] = ScrollLabel('')
+        self["key_red"] = StaticText(_('Cancel'))
+        self["key_green"] = StaticText(_('Hide'))
+        self["actions"] = ActionMap(
+            ["WizardActions", "DirectionActions", "ColorActions"],
+            {
+                "ok": self.cancel,
+                "up": self["text"].pageUp,
+                "down": self["text"].pageDown,
+                "red": self.cancel,
+                "green": self.toggleHideShow,
+                "blue": self.restartenigma,
+                "exit": self.cancel,
+            },
+            -1,
+        )
         self.cmdlist = isinstance(cmdlist, list) and cmdlist or [cmdlist]
         self.newtitle = title == 'Console' and _('Console') or title
         self.cancel_msg = None

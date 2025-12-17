@@ -51,14 +51,14 @@ def getSkinFHD(color_scheme):
     b = BUTTON_COLORS
     
     return """
-    <screen name="IPAudioScreen" position="center,center" size="1180,760" flags="wfNoBorder">
+    <screen name="IPAudioScreen" position="center,center" size="1220,760" flags="wfNoBorder">
         <!-- Border layer (bottom) -->
-        <eLabel name="" position="0,0" size="1180,760" zPosition="-3" backgroundColor="{border}" />
+        <eLabel name="" position="0,0" size="1220,760" zPosition="-3" backgroundColor="{border}" />
         <!-- Black background layer (top, 1px smaller on each side) -->
-        <eLabel name="" position="1,1" size="1178,758" zPosition="-2" backgroundColor="{bg}" />
+        <eLabel name="" position="1,1" size="1218,758" zPosition="-2" backgroundColor="{bg}" />
         
         <!-- Title -->
-        <widget name="title" position="980,20" size="180,50" font="Regular;22" foregroundColor="{primary}" backgroundColor="{bg}" halign="center" valign="center" transparent="0" />
+        <widget name="title" position="1020,20" size="180,50" font="Regular;22" foregroundColor="{primary}" backgroundColor="{bg}" halign="center" valign="center" transparent="0" />
         
         <!-- Header -->
         <widget name="server" position="20,20" size="640,50" font="Regular;32" foregroundColor="#000000" backgroundColor="{primary}" halign="center" valign="center" transparent="0" />
@@ -72,7 +72,7 @@ def getSkinFHD(color_scheme):
         <widget name="countdown" position="678,20" size="200,50" font="Regular;28" foregroundColor="#000000" backgroundColor="{primary}" halign="center" valign="center" transparent="0" zPosition="100" />
         
         <!-- Channel List (840px width, 500px height = 10 items x 50px) -->
-        <widget name="list" position="20,140" size="1140,540" backgroundColor="{bg}" foregroundColor="{text}" foregroundColorSelected="#000000" backgroundColorSelected="{primary}" itemHeight="60" scrollbarMode="showOnDemand" scrollbarBorderWidth="1" scrollbarBorderColor="{primary}" scrollbarBackgroundColor="#1a1a1a" scrollbarForegroundColor="{primary}" transparent="0" />
+        <widget name="list" position="20,140" size="1180,540" backgroundColor="{bg}" foregroundColor="{text}" foregroundColorSelected="#000000" backgroundColorSelected="{primary}" itemHeight="60" scrollbarMode="showOnDemand" scrollbarBorderWidth="1" scrollbarBorderColor="{primary}" scrollbarBackgroundColor="#1a1a1a" scrollbarForegroundColor="{primary}" transparent="0" />
         
         <!-- Footer Buttons (Red, Green, Yellow, Blue) -->
         <widget name="key_red" position="20,695" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
@@ -81,6 +81,7 @@ def getSkinFHD(color_scheme):
         <widget name="key_blue" position="530,695" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{blue}" halign="center" valign="center" transparent="0" />
         <widget name="key_menu" position="700,695" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{grey}" halign="center" valign="center" transparent="0" />
         <widget name="key_epg" position="870,695" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{whitegrey}" halign="center" valign="center" transparent="0" />
+        <widget name="key_info" position="1040,695" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{whitegrey}" halign="center" valign="center" transparent="0" />
     </screen>
     """.format(
         bg=c['background'],
@@ -524,6 +525,7 @@ def getGridSkinFHD(color_scheme):
     <widget name="key_blue" position="670,960" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{blue}" halign="center" valign="center" transparent="0" />
     <widget name="key_menu" position="840,960" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{grey}" halign="center" valign="center" transparent="0" />
     <widget name="key_epg" position="1010,960" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{whitegrey}" halign="center" valign="center" transparent="0" />
+<widget name="key_info" position="1180,960" size="160,50" font="Regular;22" foregroundColor="#000000" backgroundColor="{whitegrey}" halign="center" valign="center" transparent="0" />
 </screen>
     """.format(
         bg=c['background'],
