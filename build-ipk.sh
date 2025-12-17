@@ -184,9 +184,10 @@ find "${DATA_DIR}" -type f -exec basename {} \; | sort
 echo ""
 echo "Creating conffiles list..."
 
+# No conffiles yet (directory only, no fixed files)
 cat > ${CONTROL_DIR}/conffiles << EOF
-/etc/enigma2/ipaudio
 EOF
+
 
 
 # Calculate installed size
