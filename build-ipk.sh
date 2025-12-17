@@ -5,7 +5,7 @@
 
 # Configuration
 PLUGIN_NAME="enigma2-plugin-extensions-ipaudio"
-VERSION="8.04"
+VERSION="8.05"
 MAINTAINER="popking159"
 DESCRIPTION="IPAudio - Multi-format audio streaming plugin with custom playlists"
 HOMEPAGE="https://github.com/popking159/ipaudio"
@@ -57,6 +57,7 @@ Description: ${DESCRIPTION}
  - Automatic updates from GitHub
  - Picon support for channels (simple & grid sizes)
  - Built-in picon converter
+ - Built-in beIN SPORTS EPG fetcher (simple_epg.json)
 Section: ${SECTION}
 Priority: ${PRIORITY}
 Maintainer: ${MAINTAINER}
@@ -165,25 +166,12 @@ find "${DATA_DIR}" -type f -exec basename {} \; | sort
 
 # Create default config files
 echo ""
-echo "Creating default configuration..."
-cat > ${BUILD_DIR}/etc/enigma2/ipaudio/ipaudio_sport.json << 'EOF'
-{
-  "playlist": []
-}
-EOF
-
-cat > ${BUILD_DIR}/etc/enigma2/ipaudio/ipaudio_quran.json << 'EOF'
-{
-  "playlist": []
-}
-EOF
-
-# Create conffiles
 echo "Creating conffiles list..."
+
 cat > ${CONTROL_DIR}/conffiles << EOF
-/etc/enigma2/ipaudio/ipaudio_sport.json
-/etc/enigma2/ipaudio/ipaudio_quran.json
+/etc/enigma2/ipaudio
 EOF
+
 
 # Calculate installed size
 echo "Calculating package size..."
