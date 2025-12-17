@@ -1,0 +1,3001 @@
+{
+  "count": 28,
+  "rows": [
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2455783818668",
+        "ChannelCode": "8408",
+        "StaticChannelCode": "8408",
+        "ChannelName": "beIN SPORTS XTRA 6",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+          "Arabic": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec"
+        },
+        "Remarks": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T00:00:00",
+        "EndTime": "2025-12-16T00:00:00",
+        "Duration": "00:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 86400000,
+      "id": "536DB257-3CCF-4FBB-BCD6-02D7D320ABFC",
+      "externalId": "2455783818668",
+      "title": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+      "startDate": "2025-12-14T21:00:00.000Z",
+      "endDate": "2025-12-15T21:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "description": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "9ABD32F9-C6D9-4DD5-B936-2C7E6546292E",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:35.893Z",
+      "updatedAt": "2025-12-14T23:02:35.893Z",
+      "channel": {
+        "data": {
+          "Code": "8408",
+          "StaticChannelCode": "8408",
+          "Name": "beIN SPORTS XTRA 6"
+        },
+        "id": "9ABD32F9-C6D9-4DD5-B936-2C7E6546292E",
+        "externalId": "8408",
+        "name": "beIN SPORTS XTRA 6",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "2c991594f9e4d315239a58e57cde71bb",
+        "createdAt": "2025-01-29T13:03:34.179Z",
+        "updatedAt": "2025-01-29T13:03:34.179Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2454566519668",
+        "ChannelCode": "8808",
+        "StaticChannelCode": "8808",
+        "ChannelName": "beIN SPORTS XTRA 5",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+          "Arabic": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec"
+        },
+        "Remarks": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T00:00:00",
+        "EndTime": "2025-12-16T00:00:00",
+        "Duration": "00:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 86400000,
+      "id": "6F13F57F-8CD0-40E4-A1D5-1FD52B675290",
+      "externalId": "2454566519668",
+      "title": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+      "startDate": "2025-12-14T21:00:00.000Z",
+      "endDate": "2025-12-15T21:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "description": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "51D28C47-7B79-4007-81A3-BFDF9BC65A3B",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:35.510Z",
+      "updatedAt": "2025-12-14T23:02:35.510Z",
+      "channel": {
+        "data": {
+          "Code": "8808",
+          "StaticChannelCode": "8808",
+          "Name": "beIN SPORTS XTRA 5"
+        },
+        "id": "51D28C47-7B79-4007-81A3-BFDF9BC65A3B",
+        "externalId": "8808",
+        "name": "beIN SPORTS XTRA 5",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "de6c3cf1b5d00bf10aaf95cb5ba69d75",
+        "createdAt": "2025-01-29T13:03:32.392Z",
+        "updatedAt": "2025-01-29T13:03:32.392Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2452570111668",
+        "ChannelCode": "10801",
+        "StaticChannelCode": "10801",
+        "ChannelName": "beIN SPORTS 7",
+        "Category": {
+          "English": "Padel",
+          "Arabic": "باديل"
+        },
+        "Title": {
+          "English": "Sofia ARAUJO POR Andrea USTERO PRIETO ESP vs Ariana SANCHEZ FALLADA ESP Paula JOSEMARIA MARTIN ESP -",
+          "Arabic": "Sofia ARAUJO POR Andrea USTERO PRIETO ESP vs Ariana SANCHEZ FALLADA ESP Paula JOSEMARIA MARTIN ESP -"
+        },
+        "Remarks": {
+          "English": "From 11–14 December, Palau Sant Jordi stages the elite season finale as the top 8 men’s and top 8 women’s pairs fight through a knockout draw for the last 1,500 ranking points, a €600,000 prize pool and the honor of closing the year as Premier Padel champions",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T00:00:00",
+        "EndTime": "2025-12-15T03:08:00",
+        "Duration": "03:08:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "From 11–14 December, Palau Sant Jordi stages the elite season finale as the top 8 men’s and top 8 women’s pairs fight through a knockout draw for the last 1,500 ranking points, a €600,000 prize pool and the honor of closing the year as Premier Padel champions",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 11280000,
+      "id": "1184B4AF-229E-421D-8CF5-50360F4B9ABF",
+      "externalId": "2452570111668",
+      "title": "Sofia ARAUJO POR Andrea USTERO PRIETO ESP vs Ariana SANCHEZ FALLADA ESP Paula JOSEMARIA MARTIN ESP -",
+      "startDate": "2025-12-14T21:00:00.000Z",
+      "endDate": "2025-12-15T00:08:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Padel",
+      "genre": "",
+      "synopsis": "From 11–14 December, Palau Sant Jordi stages the elite season finale as the top 8 men’s and top 8 women’s pairs fight through a knockout draw for the last 1,500 ranking points, a €600,000 prize pool and the honor of closing the year as Premier Padel champions",
+      "description": "From 11–14 December, Palau Sant Jordi stages the elite season finale as the top 8 men’s and top 8 women’s pairs fight through a knockout draw for the last 1,500 ranking points, a €600,000 prize pool and the honor of closing the year as Premier Padel champions",
+      "categoryArabic": "باديل",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "A892063B-A5D9-4199-95AC-6A214515FA6B",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:24.942Z",
+      "updatedAt": "2025-12-14T23:02:24.942Z",
+      "channel": {
+        "data": {
+          "Code": "10801",
+          "StaticChannelCode": "10801",
+          "Name": "beIN SPORTS 7"
+        },
+        "id": "A892063B-A5D9-4199-95AC-6A214515FA6B",
+        "externalId": "10801",
+        "name": "beIN SPORTS 7",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "a3ce63a7a8521c37a513db67129855a8",
+        "createdAt": "2022-10-05T10:01:33.382Z",
+        "updatedAt": "2023-09-04T10:47:58.285Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2454566561668",
+        "ChannelCode": "8611",
+        "StaticChannelCode": "8611",
+        "ChannelName": "beIN SPORTS XTRA 4",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+          "Arabic": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec"
+        },
+        "Remarks": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T00:00:00",
+        "EndTime": "2025-12-16T00:00:00",
+        "Duration": "00:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 86400000,
+      "id": "B0C4D0EA-D240-4D3F-BBC3-F923EABFA516",
+      "externalId": "2454566561668",
+      "title": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+      "startDate": "2025-12-14T21:00:00.000Z",
+      "endDate": "2025-12-15T21:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "description": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "7A8040D9-7BAF-477E-B9F7-8BAB88F677E8",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:35.125Z",
+      "updatedAt": "2025-12-14T23:02:35.125Z",
+      "channel": {
+        "data": {
+          "Code": "8611",
+          "StaticChannelCode": "8611",
+          "Name": "beIN SPORTS XTRA 4"
+        },
+        "id": "7A8040D9-7BAF-477E-B9F7-8BAB88F677E8",
+        "externalId": "8611",
+        "name": "beIN SPORTS XTRA 4",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "17a2f75f991787fd923a77259dda115e",
+        "createdAt": "2025-01-29T13:03:30.584Z",
+        "updatedAt": "2025-01-29T13:03:30.584Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "True",
+        "ID": "2449448257668",
+        "ChannelCode": "10603",
+        "StaticChannelCode": "10603",
+        "ChannelName": "beIN SPORTS 8",
+        "Category": {
+          "English": "NFL- National Football League",
+          "Arabic": "دوري كرة القدم الأمريكية"
+        },
+        "Title": {
+          "English": "Detroit Lions @ Los Angeles Rams - NFL -National Footbal League  - 2025/26",
+          "Arabic": "Detroit Lions @ Los Angeles Rams - NFL -National Footbal League  - 2025/26"
+        },
+        "Remarks": {
+          "English": "Live and exclusive coverage of the NFL (The National Football League). The NFL comprises mainly of a 18-week regular season, which runs in the USA from early September to early January. The NFL season culminates in the Super Bowl, played in early February",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T00:25:00",
+        "EndTime": "2025-12-15T03:30:00",
+        "Duration": "03:05:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "Live and exclusive coverage of the NFL (The National Football League). The NFL comprises mainly of a 18-week regular season, which runs in the USA from early September to early January. The NFL season culminates in the Super Bowl, played in early February",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 11100000,
+      "id": "52668FD9-5A39-48C9-AC60-632558E742F6",
+      "externalId": "2449448257668",
+      "title": "Detroit Lions @ Los Angeles Rams - NFL -National Footbal League  - 2025/26",
+      "startDate": "2025-12-14T21:25:00.000Z",
+      "endDate": "2025-12-15T00:30:00.000Z",
+      "live": true,
+      "replay": false,
+      "category": "NFL- National Football League",
+      "genre": "",
+      "synopsis": "Live and exclusive coverage of the NFL (The National Football League). The NFL comprises mainly of a 18-week regular season, which runs in the USA from early September to early January. The NFL season culminates in the Super Bowl, played in early February",
+      "description": "Live and exclusive coverage of the NFL (The National Football League). The NFL comprises mainly of a 18-week regular season, which runs in the USA from early September to early January. The NFL season culminates in the Super Bowl, played in early February",
+      "categoryArabic": "دوري كرة القدم الأمريكية",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "0F8D20A4-D46C-4B18-9242-8E7B3E978FF8",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:25.424Z",
+      "updatedAt": "2025-12-14T23:02:25.424Z",
+      "channel": {
+        "data": {
+          "Code": "10603",
+          "StaticChannelCode": "10603",
+          "Name": "beIN SPORTS 8"
+        },
+        "id": "0F8D20A4-D46C-4B18-9242-8E7B3E978FF8",
+        "externalId": "10603",
+        "name": "beIN SPORTS 8",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "a9dd7e3c6ee87a48cb35b729caf61eb5",
+        "createdAt": "2022-10-05T10:01:33.724Z",
+        "updatedAt": "2023-09-04T08:00:31.984Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "True",
+        "ID": "2449448296668",
+        "ChannelCode": "10804",
+        "StaticChannelCode": "10804",
+        "ChannelName": "beIN SPORTS EN 2",
+        "Category": {
+          "English": "NFL- National Football League",
+          "Arabic": "دوري كرة القدم الأمريكية"
+        },
+        "Title": {
+          "English": "Detroit Lions @ Los Angeles Rams - NFL -National Footbal League  - 2025/26",
+          "Arabic": "Detroit Lions @ Los Angeles Rams - NFL -National Footbal League  - 2025/26"
+        },
+        "Remarks": {
+          "English": "Live and exclusive coverage of the NFL (The National Football League). The NFL comprises mainly of a 18-week regular season, which runs in the USA from early September to early January. The NFL season culminates in the Super Bowl, played in early February",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T00:25:00",
+        "EndTime": "2025-12-15T03:30:00",
+        "Duration": "03:05:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "Live and exclusive coverage of the NFL (The National Football League). The NFL comprises mainly of a 18-week regular season, which runs in the USA from early September to early January. The NFL season culminates in the Super Bowl, played in early February",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 11100000,
+      "id": "74724C74-C4F7-41BE-B60A-C18656FFCBE3",
+      "externalId": "2449448296668",
+      "title": "Detroit Lions @ Los Angeles Rams - NFL -National Footbal League  - 2025/26",
+      "startDate": "2025-12-14T21:25:00.000Z",
+      "endDate": "2025-12-15T00:30:00.000Z",
+      "live": true,
+      "replay": false,
+      "category": "NFL- National Football League",
+      "genre": "",
+      "synopsis": "Live and exclusive coverage of the NFL (The National Football League). The NFL comprises mainly of a 18-week regular season, which runs in the USA from early September to early January. The NFL season culminates in the Super Bowl, played in early February",
+      "description": "Live and exclusive coverage of the NFL (The National Football League). The NFL comprises mainly of a 18-week regular season, which runs in the USA from early September to early January. The NFL season culminates in the Super Bowl, played in early February",
+      "categoryArabic": "دوري كرة القدم الأمريكية",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "846C79D6-18F8-4A4D-ACFA-2C18DCCB6398",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:27.132Z",
+      "updatedAt": "2025-12-14T23:02:27.132Z",
+      "channel": {
+        "data": {
+          "Code": "10804",
+          "StaticChannelCode": "10804",
+          "Name": "beIN SPORTS EN 2"
+        },
+        "id": "846C79D6-18F8-4A4D-ACFA-2C18DCCB6398",
+        "externalId": "10804",
+        "name": "beIN SPORTS EN 2",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "4cd31d31e16ac873f5f421d5880e88d6",
+        "createdAt": "2022-10-05T10:01:31.675Z",
+        "updatedAt": "2025-01-20T00:03:57.761Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "1060468198",
+        "ChannelCode": "167",
+        "StaticChannelCode": "167",
+        "ChannelName": "beIN SPORTS MAX 4",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "Coupe d'Afrique des Nations de Football",
+          "Arabic": "Coupe d'Afrique des Nations de Football"
+        },
+        "Remarks": {
+          "English": "Sport, Football. Vingt-quatre selections africaines s'affrontent en phase de groupes. Les deux premiers et les quatre meilleurs troisiemes rejoignent les eliminatoires pour jouer le titre continental.",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T00:45:00",
+        "EndTime": "2025-12-15T03:15:00",
+        "Duration": "02:30:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "5",
+        "Synopsis": {
+          "English": "Sport, Football. Vingt-quatre selections africaines s'affrontent en phase de groupes. Les deux premiers et les quatre meilleurs troisiemes rejoignent les eliminatoires pour jouer le titre continental.",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 9000000,
+      "id": "487B7347-0218-4154-BA42-2F408ECCDDCE",
+      "externalId": "1060468198",
+      "title": "Coupe d'Afrique des Nations de Football",
+      "startDate": "2025-12-14T21:45:00.000Z",
+      "endDate": "2025-12-15T00:15:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "Sport, Football. Vingt-quatre selections africaines s'affrontent en phase de groupes. Les deux premiers et les quatre meilleurs troisiemes rejoignent les eliminatoires pour jouer le titre continental.",
+      "description": "Sport, Football. Vingt-quatre selections africaines s'affrontent en phase de groupes. Les deux premiers et les quatre meilleurs troisiemes rejoignent les eliminatoires pour jouer le titre continental.",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "5B15611A-5F9D-4EF0-89A6-677C9CA2BD5D",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:31.006Z",
+      "updatedAt": "2025-12-14T23:02:31.006Z",
+      "channel": {
+        "data": {
+          "Code": "167",
+          "StaticChannelCode": "167",
+          "Name": "beIN SPORTS MAX 4"
+        },
+        "id": "5B15611A-5F9D-4EF0-89A6-677C9CA2BD5D",
+        "externalId": "167",
+        "name": "beIN SPORTS MAX 4",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "5878a7ab84fb43402106c575658472fa",
+        "createdAt": "2022-10-05T10:01:34.575Z",
+        "updatedAt": "2023-03-28T14:00:36.638Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "8jmkgul01k740xn7bqnhkbr4k",
+        "m_date": "2025-12-14T14:00:00",
+        "m_time": "14:00:00Z",
+        "week": "16",
+        "description": "Olympique Lyonnais vs Le Havre",
+        "competition_id": "dm5ka0os1e3dxcp3vh05kmp33",
+        "competition_name": "Ligue 1",
+        "country": "France",
+        "stage_name": "Regular Season",
+        "stage_startdate": "2025-08-15T00:00:00",
+        "stage_enddate": "2026-05-16T00:00:00",
+        "teama_id": "121le8unjfzug3iu9pgkqa1c7",
+        "teama": "Olympique Lyonnais",
+        "teama_position": "home",
+        "teama_country": "France",
+        "teamb_id": "23pqcgxu1tip265hbe01kszbt",
+        "teamb": "Le Havre",
+        "teamb_position": "away",
+        "teamb_country": "France",
+        "venue_id": "2cqcab4wnq3jeiz0nq69ds6h",
+        "shortname": "Groupama Stadium",
+        "longname": "Groupama Stadium",
+        "teama_ar": "ليون",
+        "teamb_ar": "لو هافر",
+        "series_name": "Olympique Lyonnais vs Le Havre - Ligue 1 - 2025/2026-Regular Season-Groupama Stadium-",
+        "CompetitionType": "Domestic league",
+        "Live": "False",
+        "ID": "2451570009668",
+        "ChannelCode": "10601",
+        "StaticChannelCode": "10601",
+        "ChannelName": "beIN SPORTS 6",
+        "Category": {
+          "English": "French League - Ligue 1",
+          "Arabic": "الدوري الفرنسي"
+        },
+        "Title": {
+          "English": "Olympique Lyonnais vs Le Havre - French Ligue 1 2025/2026 Week 16",
+          "Arabic": "Olympique Lyonnais vs Le Havre - French Ligue 1 2025/2026 Week 16"
+        },
+        "Remarks": {
+          "English": "France's premier football competition, Ligue 1, is available live and exclusive only on beIN. The 2025–26 Ligue 1 season runs from 15 August 2025 until 16 May 2026. ",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T01:00:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "02:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "France's premier football competition, Ligue 1, is available live and exclusive only on beIN. The 2025–26 Ligue 1 season runs from 15 August 2025 until 16 May 2026. ",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 7200000,
+      "id": "A956B18C-1F47-46B6-8186-9F29634AD97F",
+      "externalId": "2451570009668",
+      "title": "Olympique Lyonnais vs Le Havre - French Ligue 1 2025/2026 Week 16",
+      "startDate": "2025-12-14T22:00:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "French League - Ligue 1",
+      "genre": "",
+      "synopsis": "France's premier football competition, Ligue 1, is available live and exclusive only on beIN. The 2025–26 Ligue 1 season runs from 15 August 2025 until 16 May 2026. ",
+      "description": "France's premier football competition, Ligue 1, is available live and exclusive only on beIN. The 2025–26 Ligue 1 season runs from 15 August 2025 until 16 May 2026. ",
+      "categoryArabic": "الدوري الفرنسي",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "E24D9C11-A8B4-4C7F-AD3E-B3364FB6D5A2",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:24.461Z",
+      "updatedAt": "2025-12-14T23:02:24.461Z",
+      "channel": {
+        "data": {
+          "Code": "10601",
+          "StaticChannelCode": "10601",
+          "Name": "beIN SPORTS 6"
+        },
+        "id": "E24D9C11-A8B4-4C7F-AD3E-B3364FB6D5A2",
+        "externalId": "10601",
+        "name": "beIN SPORTS 6",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "1aa4de654d4e502b4ef4136466b13fcc",
+        "createdAt": "2022-10-05T10:01:33.228Z",
+        "updatedAt": "2023-09-04T10:47:57.698Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "1060572338",
+        "ChannelCode": "10702",
+        "StaticChannelCode": "10702",
+        "ChannelName": "beIN SPORTS FR 1",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "Red Star vs Reims - Ligue 2 - J17 - Football 2025-2026",
+          "Arabic": "Red Star vs Reims - Ligue 2 - J17 - Football 2025-2026"
+        },
+        "Remarks": {
+          "English": "Sport, Football. Vingt equipes de deuxieme division française s'affrontent lors d'un marathon de 38 journees, toutes en quete de promotion en Ligue 1 pour defier les legendes du football hexagonal.",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T01:15:00",
+        "EndTime": "2025-12-15T03:15:00",
+        "Duration": "02:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "5",
+        "Synopsis": {
+          "English": "Sport, Football. Vingt equipes de deuxieme division française s'affrontent lors d'un marathon de 38 journees, toutes en quete de promotion en Ligue 1 pour defier les legendes du football hexagonal.",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 7200000,
+      "id": "A7DCE0E1-BE1D-461B-A605-878662973CB0",
+      "externalId": "1060572338",
+      "title": "Red Star vs Reims - Ligue 2 - J17 - Football 2025-2026",
+      "startDate": "2025-12-14T22:15:00.000Z",
+      "endDate": "2025-12-15T00:15:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "Sport, Football. Vingt equipes de deuxieme division française s'affrontent lors d'un marathon de 38 journees, toutes en quete de promotion en Ligue 1 pour defier les legendes du football hexagonal.",
+      "description": "Sport, Football. Vingt equipes de deuxieme division française s'affrontent lors d'un marathon de 38 journees, toutes en quete de promotion en Ligue 1 pour defier les legendes du football hexagonal.",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "93000494-0DF8-4107-AF0E-1C99D3DBB2EC",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:27.638Z",
+      "updatedAt": "2025-12-14T23:02:27.638Z",
+      "channel": {
+        "data": {
+          "Code": "10702",
+          "StaticChannelCode": "10702",
+          "Name": "beIN SPORTS FR 1"
+        },
+        "id": "93000494-0DF8-4107-AF0E-1C99D3DBB2EC",
+        "externalId": "10702",
+        "name": "beIN SPORTS FR 1",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "e2c2ff9c7fb57db574e461fbe467d84e",
+        "createdAt": "2022-10-05T10:01:30.757Z",
+        "updatedAt": "2025-01-20T00:03:58.231Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "v3lhpsc6pb8pl9l3mu0evqj8",
+        "m_date": "2025-10-19T16:30:00",
+        "m_time": "16:30:00Z",
+        "week": "9",
+        "description": "Levante vs Rayo Vallecano",
+        "competition_id": "34pl8szyvrbwcmfkuocjm3r6t",
+        "competition_name": "LaLiga",
+        "country": "Spain",
+        "stage_name": "Regular Season",
+        "stage_startdate": "2025-08-15T00:00:00",
+        "stage_enddate": "2026-05-24T00:00:00",
+        "teama_id": "4grc9qgcvusllap8h5j6gc5h5",
+        "teama": "Levante",
+        "teama_position": "home",
+        "teama_country": "Spain",
+        "teamb_id": "3budh3j9xivsid3ptm8ptpy4k",
+        "teamb": "Rayo Vallecano",
+        "teamb_position": "away",
+        "teamb_country": "Spain",
+        "venue_id": "2n6pw21w4t9kc955w78ryjkyr",
+        "shortname": "Estadio Ciudad de Valencia",
+        "longname": "Estadio Ciudad de Valencia",
+        "teama_ar": "ليفانتي",
+        "teamb_ar": "رايو فاييكانو",
+        "series_name": "Levante vs Rayo Vallecano - Primera División - 2025/2026-Regular Season-Estadio Ciudad de Valencia-",
+        "CompetitionType": "Domestic league",
+        "Live": "False",
+        "ID": "2449966694668",
+        "ChannelCode": "10403",
+        "StaticChannelCode": "5203",
+        "ChannelName": "beIN SPORTS 3",
+        "Category": {
+          "English": "Spanish League - Primera División",
+          "Arabic": "الدوري الإسباني لكرة القدم"
+        },
+        "Title": {
+          "English": "Real Sociedad vs Girona - Spanish LaLiga 2025/26 - Week 16",
+          "Arabic": "Real Sociedad vs Girona - Spanish LaLiga 2025/26 - Week 16"
+        },
+        "Remarks": {
+          "English": "All matches from the 2025–26 La Liga season are available live and exclusive only on beIN. La Liga, Spain's premier football competition, runs from 15 August 2025 until 24 May 2026. Barcelona are the defending champions, having won their 28th title the previous season.",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T01:52:00",
+        "EndTime": "2025-12-15T03:52:00",
+        "Duration": "02:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "All matches from the 2025–26 La Liga season are available live and exclusive only on beIN. La Liga, Spain's premier football competition, runs from 15 August 2025 until 24 May 2026. Barcelona are the defending champions, having won their 28th title the previous season.",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 7200000,
+      "id": "F86544F1-3BCF-44B7-AC94-893C2CD6AFC4",
+      "externalId": "2449966694668",
+      "title": "Real Sociedad vs Girona - Spanish LaLiga 2025/26 - Week 16",
+      "startDate": "2025-12-14T22:52:00.000Z",
+      "endDate": "2025-12-15T00:52:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Spanish League - Primera División",
+      "genre": "",
+      "synopsis": "All matches from the 2025–26 La Liga season are available live and exclusive only on beIN. La Liga, Spain's premier football competition, runs from 15 August 2025 until 24 May 2026. Barcelona are the defending champions, having won their 28th title the previous season.",
+      "description": "All matches from the 2025–26 La Liga season are available live and exclusive only on beIN. La Liga, Spain's premier football competition, runs from 15 August 2025 until 24 May 2026. Barcelona are the defending champions, having won their 28th title the previous season.",
+      "categoryArabic": "الدوري الإسباني لكرة القدم",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "8AEA2426-D451-4BA5-BF48-114A1F04B1A8",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:22.797Z",
+      "updatedAt": "2025-12-14T23:02:22.797Z",
+      "channel": {
+        "data": {
+          "Code": "10403",
+          "StaticChannelCode": "5203",
+          "Name": "beIN SPORTS 3"
+        },
+        "id": "8AEA2426-D451-4BA5-BF48-114A1F04B1A8",
+        "externalId": "10403",
+        "name": "beIN SPORTS 3",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "94130ea17023c4837f0dcdda95034b65",
+        "createdAt": "2022-10-05T10:01:30.078Z",
+        "updatedAt": "2023-09-04T10:47:55.883Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2449447816668",
+        "ChannelCode": "10402",
+        "StaticChannelCode": "5202",
+        "ChannelName": "beIN SPORTS 2",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "Trabzonspor vs Besiktas - Turkish Super League - MD16 - 2025-2026",
+          "Arabic": "Trabzonspor vs Besiktas - Turkish Super League - MD16 - 2025-2026"
+        },
+        "Remarks": {
+          "English": "The Turkish Süper Lig is the top-flight competition of the Turkish football league system and is live and exclusive on beIN SPORTS. The season runs from August to May, with each club playing 38 matches. Matches are played Friday through to Monday. Galatasaray are the current Champions.",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T01:55:00",
+        "EndTime": "2025-12-15T03:47:00",
+        "Duration": "01:52:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "The Turkish Süper Lig is the top-flight competition of the Turkish football league system and is live and exclusive on beIN SPORTS. The season runs from August to May, with each club playing 38 matches. Matches are played Friday through to Monday. Galatasaray are the current Champions.",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 6720000,
+      "id": "F44EABFF-3382-4C77-BBDD-B82CBBC21311",
+      "externalId": "2449447816668",
+      "title": "Trabzonspor vs Besiktas - Turkish Super League - MD16 - 2025-2026",
+      "startDate": "2025-12-14T22:55:00.000Z",
+      "endDate": "2025-12-15T00:47:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "The Turkish Süper Lig is the top-flight competition of the Turkish football league system and is live and exclusive on beIN SPORTS. The season runs from August to May, with each club playing 38 matches. Matches are played Friday through to Monday. Galatasaray are the current Champions.",
+      "description": "The Turkish Süper Lig is the top-flight competition of the Turkish football league system and is live and exclusive on beIN SPORTS. The season runs from August to May, with each club playing 38 matches. Matches are played Friday through to Monday. Galatasaray are the current Champions.",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "FD1DD7DD-1E7B-4AA2-8682-BFA17338E653",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:22.335Z",
+      "updatedAt": "2025-12-14T23:02:22.335Z",
+      "channel": {
+        "data": {
+          "Code": "10402",
+          "StaticChannelCode": "5202",
+          "Name": "beIN SPORTS 2"
+        },
+        "id": "FD1DD7DD-1E7B-4AA2-8682-BFA17338E653",
+        "externalId": "10402",
+        "name": "beIN SPORTS 2",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "4fbe073f17f161810fdf3dab1307b30f",
+        "createdAt": "2022-10-05T10:01:31.976Z",
+        "updatedAt": "2023-09-04T10:47:54.491Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "8jzwdz729b6d3cina9j0g4ljo",
+        "m_date": "2025-12-14T16:15:00",
+        "m_time": "16:15:00Z",
+        "week": "16",
+        "description": "Strasbourg vs Lorient",
+        "competition_id": "dm5ka0os1e3dxcp3vh05kmp33",
+        "competition_name": "Ligue 1",
+        "country": "France",
+        "stage_name": "Regular Season",
+        "stage_startdate": "2025-08-15T00:00:00",
+        "stage_enddate": "2026-05-16T00:00:00",
+        "teama_id": "71ajatxnuhc5cnm3xvgdky49w",
+        "teama": "Strasbourg",
+        "teama_position": "home",
+        "teama_country": "France",
+        "teamb_id": "70nn27vgkt6l48lvv5e66q7ww",
+        "teamb": "Lorient",
+        "teamb_position": "away",
+        "teamb_country": "France",
+        "venue_id": "a6d45ji1uwsgu67rmohwz9tho",
+        "shortname": "Stade de la Meinau",
+        "longname": "Stade de la Meinau",
+        "teama_ar": "ستراسبورغ",
+        "teamb_ar": "لوريان",
+        "series_name": "Strasbourg vs Lorient - Ligue 1 - 2025/2026-Regular Season-Stade de la Meinau-",
+        "CompetitionType": "Domestic league",
+        "Live": "False",
+        "ID": "2451565802668",
+        "ChannelCode": "10602",
+        "StaticChannelCode": "10602",
+        "ChannelName": "beIN SPORTS 4",
+        "Category": {
+          "English": "French League - Ligue 1",
+          "Arabic": "الدوري الفرنسي"
+        },
+        "Title": {
+          "English": "Strasbourg vs Lorient - French Ligue 1 2025/2026 Week 16",
+          "Arabic": "Strasbourg vs Lorient - French Ligue 1 2025/2026 Week 16"
+        },
+        "Remarks": {
+          "English": "France's premier football competition, Ligue 1, is available live and exclusive only on beIN. The 2025–26 Ligue 1 season runs from 15 August 2025 until 16 May 2026. ",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T01:59:00",
+        "EndTime": "2025-12-15T03:50:00",
+        "Duration": "01:51:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "France's premier football competition, Ligue 1, is available live and exclusive only on beIN. The 2025–26 Ligue 1 season runs from 15 August 2025 until 16 May 2026. ",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 6660000,
+      "id": "414A5BB9-BE27-4EB7-951A-0717607A5AFB",
+      "externalId": "2451565802668",
+      "title": "Strasbourg vs Lorient - French Ligue 1 2025/2026 Week 16",
+      "startDate": "2025-12-14T22:59:00.000Z",
+      "endDate": "2025-12-15T00:50:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "French League - Ligue 1",
+      "genre": "",
+      "synopsis": "France's premier football competition, Ligue 1, is available live and exclusive only on beIN. The 2025–26 Ligue 1 season runs from 15 August 2025 until 16 May 2026. ",
+      "description": "France's premier football competition, Ligue 1, is available live and exclusive only on beIN. The 2025–26 Ligue 1 season runs from 15 August 2025 until 16 May 2026. ",
+      "categoryArabic": "الدوري الفرنسي",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "DB9361E8-B3EB-4D6F-9A82-75B5F09E2F92",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:23.367Z",
+      "updatedAt": "2025-12-14T23:02:23.367Z",
+      "channel": {
+        "data": {
+          "Code": "10602",
+          "StaticChannelCode": "10602",
+          "Name": "beIN SPORTS 4"
+        },
+        "id": "DB9361E8-B3EB-4D6F-9A82-75B5F09E2F92",
+        "externalId": "10602",
+        "name": "beIN SPORTS 4",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "e92b755eb0d8800175a02a35c2bf44fe",
+        "createdAt": "2022-10-05T10:01:31.095Z",
+        "updatedAt": "2023-09-04T10:47:56.447Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2449904846668",
+        "ChannelCode": "2048",
+        "StaticChannelCode": "2048",
+        "ChannelName": "beIN SPORTS XTRA 2",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+          "Arabic": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec"
+        },
+        "Remarks": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:00:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "01:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 3600000,
+      "id": "DFE3DB3E-0761-46DD-8B20-3CDE9463A2EA",
+      "externalId": "2449904846668",
+      "title": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+      "startDate": "2025-12-14T23:00:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "description": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "27E67022-B943-4913-9AF3-AFD3DAC9854B",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:33.745Z",
+      "updatedAt": "2025-12-14T23:02:33.745Z",
+      "channel": {
+        "data": {
+          "Code": "2048",
+          "StaticChannelCode": "2048",
+          "Name": "beIN SPORTS XTRA 2"
+        },
+        "id": "27E67022-B943-4913-9AF3-AFD3DAC9854B",
+        "externalId": "2048",
+        "name": "beIN SPORTS XTRA 2",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "051928341be67dcba03f0e04104d9047",
+        "createdAt": "2022-10-05T10:01:36.414Z",
+        "updatedAt": "2023-03-28T14:00:40.448Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "915122512010349",
+        "ChannelCode": "9925",
+        "StaticChannelCode": "9925",
+        "ChannelName": "beIN SPORTS MAX 6",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "beIN Sports MAX",
+          "Arabic": "beIN Sports MAX"
+        },
+        "Remarks": {
+          "English": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+          "Arabic": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments."
+        },
+        "StartTime": "2025-12-15T02:00:00",
+        "EndTime": "2025-12-15T04:00:00",
+        "Duration": "02:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+          "Arabic": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments."
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 7200000,
+      "id": "95F56D0B-6C39-44EE-8AB1-8788536A9A44",
+      "externalId": "915122512010349",
+      "title": "beIN Sports MAX",
+      "startDate": "2025-12-14T23:00:00.000Z",
+      "endDate": "2025-12-15T01:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+      "description": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+      "descriptionArabic": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+      "channelId": "DC04009D-7E18-4D1C-BA7F-7269B8F8D065",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:31.772Z",
+      "updatedAt": "2025-12-14T23:02:31.772Z",
+      "channel": {
+        "data": {
+          "Code": "9925",
+          "StaticChannelCode": "9925",
+          "Name": "beIN SPORTS MAX 6"
+        },
+        "id": "DC04009D-7E18-4D1C-BA7F-7269B8F8D065",
+        "externalId": "9925",
+        "name": "beIN SPORTS MAX 6",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "a1cb608a30fc2883eed0831dcf25f260",
+        "createdAt": "2022-10-05T10:01:34.772Z",
+        "updatedAt": "2023-03-28T14:00:36.898Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2449901858668",
+        "ChannelCode": "2047",
+        "StaticChannelCode": "2047",
+        "ChannelName": "beIN SPORTS XTRA 1",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+          "Arabic": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec"
+        },
+        "Remarks": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:00:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "01:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 3600000,
+      "id": "A1F77EE9-4776-4A4E-A7CB-8E20F5780930",
+      "externalId": "2449901858668",
+      "title": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+      "startDate": "2025-12-14T23:00:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "description": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "E3B37FA0-E582-45B2-BB8E-516E1A714EF6",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:33.003Z",
+      "updatedAt": "2025-12-14T23:02:33.003Z",
+      "channel": {
+        "data": {
+          "Code": "2047",
+          "StaticChannelCode": "2047",
+          "Name": "beIN SPORTS XTRA 1"
+        },
+        "id": "E3B37FA0-E582-45B2-BB8E-516E1A714EF6",
+        "externalId": "2047",
+        "name": "beIN SPORTS XTRA 1",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "a501bebf79d570651ff601788ea9d16d",
+        "createdAt": "2022-10-05T10:01:36.063Z",
+        "updatedAt": "2023-03-28T14:00:39.259Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2449907713668",
+        "ChannelCode": "10604",
+        "StaticChannelCode": "10604",
+        "ChannelName": "beIN SPORTS XTRA 3",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+          "Arabic": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec"
+        },
+        "Remarks": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:00:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "01:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 3600000,
+      "id": "5E9FD476-2BE3-43F0-81D9-CB04F4F0DB09",
+      "externalId": "2449907713668",
+      "title": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events - Dec",
+      "startDate": "2025-12-14T23:00:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "description": "beIN SPORTS XTRA For Live And Exclusive Coverage of Premuim Sporting Events",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "CDF1A4C8-26DD-4C33-A239-F729A3B09295",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:34.444Z",
+      "updatedAt": "2025-12-14T23:02:34.444Z",
+      "channel": {
+        "data": {
+          "Code": "10604",
+          "StaticChannelCode": "10604",
+          "Name": "beIN SPORTS XTRA 3"
+        },
+        "id": "CDF1A4C8-26DD-4C33-A239-F729A3B09295",
+        "externalId": "10604",
+        "name": "beIN SPORTS XTRA 3",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "75c6b2d6319e12f37ff421834ad22fa8",
+        "createdAt": "2022-10-05T10:01:33.094Z",
+        "updatedAt": "2023-09-04T08:00:46.223Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "915122512010337",
+        "ChannelCode": "9924",
+        "StaticChannelCode": "9924",
+        "ChannelName": "beIN SPORTS MAX 5",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "beIN Sports MAX",
+          "Arabic": "beIN Sports MAX"
+        },
+        "Remarks": {
+          "English": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+          "Arabic": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments."
+        },
+        "StartTime": "2025-12-15T02:00:00",
+        "EndTime": "2025-12-15T04:00:00",
+        "Duration": "02:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+          "Arabic": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments."
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 7200000,
+      "id": "C611DE39-4E39-4C24-A968-DA8A2E4F6C66",
+      "externalId": "915122512010337",
+      "title": "beIN Sports MAX",
+      "startDate": "2025-12-14T23:00:00.000Z",
+      "endDate": "2025-12-15T01:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+      "description": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+      "descriptionArabic": "beIN SPORTS MAX Channel for exclusive coverage of major sporting tournaments.",
+      "channelId": "F7215920-CCF9-4DBB-8B9D-152E232FA549",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:31.414Z",
+      "updatedAt": "2025-12-14T23:02:31.414Z",
+      "channel": {
+        "data": {
+          "Code": "9924",
+          "StaticChannelCode": "9924",
+          "Name": "beIN SPORTS MAX 5"
+        },
+        "id": "F7215920-CCF9-4DBB-8B9D-152E232FA549",
+        "externalId": "9924",
+        "name": "beIN SPORTS MAX 5",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "ca886eb9edb61a42256192745c72cd79",
+        "createdAt": "2022-10-05T10:01:34.680Z",
+        "updatedAt": "2023-03-28T14:00:36.767Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "uoe12e3coa1i9fov19pdukus",
+        "m_date": "2025-10-19T19:00:00",
+        "m_time": "19:00:00Z",
+        "week": "9",
+        "description": "Getafe vs Real Madrid",
+        "competition_id": "34pl8szyvrbwcmfkuocjm3r6t",
+        "competition_name": "LaLiga",
+        "country": "Spain",
+        "stage_name": "Regular Season",
+        "stage_startdate": "2025-08-15T00:00:00",
+        "stage_enddate": "2026-05-24T00:00:00",
+        "teama_id": "1n1j0wsl763lq7ee1k0c11c02",
+        "teama": "Getafe",
+        "teama_position": "home",
+        "teama_country": "Spain",
+        "teamb_id": "3kq9cckrnlogidldtdie2fkbl",
+        "teamb": "Real Madrid",
+        "teamb_position": "away",
+        "teamb_country": "Spain",
+        "venue_id": "4ydszy39adhtczo02as8gdqup",
+        "shortname": "Estadio Coliseum",
+        "longname": "Estadio Coliseum",
+        "teama_ar": "خيتافي",
+        "teamb_ar": "ريال مدريد",
+        "series_name": "Getafe vs Real Madrid - Primera División - 2025/2026-Regular Season-Estadio Coliseum-",
+        "CompetitionType": "Domestic league",
+        "Live": "False",
+        "ID": "2454450532668",
+        "ChannelCode": "10404",
+        "StaticChannelCode": "10404",
+        "ChannelName": "beIN SPORTS 5",
+        "Category": {
+          "English": "Spanish League - Primera División",
+          "Arabic": "الدوري الإسباني لكرة القدم"
+        },
+        "Title": {
+          "English": "Celta Vigo vs Athletic Bilbao - Spanish LaLiga 2025/26 - Week 16",
+          "Arabic": "Celta Vigo vs Athletic Bilbao - Spanish LaLiga 2025/26 - Week 16"
+        },
+        "Remarks": {
+          "English": "All matches from the 2025–26 La Liga season are available live and exclusive only on beIN. La Liga, Spain's premier football competition, runs from 15 August 2025 until 24 May 2026. Barcelona are the defending champions, having won their 28th title the previous season.",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:25:00",
+        "EndTime": "2025-12-15T04:18:00",
+        "Duration": "01:53:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "All matches from the 2025–26 La Liga season are available live and exclusive only on beIN. La Liga, Spain's premier football competition, runs from 15 August 2025 until 24 May 2026. Barcelona are the defending champions, having won their 28th title the previous season.",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 6780000,
+      "id": "13D00FBF-8328-49D8-84B5-A3A421C274A6",
+      "externalId": "2454450532668",
+      "title": "Celta Vigo vs Athletic Bilbao - Spanish LaLiga 2025/26 - Week 16",
+      "startDate": "2025-12-14T23:25:00.000Z",
+      "endDate": "2025-12-15T01:18:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Spanish League - Primera División",
+      "genre": "",
+      "synopsis": "All matches from the 2025–26 La Liga season are available live and exclusive only on beIN. La Liga, Spain's premier football competition, runs from 15 August 2025 until 24 May 2026. Barcelona are the defending champions, having won their 28th title the previous season.",
+      "description": "All matches from the 2025–26 La Liga season are available live and exclusive only on beIN. La Liga, Spain's premier football competition, runs from 15 August 2025 until 24 May 2026. Barcelona are the defending champions, having won their 28th title the previous season.",
+      "categoryArabic": "الدوري الإسباني لكرة القدم",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "964E6246-CA95-410B-82C4-EA75DD979435",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:23.906Z",
+      "updatedAt": "2025-12-14T23:02:23.906Z",
+      "channel": {
+        "data": {
+          "Code": "10404",
+          "StaticChannelCode": "10404",
+          "Name": "beIN SPORTS 5"
+        },
+        "id": "964E6246-CA95-410B-82C4-EA75DD979435",
+        "externalId": "10404",
+        "name": "beIN SPORTS 5",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "0a5052334511e344f15ae0bfafd47a67",
+        "createdAt": "2022-10-05T10:01:32.267Z",
+        "updatedAt": "2023-09-04T10:47:57.006Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2451568922668",
+        "ChannelCode": "10802",
+        "StaticChannelCode": "10802",
+        "ChannelName": "beIN SPORTS 9",
+        "Category": {
+          "English": "Equestrian",
+          "Arabic": "الفروسية"
+        },
+        "Title": {
+          "English": "Equestrian Round 2 - Global Tour – Jumping -  New York Round 2025 - Equestrian",
+          "Arabic": "Equestrian Round 2 - Global Tour – Jumping -  New York Round 2025 - Equestrian"
+        },
+        "Remarks": {
+          "English": "",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:25:00",
+        "EndTime": "2025-12-15T04:00:00",
+        "Duration": "01:35:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 5700000,
+      "id": "5A278400-3960-4742-9355-DFFBE9746786",
+      "externalId": "2451568922668",
+      "title": "Equestrian Round 2 - Global Tour – Jumping -  New York Round 2025 - Equestrian",
+      "startDate": "2025-12-14T23:25:00.000Z",
+      "endDate": "2025-12-15T01:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Equestrian",
+      "genre": "",
+      "synopsis": "",
+      "description": "",
+      "categoryArabic": "الفروسية",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "5C08D9D3-C713-4F1F-947E-87C761428B9B",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:25.857Z",
+      "updatedAt": "2025-12-14T23:02:25.857Z",
+      "channel": {
+        "data": {
+          "Code": "10802",
+          "StaticChannelCode": "10802",
+          "Name": "beIN SPORTS 9"
+        },
+        "id": "5C08D9D3-C713-4F1F-947E-87C761428B9B",
+        "externalId": "10802",
+        "name": "beIN SPORTS 9",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "de9d96171258bf940fc7b77c09b1cde4",
+        "createdAt": "2022-10-05T10:01:33.876Z",
+        "updatedAt": "2023-09-04T08:00:32.613Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "2o9v97aqrj9rmg20rell04xec",
+        "m_date": "2025-12-13T20:00:00",
+        "m_time": "20:00:00Z",
+        "week": "16",
+        "description": "Arsenal vs Wolverhampton Wanderers",
+        "competition_id": "2kwbbcootiqqgmrzs6o5inle5",
+        "competition_name": "Premier League",
+        "country": "England",
+        "stage_name": "Regular Season",
+        "stage_startdate": "2025-08-15T00:00:00",
+        "stage_enddate": "2026-05-24T00:00:00",
+        "teama_id": "4dsgumo7d4zupm2ugsvm4zm4d",
+        "teama": "Arsenal",
+        "teama_position": "home",
+        "teama_country": "England",
+        "teamb_id": "b9si1jn1lfxfund69e9ogcu2n",
+        "teamb": "Wolverhampton Wanderers",
+        "teamb_position": "away",
+        "teamb_country": "England",
+        "venue_id": "bxpq91vq4x9r3q6eq3d0bwjuy",
+        "shortname": "Emirates Stadium",
+        "longname": "Emirates Stadium",
+        "teama_ar": "أرسنال",
+        "teamb_ar": "ولفرهامبتون",
+        "series_name": "Arsenal vs Wolverhampton Wanderers - Premier League - 2025/2026-Regular Season-Emirates Stadium-",
+        "CompetitionType": "Domestic league",
+        "Live": "False",
+        "ID": "2454803488668",
+        "ChannelCode": "179",
+        "StaticChannelCode": "179",
+        "ChannelName": "beIN 4K",
+        "Category": {
+          "English": "English Premier League",
+          "Arabic": "الدوري الإنجليزي الممتاز"
+        },
+        "Title": {
+          "English": "Arsenal vs. Wolverhampton Wanderers  - English Premier League 2025/2026",
+          "Arabic": "Arsenal vs. Wolverhampton Wanderers  - English Premier League 2025/2026"
+        },
+        "Remarks": {
+          "English": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. ",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:26:00",
+        "EndTime": "2025-12-15T04:13:00",
+        "Duration": "01:47:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. ",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 6420000,
+      "id": "7DA8FD1C-C8E8-4DE9-BBEA-DEEE82DD204D",
+      "externalId": "2454803488668",
+      "title": "Arsenal vs. Wolverhampton Wanderers  - English Premier League 2025/2026",
+      "startDate": "2025-12-14T23:26:00.000Z",
+      "endDate": "2025-12-15T01:13:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "English Premier League",
+      "genre": "",
+      "synopsis": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. ",
+      "description": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. ",
+      "categoryArabic": "الدوري الإنجليزي الممتاز",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "67DD49E9-E3A2-4B3A-94B8-88C620A4DFB1",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:20.308Z",
+      "updatedAt": "2025-12-14T23:02:20.308Z",
+      "channel": {
+        "data": {
+          "Code": "179",
+          "StaticChannelCode": "179",
+          "Name": "beIN 4K"
+        },
+        "id": "67DD49E9-E3A2-4B3A-94B8-88C620A4DFB1",
+        "externalId": "179",
+        "name": "beIN 4K",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "8f53295a73878494e9bc8dd6c3c7104f",
+        "createdAt": "2023-04-25T11:00:14.353Z",
+        "updatedAt": "2023-04-25T11:00:14.353Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2452809904668",
+        "ChannelCode": "1953",
+        "StaticChannelCode": "1953",
+        "ChannelName": "beIN SPORTS MAX 2",
+        "Category": {
+          "English": "Mini Matches",
+          "Arabic": "مباريات قصيرة"
+        },
+        "Title": {
+          "English": "Ivory Coast - Ghana, Final of AFCON 2015",
+          "Arabic": "Ivory Coast - Ghana, Final of AFCON 2015"
+        },
+        "Remarks": {
+          "English": "",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:30:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "00:30:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 1800000,
+      "id": "D319605E-DB00-40E0-96A2-04D7E212D7B0",
+      "externalId": "2452809904668",
+      "title": "Ivory Coast - Ghana, Final of AFCON 2015",
+      "startDate": "2025-12-14T23:30:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Mini Matches",
+      "genre": "",
+      "synopsis": "",
+      "description": "",
+      "categoryArabic": "مباريات قصيرة",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "008F0EA9-FCD9-4E8C-849A-913979E7450A",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:29.277Z",
+      "updatedAt": "2025-12-14T23:02:29.277Z",
+      "channel": {
+        "data": {
+          "Code": "1953",
+          "StaticChannelCode": "1953",
+          "Name": "beIN SPORTS MAX 2"
+        },
+        "id": "008F0EA9-FCD9-4E8C-849A-913979E7450A",
+        "externalId": "1953",
+        "name": "beIN SPORTS MAX 2",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "a38b16173474ba8b1a95bcbc30d3b8a5",
+        "createdAt": "2022-10-05T10:01:34.381Z",
+        "updatedAt": "2023-03-28T14:00:36.280Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "1060572228",
+        "ChannelCode": "10703",
+        "StaticChannelCode": "10703",
+        "ChannelName": "beIN SPORTS FR 2",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "AtlÃ©tico Madrid vs Valence - Liga - J16 - Football 2025-2026",
+          "Arabic": "AtlÃ©tico Madrid vs Valence - Liga - J16 - Football 2025-2026"
+        },
+        "Remarks": {
+          "English": "Sport, Sport, Football. Vingt clubs, trente-huit journees intenses. La Liga est le grand spectacle du football espagnol ou les legendes naissent, les rivalites s'enflamment et chaque match ecrit un nouveau chapitre dans la quete de gloire.",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:30:00",
+        "EndTime": "2025-12-15T04:30:00",
+        "Duration": "02:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "11",
+        "Synopsis": {
+          "English": "Sport, Sport, Football. Vingt clubs, trente-huit journees intenses. La Liga est le grand spectacle du football espagnol ou les legendes naissent, les rivalites s'enflamment et chaque match ecrit un nouveau chapitre dans la quete de gloire.",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 7200000,
+      "id": "7BFB03A7-7E1C-4125-B781-1640696758DB",
+      "externalId": "1060572228",
+      "title": "AtlÃ©tico Madrid vs Valence - Liga - J16 - Football 2025-2026",
+      "startDate": "2025-12-14T23:30:00.000Z",
+      "endDate": "2025-12-15T01:30:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "Sport, Sport, Football. Vingt clubs, trente-huit journees intenses. La Liga est le grand spectacle du football espagnol ou les legendes naissent, les rivalites s'enflamment et chaque match ecrit un nouveau chapitre dans la quete de gloire.",
+      "description": "Sport, Sport, Football. Vingt clubs, trente-huit journees intenses. La Liga est le grand spectacle du football espagnol ou les legendes naissent, les rivalites s'enflamment et chaque match ecrit un nouveau chapitre dans la quete de gloire.",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "9B969275-E59C-4DD1-8FCA-8B01EAE04909",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:28.036Z",
+      "updatedAt": "2025-12-14T23:02:28.036Z",
+      "channel": {
+        "data": {
+          "Code": "10703",
+          "StaticChannelCode": "10703",
+          "Name": "beIN SPORTS FR 2"
+        },
+        "id": "9B969275-E59C-4DD1-8FCA-8B01EAE04909",
+        "externalId": "10703",
+        "name": "beIN SPORTS FR 2",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "501e3f8a108d7ab9335ceecd363d113d",
+        "createdAt": "2022-10-05T10:01:31.813Z",
+        "updatedAt": "2025-01-20T00:03:58.628Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2455874153668",
+        "ChannelCode": "10304",
+        "StaticChannelCode": "10304",
+        "ChannelName": "beIN SPORTS NEWS",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "Daily Highlights Arab Cup",
+          "Arabic": "Daily Highlights Arab Cup"
+        },
+        "Remarks": {
+          "English": "\"Daily Highlights\" is a brief highlight of the previous days action. A look at the goals and talking points that have taken place in the world of sport. \t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:30:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "00:30:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "\"Daily Highlights\" is a brief highlight of the previous days action. A look at the goals and talking points that have taken place in the world of sport. \t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 1800000,
+      "id": "A177DADC-F82F-40DF-A54A-27674CA7BA4B",
+      "externalId": "2455874153668",
+      "title": "Daily Highlights Arab Cup",
+      "startDate": "2025-12-14T23:30:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "\"Daily Highlights\" is a brief highlight of the previous days action. A look at the goals and talking points that have taken place in the world of sport. \t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n",
+      "description": "\"Daily Highlights\" is a brief highlight of the previous days action. A look at the goals and talking points that have taken place in the world of sport. \t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\n",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "7B558284-F996-4123-9584-1E5D01844270",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:32.196Z",
+      "updatedAt": "2025-12-14T23:02:32.196Z",
+      "channel": {
+        "data": {
+          "Code": "10304",
+          "StaticChannelCode": "10304",
+          "Name": "beIN SPORTS NEWS"
+        },
+        "id": "7B558284-F996-4123-9584-1E5D01844270",
+        "externalId": "10304",
+        "name": "beIN SPORTS NEWS",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "61a10e6abb1149ad9d08f303267f9bc4",
+        "createdAt": "2022-10-05T10:01:35.616Z",
+        "updatedAt": "2023-03-28T14:00:37.781Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2456314002668",
+        "ChannelCode": "10401",
+        "StaticChannelCode": "5201",
+        "ChannelName": "beIN SPORTS 1",
+        "Category": {
+          "English": "English Premier League",
+          "Arabic": "الدوري الإنجليزي الممتاز"
+        },
+        "Title": {
+          "English": "Crystal Palace vs Manchester City - English Premier League 2025/2026 Week 16",
+          "Arabic": "Crystal Palace vs Manchester City - English Premier League 2025/2026 Week 16"
+        },
+        "Remarks": {
+          "English": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. \n",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:30:00",
+        "EndTime": "2025-12-15T05:28:00",
+        "Duration": "02:58:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. \n",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 10680000,
+      "id": "E1265BE2-E74E-4D37-A0A6-5A71BD77251D",
+      "externalId": "2456314002668",
+      "title": "Crystal Palace vs Manchester City - English Premier League 2025/2026 Week 16",
+      "startDate": "2025-12-14T23:30:00.000Z",
+      "endDate": "2025-12-15T02:28:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "English Premier League",
+      "genre": "",
+      "synopsis": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. \n",
+      "description": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. \n",
+      "categoryArabic": "الدوري الإنجليزي الممتاز",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "7836FEA9-6B39-4A1A-8352-DC5FCB97A16C",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:21.486Z",
+      "updatedAt": "2025-12-14T23:02:21.486Z",
+      "channel": {
+        "data": {
+          "Code": "10401",
+          "StaticChannelCode": "5201",
+          "Name": "beIN SPORTS 1"
+        },
+        "id": "7836FEA9-6B39-4A1A-8352-DC5FCB97A16C",
+        "externalId": "10401",
+        "name": "beIN SPORTS 1",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "f50c7035e532c49a0f6993d988e2e843",
+        "createdAt": "2022-10-05T10:01:30.915Z",
+        "updatedAt": "2023-09-04T10:47:52.585Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2456090799668",
+        "ChannelCode": "10303",
+        "StaticChannelCode": "10303",
+        "ChannelName": "beIN SPORTS",
+        "Category": {
+          "English": "Sports General",
+          "Arabic": "الرياضة العام"
+        },
+        "Title": {
+          "English": "Comoros vs KSA - Fifa Arab cup 2025 - Mini Match",
+          "Arabic": "Comoros vs KSA - Fifa Arab cup 2025 - Mini Match"
+        },
+        "Remarks": {
+          "English": "The 2025 FIFA Arab Cup takes place in Qatar from 1st to 18th  December 2025.\nEvery game will be live on beIN.\nThis is the third time that Qatar will host the FIFA Arab Cup following the 1998 and 2021 editions. Algeria are the defending champions.",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:30:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "00:30:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "The 2025 FIFA Arab Cup takes place in Qatar from 1st to 18th  December 2025.\nEvery game will be live on beIN.\nThis is the third time that Qatar will host the FIFA Arab Cup following the 1998 and 2021 editions. Algeria are the defending champions.",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 1800000,
+      "id": "A94B41F6-6340-43F2-B668-66C28FE3E69F",
+      "externalId": "2456090799668",
+      "title": "Comoros vs KSA - Fifa Arab cup 2025 - Mini Match",
+      "startDate": "2025-12-14T23:30:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Sports General",
+      "genre": "",
+      "synopsis": "The 2025 FIFA Arab Cup takes place in Qatar from 1st to 18th  December 2025.\nEvery game will be live on beIN.\nThis is the third time that Qatar will host the FIFA Arab Cup following the 1998 and 2021 editions. Algeria are the defending champions.",
+      "description": "The 2025 FIFA Arab Cup takes place in Qatar from 1st to 18th  December 2025.\nEvery game will be live on beIN.\nThis is the third time that Qatar will host the FIFA Arab Cup following the 1998 and 2021 editions. Algeria are the defending champions.",
+      "categoryArabic": "الرياضة العام",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "84F7E0C1-D47A-4444-BBA8-C50BB8D2C5A8",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:20.811Z",
+      "updatedAt": "2025-12-14T23:02:20.811Z",
+      "channel": {
+        "data": {
+          "Code": "10303",
+          "StaticChannelCode": "10303",
+          "Name": "beIN SPORTS"
+        },
+        "id": "84F7E0C1-D47A-4444-BBA8-C50BB8D2C5A8",
+        "externalId": "10303",
+        "name": "beIN SPORTS",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "d78bded526b07ede88675c6412d63f3d",
+        "createdAt": "2022-10-05T10:01:29.940Z",
+        "updatedAt": "2023-03-28T14:00:22.443Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2452486206668",
+        "ChannelCode": "10705",
+        "StaticChannelCode": "10705",
+        "ChannelName": "beIN SPORTS MAX 3",
+        "Category": {
+          "English": "Mini Matches",
+          "Arabic": "مباريات قصيرة"
+        },
+        "Title": {
+          "English": "Burkina Faso vs Tunisia - Quarter Final - TotalEnergies Africa Cup of Nations, Cameroon 2021 - Mini ",
+          "Arabic": "Burkina Faso vs Tunisia - Quarter Final - TotalEnergies Africa Cup of Nations, Cameroon 2021 - Mini "
+        },
+        "Remarks": {
+          "English": "Burkina Faso vs Tunisia - Quarter Final -  Extended Highlights - AFCON Cameroon 2021",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:30:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "00:30:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "Burkina Faso vs Tunisia - Quarter Final -  Extended Highlights - AFCON Cameroon 2021",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 1800000,
+      "id": "F5F6C4AB-FE35-4C52-BBB3-70B7A893413E",
+      "externalId": "2452486206668",
+      "title": "Burkina Faso vs Tunisia - Quarter Final - TotalEnergies Africa Cup of Nations, Cameroon 2021 - Mini ",
+      "startDate": "2025-12-14T23:30:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Mini Matches",
+      "genre": "",
+      "synopsis": "Burkina Faso vs Tunisia - Quarter Final -  Extended Highlights - AFCON Cameroon 2021",
+      "description": "Burkina Faso vs Tunisia - Quarter Final -  Extended Highlights - AFCON Cameroon 2021",
+      "categoryArabic": "مباريات قصيرة",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "7783DC02-4527-4094-9EE3-CDA8E093E4EB",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:30.077Z",
+      "updatedAt": "2025-12-14T23:02:30.077Z",
+      "channel": {
+        "data": {
+          "Code": "10705",
+          "StaticChannelCode": "10705",
+          "Name": "beIN SPORTS MAX 3"
+        },
+        "id": "7783DC02-4527-4094-9EE3-CDA8E093E4EB",
+        "externalId": "10705",
+        "name": "beIN SPORTS MAX 3",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "dc1913d422398c25c5f0b81cab94cc87",
+        "createdAt": "2022-10-05T10:01:34.475Z",
+        "updatedAt": "2023-03-28T14:00:36.478Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2456419964668",
+        "ChannelCode": "10803",
+        "StaticChannelCode": "10803",
+        "ChannelName": "beIN SPORTS EN 1",
+        "Category": {
+          "English": "English Premier League",
+          "Arabic": "الدوري الإنجليزي الممتاز"
+        },
+        "Title": {
+          "English": "Liverpool vs Brighton & Hove Albion - English Premier League 2025/2026 Week 16",
+          "Arabic": "Liverpool vs Brighton & Hove Albion - English Premier League 2025/2026 Week 16"
+        },
+        "Remarks": {
+          "English": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. \n",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:30:00",
+        "EndTime": "2025-12-15T04:30:00",
+        "Duration": "02:00:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. \n",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 7200000,
+      "id": "CA39DCE1-E979-4A84-B057-C4517316A37B",
+      "externalId": "2456419964668",
+      "title": "Liverpool vs Brighton & Hove Albion - English Premier League 2025/2026 Week 16",
+      "startDate": "2025-12-14T23:30:00.000Z",
+      "endDate": "2025-12-15T01:30:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "English Premier League",
+      "genre": "",
+      "synopsis": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. \n",
+      "description": "All 380 matches from the English Premier league are live and exclusive only on beIN.\nAll matches are available live with a choice of Arabic or English commentary.\nThe season will consist of 33 weekends and five midweek rounds of matches.\nLiverpool are the defending champions, having won their second Premier League title. \n",
+      "categoryArabic": "الدوري الإنجليزي الممتاز",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "8C1EC4FC-35E6-4866-A75D-37FCFAE18839",
+      "sportTypeId": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+      "createdAt": "2025-12-14T23:02:26.377Z",
+      "updatedAt": "2025-12-14T23:02:26.377Z",
+      "channel": {
+        "data": {
+          "Code": "10803",
+          "StaticChannelCode": "10803",
+          "Name": "beIN SPORTS EN 1"
+        },
+        "id": "8C1EC4FC-35E6-4866-A75D-37FCFAE18839",
+        "externalId": "10803",
+        "name": "beIN SPORTS EN 1",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "6a971e08a01e6676d0f1a6e0dacbbd67",
+        "createdAt": "2022-10-05T10:01:30.527Z",
+        "updatedAt": "2025-01-20T00:03:57.011Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "7E27AB43-31E6-48B0-8DEB-06E3AB56948D",
+        "name": "Football",
+        "createdAt": "2022-10-03T09:10:29.401Z",
+        "updatedAt": "2022-10-03T09:10:29.401Z"
+      }
+    },
+    {
+      "data": {
+        "matchid": "",
+        "m_date": null,
+        "m_time": "",
+        "week": "",
+        "description": "",
+        "competition_id": "",
+        "competition_name": "",
+        "country": "",
+        "stage_name": "",
+        "stage_startdate": null,
+        "stage_enddate": null,
+        "teama_id": "",
+        "teama": "",
+        "teama_position": "",
+        "teama_country": "",
+        "teamb_id": "",
+        "teamb": "",
+        "teamb_position": "",
+        "teamb_country": "",
+        "venue_id": "",
+        "shortname": "",
+        "longname": "",
+        "teama_ar": "",
+        "teamb_ar": "",
+        "series_name": "",
+        "CompetitionType": "",
+        "Live": "False",
+        "ID": "2452809627668",
+        "ChannelCode": "1952",
+        "StaticChannelCode": "1952",
+        "ChannelName": "beIN SPORTS MAX 1",
+        "Category": {
+          "English": "Mini Matches",
+          "Arabic": "مباريات قصيرة"
+        },
+        "Title": {
+          "English": "Niger vs Morocco AFCON 2012",
+          "Arabic": "Niger vs Morocco AFCON 2012"
+        },
+        "Remarks": {
+          "English": "Niger - Morocco AFCON 2012",
+          "Arabic": ""
+        },
+        "StartTime": "2025-12-15T02:30:00",
+        "EndTime": "2025-12-15T03:00:00",
+        "Duration": "00:30:00",
+        "Commentators": {
+          "English": "",
+          "Arabic": ""
+        },
+        "ParentalRating": "0",
+        "Synopsis": {
+          "English": "Niger - Morocco AFCON 2012",
+          "Arabic": ""
+        },
+        "ImageURL": "",
+        "Genre": "",
+        "ProductionYear": ""
+      },
+      "duration": 1800000,
+      "id": "7F6F5D03-A493-4EAC-8DF2-F2FDD20210CE",
+      "externalId": "2452809627668",
+      "title": "Niger vs Morocco AFCON 2012",
+      "startDate": "2025-12-14T23:30:00.000Z",
+      "endDate": "2025-12-15T00:00:00.000Z",
+      "live": false,
+      "replay": false,
+      "category": "Mini Matches",
+      "genre": "",
+      "synopsis": "Niger - Morocco AFCON 2012",
+      "description": "Niger - Morocco AFCON 2012",
+      "categoryArabic": "مباريات قصيرة",
+      "synopsisArabic": "",
+      "descriptionArabic": "",
+      "channelId": "2FB43094-3598-43C1-A3BA-44BFB40092E0",
+      "sportTypeId": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+      "createdAt": "2025-12-14T23:02:28.468Z",
+      "updatedAt": "2025-12-14T23:02:28.468Z",
+      "channel": {
+        "data": {
+          "Code": "1952",
+          "StaticChannelCode": "1952",
+          "Name": "beIN SPORTS MAX 1"
+        },
+        "id": "2FB43094-3598-43C1-A3BA-44BFB40092E0",
+        "externalId": "1952",
+        "name": "beIN SPORTS MAX 1",
+        "providerId": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+        "externalUniqueId": "1113d7a76ffceca1bb350bfe145467c6",
+        "createdAt": "2022-10-05T10:01:34.279Z",
+        "updatedAt": "2023-03-28T14:00:36.093Z",
+        "provider": {
+          "id": "995DA2A6-B086-457D-8DFF-5C8E0A7B5A7F",
+          "name": "epg.bein",
+          "createdAt": "2022-10-03T09:10:27.295Z",
+          "updatedAt": "2022-10-03T09:10:27.295Z"
+        }
+      },
+      "sportType": {
+        "id": "4503BDDA-BDBB-44C6-8E4A-D42F0305A7FE",
+        "name": "Other",
+        "createdAt": "2022-10-03T09:10:29.526Z",
+        "updatedAt": "2022-10-03T09:10:29.526Z"
+      }
+    }
+  ]
+}

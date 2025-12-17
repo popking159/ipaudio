@@ -127,22 +127,6 @@ config.plugins.IPAudio.viewMode = ConfigSelection(default="list", choices=[
     ("list", _("List View")),
     ("grid", _("Grid View"))
 ])
-from Components.config import ConfigSelection
-
-# EPG offset: base is UTC+03:00 (value "0"),
-# negative values mean west of UTC+3, positive east
-config.plugins.IPAudio.epgOffset = ConfigSelection(
-    default="0",
-    choices=[
-        ("-3", "UTC+00:00"),
-        ("-2", "UTC+01:00"),
-        ("-1", "UTC+02:00"),
-        ("0",  "UTC+03:00"),  # base
-        ("1",  "UTC+04:00"),
-        ("2",  "UTC+05:00"),
-        ("3",  "UTC+06:00"),
-    ]
-)
 
 # After config definitions, add migration code:
 
@@ -272,48 +256,6 @@ def getversioninfo():
     return currversion
 
 Ver = getversioninfo()
-
-def loadSimpleEPG():
-    """Load simple_epg.json from settingsPath"""
-    epg_path = os.path.join(config.plugins.IPAudio.settingsPath.value, "simple_epg.json")
-    if not fileExists(epg_path):
-        return {"events": []}
-    try:
-        with open(epg_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except:
-        trace_error()
-        return {"events": []}
-
-def buildEPGIndex():
-    """Build channel -> events list from simple_epg.json"""
-    epg = loadSimpleEPG()
-    events_by_channel = {}
-    for ev in epg.get("events", []):
-        ch = ev.get("channel", "")
-        if not ch:
-            continue
-        events_by_channel.setdefault(ch, []).append(ev)
-    return events_by_channel
-
-def findEPGTitleForAudioName(audio_name, ch_events):
-    from datetime import datetime
-    now_str = datetime.now().strftime("%Y%m%d%H%M%S")
-
-    parts = audio_name.split()
-    if len(parts) < 2:
-        return ""
-
-    suffix = " ".join(parts[-2:]).upper()  # e.g. "SPORTS 9"
-
-    for ch_name, events in ch_events.items():
-        if ch_name.upper().endswith(suffix):
-            for ev in events:
-                if ev["start_full"] <= now_str <= ev["end_full"]:
-                    cprint("[IPAudio] Grid EPG match: {} -> {}"
-                           .format(audio_name, ev["title"]))
-                    return ev.get("title", "")
-    return ""
 
 def getPiconPath(serviceName):
     """Find picon for service name - SIMPLE LIST VIEW"""
@@ -541,7 +483,7 @@ def getGridPositions(resolution="FHD"):
     return positions
 
 def isMutable():
-    if fileExists('/proc/stb/info/boxtype') and open('/proc/stb/info/boxtype').read().strip() in ('sf8004', 'sf8008m', 'viper4kv20', 'beyonwizv2', 'ustym4kpro', 'gbtrio4k', 'spider-x',):
+    if fileExists('/proc/stb/info/boxtype') and open('/proc/stb/info/boxtype').read().strip() in ('sf8008', 'sf8008m', 'viper4kv20', 'beyonwizv2', 'ustym4kpro', 'gbtrio4k', 'spider-x',):
         return True
     else:
         return False
@@ -619,12 +561,12 @@ class IPAudioPiconConverter(Screen):
             self.source_path = config.plugins.IPAudio.piconPathSimple.value
             self.dest_path = config.plugins.IPAudio.piconPathGrid.value
             self.source_size = (110, 56)
-            self.dest_size = (200, 120) if not isHD() else (190, 130)
+            self.dest_size = (270, 200) if not isHD() else (190, 130)
             self.title_text = "Converting Simple → Grid Picons"
         else:  # grid_to_simple
             self.source_path = config.plugins.IPAudio.piconPathGrid.value
             self.dest_path = config.plugins.IPAudio.piconPathSimple.value
-            self.source_size = (200, 120) if not isHD() else (190, 130)
+            self.source_size = (270, 200) if not isHD() else (190, 130)
             self.dest_size = (110, 56)
             self.title_text = "Converting Grid → Simple Picons"
         
@@ -825,8 +767,8 @@ class IPAudioSetup(Screen, ConfigListScreen):
     def openPiconConverter(self):
         """Open picon converter choice menu"""
         choices = [
-            (_("Convert Simple → Grid (110x56 → 200x120)"), "simple_to_grid"),
-            (_("Convert Grid → Simple (200x120 → 110x56)"), "grid_to_simple"),
+            (_("Convert Simple → Grid (110x56 → 270x200)"), "simple_to_grid"),
+            (_("Convert Grid → Simple (270x200 → 110x56)"), "grid_to_simple"),
         ]
         
         self.session.openWithCallback(
@@ -873,7 +815,7 @@ class IPAudioSetup(Screen, ConfigListScreen):
         
         # Show picon path based on current view mode
         if config.plugins.IPAudio.viewMode.value == "grid":
-            self.list.append(getConfigListEntry(_("Grid Picons Folder (200x120)"), config.plugins.IPAudio.piconPathGrid))
+            self.list.append(getConfigListEntry(_("Grid Picons Folder (270x200)"), config.plugins.IPAudio.piconPathGrid))
         else:
             self.list.append(getConfigListEntry(_("List Picons Folder (110x56)"), config.plugins.IPAudio.piconPathSimple))
         
@@ -884,7 +826,6 @@ class IPAudioSetup(Screen, ConfigListScreen):
         self.list.append(getConfigListEntry(_("Enable/Disable online update"), config.plugins.IPAudio.update))
         self.list.append(getConfigListEntry(_("Show IPAudio in main menu"), config.plugins.IPAudio.mainmenu))
         self.list.append(getConfigListEntry(_("Select Your IPAudio Skin"), config.plugins.IPAudio.skin))
-        self.list.append(getConfigListEntry(_("EPG Time Zone (base UTC+03:00)"), config.plugins.IPAudio.epgOffset))
         
         self["config"].list = self.list
         self["config"].setList(self.list)
@@ -919,7 +860,7 @@ class IPAudioSetup(Screen, ConfigListScreen):
             # Check picon folders based on view mode
             if config.plugins.IPAudio.viewMode.value == "grid":
                 new_picon_path = config.plugins.IPAudio.piconPathGrid.value
-                picon_type = "Grid (200x120)"
+                picon_type = "Grid (270x200)"
             else:
                 new_picon_path = config.plugins.IPAudio.piconPathSimple.value
                 picon_type = "List (110x56)"
@@ -1059,7 +1000,6 @@ class IPAudioScreen(Screen):
         self["key_yellow"] = Button(_("Help"))
         self["key_blue"] = Button(_("Info"))
         self["key_menu"] = Button(_("Menu"))
-        self["key_epg"] = Button(_("EPG"))
         self["IPAudioAction"] = ActionMap(["IPAudioActions", "ColorActions"],
             {
                 "ok": self.ok,
@@ -1080,13 +1020,13 @@ class IPAudioScreen(Screen):
                 "audioDelayReset": self.audioDelayReset,
                 "audioDelayUp": self.audioDelayUp,
                 "clearVideoDelay": self.clearVideoDelay,
-                "fetchEPG": self.fetchEPG,  # new
             }, -1)
         
         self.alsa = None
         self.audioPaused = False
         self.audio_process = None
         self.radioList = []
+        self.guide = dict()
 
         # ADD COUNTDOWN TRACKING
         self.currentDelaySeconds = 0  # Current active delay
@@ -1105,15 +1045,18 @@ class IPAudioScreen(Screen):
         
         # Initialize all timers
         self.timeShiftTimer = eTimer()
+        self.guideTimer = eTimer()
         self.statusTimer = eTimer()
         self.countdownTimer = eTimer()  # ADD THIS
         
         try:
             self.timeShiftTimer.callback.append(self.unpauseService)
+            self.guideTimer.callback.append(self.getGuide)
             self.statusTimer.callback.append(self.checkNetworkStatus)
             self.countdownTimer.callback.append(self.updateCountdown)  # ADD THIS
         except:
             self.timeShiftTimer_conn = self.timeShiftTimer.timeout.connect(self.unpauseService)
+            self.guideTimer_conn = self.guideTimer.timeout.connect(self.getGuide)
             self.statusTimer_conn = self.statusTimer.timeout.connect(self.checkNetworkStatus)
             self.countdownTimer_conn = self.countdownTimer.timeout.connect(self.updateCountdown)  # ADD THIS
         
@@ -1121,29 +1064,9 @@ class IPAudioScreen(Screen):
         
         if config.plugins.IPAudio.update.value:
             self.checkupdates()
-
+        
+        self.onLayoutFinish.append(self.getGuide)
         self.onShown.append(self.onWindowShow)
-
-    def fetchEPG(self):
-        from .beinepg import fetch_and_build_simple_epg
-        try:
-            path = fetch_and_build_simple_epg()
-            self.session.open(
-                MessageBox,
-                _("beIN EPG updated:\n%s") % path,
-                MessageBox.TYPE_INFO,
-                timeout=3
-            )
-            # Rebuild playlist list so EPG titles appear
-            self.setPlaylist()
-        except Exception as e:
-            trace_error()
-            self.session.open(
-                MessageBox,
-                _("EPG fetch failed:\n%s") % str(e),
-                MessageBox.TYPE_ERROR,
-                timeout=5
-            )
 
     def updateCountdown(self):
         """Update countdown display every second"""
@@ -1350,6 +1273,7 @@ class IPAudioScreen(Screen):
 
     def onWindowShow(self):
         self.onShown.remove(self.onWindowShow)
+        self.guideTimer.start(30000)
         
         # Check and update video delay for current channel with fallback
         current_service = self.session.nav.getCurrentlyPlayingServiceReference()
@@ -1592,6 +1516,7 @@ class IPAudioScreen(Screen):
                 list = []
                 for cmd in self.hosts[current]['cmds']:
                     list.append([cmd.split('|')[0], cmd.split('|')[1]])
+                list = self.checkINGuide(list)
                 
                 if len(list) > 0:  # Add check
                     self["list"].l.setList(self.iniMenu(list))
@@ -1636,100 +1561,136 @@ class IPAudioScreen(Screen):
                 self.radioList = []  # Initialize empty
                 self['server'].setText('Playlist file not found')
 
+    def checkINGuide(self, entries):
+        for idx, entry in enumerate(entries):
+            if entry[0] in self.guide:
+                if self.guide[entry[0]]['check']:
+                    nowIntimestamp = datetime.now().strftime('%s')
+                    entryProgEnding = self.guide[entry[0]]['end']
+                    if int(entryProgEnding) >= int(nowIntimestamp):
+                        entries[idx] = (self.guide[entry[0]]['prog'], entry[1])
+        return entries
+
+    def getGuide(self):
+        url = 'http://ipkinstall.ath.cx/ipaudio/epg.json'
+        self.callUrl(url, self.parseGuide)
+
+    def parseGuide(self, data):
+        if PY3:
+            data = data.decode("utf-8")
+        else:
+            data = data.encode("utf-8")
+        self.guide = json.loads(data)
+        if self.guide != {}:
+            self.setPlaylist()
+
     def iniMenu(self, sList):
-        """
-        Build simple list view entries:
-        - picon (left)
-        - audio name (first line)
-        - EPG event title (second line, if available)
-        """
+        """Initialize menu list with picons and channel names"""
+        
         res = []
         gList = []
-
-        # Build EPG index once per menu
-        ch_events = buildEPGIndex()   # uses simple_epg.json
-        # Example helpers (already in plugin.py):
-        # - getPiconPath(serviceName)
-        # - isHD()
-
+        
         for elem in sList:
-            # elem: (channel_name, url)
-            name = str(elem[0])
-            url = elem[1]
-
-            # Resolve picon path for this name
-            picon_path = getPiconPath(name)
-            picon = loadPNG(picon_path) if picon_path else None
-
-            # Find EPG title for this audio name
-            epg_title = findEPGTitleForAudioName(name, ch_events)
-
-            # HD vs FHD layout
+            picon_path = getPiconPath(elem[0])
+            
             if isHD():
-                # Item size ~ 580x50 (from your existing code)
-                # Picon on left, name + epg stacked on right
-
+                # HD resolution (1280x720) - 58px item height, 570px width
                 res.append(MultiContentEntryText(
-                    pos=(0, 0), size=(0, 0), font=0,
-                    flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER,
-                    text='', border_width=3
+                    pos=(0, 0), 
+                    size=(0, 0), 
+                    font=0, 
+                    flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER | RT_WRAP, 
+                    text='', 
+                    border_width=3
                 ))
-
-                # Picon (40x40) at x=5
-                if picon is not None:
-                    res.append(MultiContentEntryPixmapAlphaTest(
-                        pos=(5, 5), size=(40, 40),
-                        png=picon
-                    ))
-
-                # Audio name (first line)
-                res.append(MultiContentEntryText(
-                    pos=(50, 2), size=(530, 24), font=0,
-                    flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT,
-                    text=name
-                ))
-
-                # EPG title (second line)
-                if epg_title:
+                
+                # Add picon if found
+                if picon_path:
+                    pixmap = loadPNG(picon_path)
+                    if pixmap:
+                        res.append(MultiContentEntryPixmapAlphaTest(
+                            pos=(10, 1), 
+                            size=(100, 56), 
+                            png=pixmap
+                        ))
+                        # Adjust text position to make room for picon
+                        res.append(MultiContentEntryText(
+                            pos=(120, 4), 
+                            size=(440, 50), 
+                            font=0, 
+                            backcolor_sel=None, 
+                            flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT, 
+                            text=str(elem[0])
+                        ))
+                    else:
+                        res.append(MultiContentEntryText(
+                            pos=(5, 4), 
+                            size=(560, 50), 
+                            font=0, 
+                            backcolor_sel=None, 
+                            flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT, 
+                            text=str(elem[0])
+                        ))
+                else:
                     res.append(MultiContentEntryText(
-                        pos=(50, 26), size=(530, 22), font=0,
-                        flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT,
-                        text=epg_title
+                        pos=(5, 4), 
+                        size=(560, 50), 
+                        font=0, 
+                        backcolor_sel=None, 
+                        flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT, 
+                        text=str(elem[0])
                     ))
-
             else:
-                # FHD: more vertical space, item height ~70
+                # FHD resolution (1920x1080) - 50px item height, 840px width
                 res.append(MultiContentEntryText(
-                    pos=(0, 0), size=(0, 0), font=0,
-                    flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER,
-                    text='', border_width=3
+                    pos=(0, 0), 
+                    size=(0, 0), 
+                    font=0, 
+                    flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER | RT_WRAP, 
+                    text='', 
+                    border_width=3
                 ))
-
-                # Picon (110x56) at x=5
-                if picon is not None:
-                    res.append(MultiContentEntryPixmapAlphaTest(
-                        pos=(5, 2), size=(110, 56),
-                        png=picon
-                    ))
-
-                # Audio name (first line)
-                res.append(MultiContentEntryText(
-                    pos=(120, 0), size=(420, 60), font=0,
-                    flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT,
-                    text=name
-                ))
-
-                # EPG title (second line)
-                if epg_title:
+                
+                # Add picon if found
+                if picon_path:
+                    pixmap = loadPNG(picon_path)
+                    if pixmap:
+                        res.append(MultiContentEntryPixmapAlphaTest(
+                            pos=(10, 1), 
+                            size=(110, 48), 
+                            png=pixmap
+                        ))
+                        # Adjust text position to make room for picon
+                        res.append(MultiContentEntryText(
+                            pos=(130, 4), 
+                            size=(700, 42), 
+                            font=0, 
+                            backcolor_sel=None, 
+                            flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT, 
+                            text=str(elem[0])
+                        ))
+                    else:
+                        res.append(MultiContentEntryText(
+                            pos=(5, 4), 
+                            size=(830, 42), 
+                            font=0, 
+                            backcolor_sel=None, 
+                            flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT, 
+                            text=str(elem[0])
+                        ))
+                else:
                     res.append(MultiContentEntryText(
-                        pos=(450, 0), size=(690, 60), font=0,
-                        flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT,
-                        text=epg_title
+                        pos=(5, 4), 
+                        size=(830, 42), 
+                        font=0, 
+                        backcolor_sel=None, 
+                        flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT, 
+                        text=str(elem[0])
                     ))
-
+            
             gList.append(res)
             res = []
-
+        
         return gList
 
     def ok(self, long=False):
@@ -2093,78 +2054,53 @@ class IPAudioScreen(Screen):
 
     def restartAudioWithDelay(self):
         """Restart audio stream with new delay setting"""
-        if not (hasattr(self, 'url') and self.url):
-            return
-
-        delay_sec = int(config.plugins.IPAudio.audioDelay.value)  # seconds
-        cprint("[IPAudio] Restarting audio with new delay (Gst): {}s".format(delay_sec))
-
-        # Kill current audio
-        if self.audio_process:
-            try:
-                self.audio_process.terminate()
-                self.audio_process.wait(timeout=1)
-            except:
-                pass
-        if IPAudioHandler.container.running():
-            IPAudioHandler.container.kill()
-
-        if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
-            sink = config.plugins.IPAudio.sync.value
-
-            # Base decode path
-            # uridecodebin -> audioconvert -> audioresample -> (optional delay queue) -> sink
-            if delay_sec > 0:
-            # Use min-threshold-time to introduce latency without blocking forever
-                delay_ns = delay_sec * 1000000000
-                cmd = (
-                    'gst-launch-1.0 -e '
-                    'uridecodebin uri="{url}" ! audioconvert ! audioresample ! '
-                    'queue max-size-buffers=0 max-size-bytes=0 max-size-time=0 '
-                    'min-threshold-time={delay} ! '
-                    '{sink} sync=false'
-                ).format(url=self.url, delay=delay_ns, sink=sink)
-            elif delay_sec < 0:
-                # Negative delay: for now, just start immediately (no safe generic "cut" in pipeline)
-                # You can keep FFmpeg for cutting, but here stay simple to avoid mute.
-                cmd = (
-                    'gst-launch-1.0 -e '
-                    'uridecodebin uri="{url}" ! audioconvert ! audioresample ! '
-                    '{sink} sync=false'
-                ).format(url=self.url, sink=sink)
+        if hasattr(self, 'url') and self.url:
+            cprint("[IPAudio] Restarting audio with new delay: {}ms".format(config.plugins.IPAudio.audioDelay.value))
+            
+            # Kill current audio
+            if self.audio_process:
+                try:
+                    self.audio_process.terminate()
+                    self.audio_process.wait(timeout=1)
+                except:
+                    pass
+            
+            if IPAudioHandler.container.running():
+                IPAudioHandler.container.kill()
+            
+            # Rebuild and restart command with new delay
+            delay_ms = config.plugins.IPAudio.audioDelay.value
+            
+            if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
+                sink = config.plugins.IPAudio.sync.value
+                cmd = 'gst-launch-1.0 -e uridecodebin uri="{}" ! audioconvert ! audioresample ! '.format(self.url)
+                
+                # Add audio delay buffer if needed
+                if delay_ms != 0:
+                    delay_ns = abs(delay_ms) * 1000000
+                    if delay_ms > 0:
+                        cmd += 'audiobuffersplit output-buffer-duration={} ! '.format(delay_ns)
+                    else:
+                        cmd += 'queue max-size-buffers=1 max-size-time=1000000 ! '
+                
+                cmd += '{} sync=false'.format(sink)
+                
+                # Add volume if custom playlist
+                if hasattr(self, 'plIndex') and self.plIndex < len(self.choices):
+                    if self.choices[self.plIndex] not in self.hosts:
+                        volume = config.plugins.IPAudio.volLevel.value / 0.5
+                        cmd = cmd.replace('audioresample !', 'audioresample ! volume volume={} !'.format(volume))
             else:
-                # No delay
-                cmd = (
-                    'gst-launch-1.0 -e '
-                    'uridecodebin uri="{url}" ! audioconvert ! audioresample ! '
-                    '{sink} sync=false'
-                ).format(url=self.url, sink=sink)
-
-            # Apply volume for custom playlists (unchanged)
-            if hasattr(self, 'plIndex') and self.plIndex < len(self.choices):
-                if self.choices[self.plIndex] not in self.hosts:
-                    volume = config.plugins.IPAudio.volLevel.value / 0.5
-                    cmd = cmd.replace(
-                        'audioresample !',
-                        'audioresample ! volume volume={} !'.format(volume)
-                    )
-
-        else:
-            # FFmpeg path (keep as you already have, treat delay_sec as seconds)
-            delay_ms = delay_sec * 1000
-            if delay_ms > 0:
-                cmd = 'ffmpeg -i "{url}" -af "adelay={d}|{d}" -vn -f alsa default'.format(
-                    url=self.url, d=delay_ms
-                )
-            elif delay_ms < 0:
-                trim_sec = abs(delay_ms) / 1000.0
-                cmd = 'ffmpeg -ss {t} -i "{url}" -vn -f alsa default'.format(
-                    t=trim_sec, url=self.url
-                )
-            else:
-                cmd = 'ffmpeg -i "{url}" -vn -f alsa default'.format(url=self.url)
-
-        self.runCmd(cmd)
+                # FFmpeg with delay
+                if delay_ms > 0:
+                    cmd = 'ffmpeg -i "{}" -af "adelay={}|{}" -vn -f alsa default'.format(self.url, delay_ms, delay_ms)
+                elif delay_ms < 0:
+                    trim_sec = abs(delay_ms) / 1000.0
+                    cmd = 'ffmpeg -ss {} -i "{}" -vn -f alsa default'.format(trim_sec, self.url)
+                else:
+                    cmd = 'ffmpeg -i "{}" -vn -f alsa default'.format(self.url)
+            
+            self.runCmd(cmd)
 
     def openConfig(self):
         self.session.openWithCallback(self.configClosed, IPAudioSetup)
@@ -2198,6 +2134,8 @@ class IPAudioScreen(Screen):
 
     def exit(self, ret=False):
         # Stop all timers
+        if self.guideTimer.isActive():
+            self.guideTimer.stop()
         
         if self.statusTimer.isActive():  # ADD THIS
             self.statusTimer.stop()
@@ -2266,14 +2204,12 @@ class IPAudioScreenGrid(Screen):
         self["key_yellow"] = Button(_("Help"))
         self["key_blue"] = Button(_("Info"))
         self["key_menu"] = Button(_("Menu"))
-        self["key_epg"] = Button(_("EPG"))
         
         # Grid widgets - 15 picons and labels
         self.ITEMS_PER_PAGE = 15
         for i in range(1, self.ITEMS_PER_PAGE + 1):
             self['pixmap_{}'.format(i)] = Pixmap()
             self['label_{}'.format(i)] = Label()
-            self['event_{}'.format(i)] = Label()
         
         # Selection frame
         self['frame'] = MovingPixmap()
@@ -2311,7 +2247,6 @@ class IPAudioScreenGrid(Screen):
             "clearVideoDelay": self.clearVideoDelay,
             "nextBouquet": self.nextPlaylist,
             "prevBouquet": self.prevPlaylist,
-            "fetchEPG": self.fetchEPG,  # new
         }, -1)
         
         # Initialize variables
@@ -2319,6 +2254,7 @@ class IPAudioScreenGrid(Screen):
         self.audioPaused = False
         self.audio_process = None
         self.radioList = []
+        self.guide = dict()
         self.currentDelaySeconds = 0
         self.targetDelaySeconds = 0
         self.countdownValue = 0
@@ -2334,17 +2270,20 @@ class IPAudioScreenGrid(Screen):
         
         # Initialize timers (same as list view)
         self.timeShiftTimer = eTimer()
+        self.guideTimer = eTimer()
         self.statusTimer = eTimer()
         self.countdownTimer = eTimer()
         self.bitrateCheckTimer = eTimer()
         
         try:
             self.timeShiftTimer.callback.append(self.unpauseService)
+            self.guideTimer.callback.append(self.getGuide)
             self.statusTimer.callback.append(self.checkNetworkStatus)
             self.countdownTimer.callback.append(self.updateCountdown)
             self.bitrateCheckTimer.callback.append(self.checkAudioBitrate)
         except:
             self.timeShiftTimer_conn = self.timeShiftTimer.timeout.connect(self.unpauseService)
+            self.guideTimer_conn = self.guideTimer.timeout.connect(self.getGuide)
             self.statusTimer_conn = self.statusTimer.timeout.connect(self.checkNetworkStatus)
             self.countdownTimer_conn = self.countdownTimer.timeout.connect(self.updateCountdown)
             self.bitrateCheckTimer_conn = self.bitrateCheckTimer.timeout.connect(self.checkAudioBitrate)
@@ -2353,7 +2292,8 @@ class IPAudioScreenGrid(Screen):
         
         if config.plugins.IPAudio.update.value:
             self.checkupdates()
-
+        
+        self.onLayoutFinish.append(self.getGuide)
         self.onLayoutFinish.append(self.loadFrame)
         self.onShown.append(self.onWindowShow)
 
@@ -2375,6 +2315,7 @@ class IPAudioScreenGrid(Screen):
     def onWindowShow(self):
         """Initialize grid on window show"""
         self.onShown.remove(self.onWindowShow)
+        self.guideTimer.start(30000)
         
         # Load video delay
         current_service = self.session.nav.getCurrentlyPlayingServiceReference()
@@ -2396,88 +2337,50 @@ class IPAudioScreenGrid(Screen):
                 self.setPlaylist()
         else:
             self.setPlaylist()
-
-    def fetchEPG(self):
-        from .beinepg import fetch_and_build_simple_epg
-        try:
-            path = fetch_and_build_simple_epg()
-            self.session.open(
-                MessageBox,
-                _("beIN EPG updated:\n%s") % path,
-                MessageBox.TYPE_INFO,
-                timeout=3
-            )
-            # Rebuild playlist list so EPG titles appear
-            self.setPlaylist()
-        except Exception as e:
-            trace_error()
-            self.session.open(
-                MessageBox,
-                _("EPG fetch failed:\n%s") % str(e),
-                MessageBox.TYPE_ERROR,
-                timeout=5
-            )
-
+    
     def updateGrid(self):
-        """Update grid display for current page with separate name + event labels"""
-        # Build EPG index once per refresh (same as list view)
-        ch_events = buildEPGIndex()  # uses simple_epg.json
-
+        """Update grid display for current page"""
         if not self.radioList:
-            # Clear all cells
+            # Clear all items
             for i in range(1, self.ITEMS_PER_PAGE + 1):
                 self['pixmap_{}'.format(i)].hide()
                 self['label_{}'.format(i)].setText('')
-                name_event = 'event_{}'.format(i)
-                if name_event in self:
-                    self[name_event].setText('')
             return
-
+        
+        # Calculate page info
         total_items = len(self.radioList)
         self.maxPages = (total_items + self.ITEMS_PER_PAGE - 1) // self.ITEMS_PER_PAGE
         start_idx = self.page * self.ITEMS_PER_PAGE
         end_idx = min(start_idx + self.ITEMS_PER_PAGE, total_items)
-
+        
+        # Default picon path
         default_picon = '/usr/lib/enigma2/python/Plugins/Extensions/IPAudio/default_grid_picon.png'
-
+        
+        # Update grid items
         for i in range(self.ITEMS_PER_PAGE):
             item_idx = start_idx + i
             pixmap_widget = self['pixmap_{}'.format(i + 1)]
             label_widget = self['label_{}'.format(i + 1)]
-            event_name = 'event_{}'.format(i + 1)
-            event_widget = self[event_name] if event_name in self else None
-
+            
             if item_idx < end_idx:
-                # Channel name
-                channel_name = str(self.radioList[item_idx][0])
+                # Show item
+                channel_name = self.radioList[item_idx][0]
                 label_widget.setText(channel_name)
-
-                # EPG title using same helper as simple list
-                epg_title = findEPGTitleForAudioName(channel_name, ch_events)
-                if event_widget is not None:
-                    event_widget.setText(epg_title or '')
-
-                # Picon (auto scaled by widget size)
+                
+                # Load picon
                 picon_path = getPiconPathGrid(channel_name)
-                try:
-                    if picon_path and fileExists(picon_path):
-                        pixmap_widget.instance.setPixmapFromFile(picon_path)
-                        pixmap_widget.show()
-                    elif fileExists(default_picon):
-                        pixmap_widget.instance.setPixmapFromFile(default_picon)
-                        pixmap_widget.show()
-                    else:
-                        pixmap_widget.hide()
-                except Exception:
-                    pixmap_widget.hide()
+                if picon_path and fileExists(picon_path):
+                    pixmap_widget.instance.setPixmapFromFile(picon_path)
+                elif fileExists(default_picon):
+                    pixmap_widget.instance.setPixmapFromFile(default_picon)
+                
+                pixmap_widget.show()
             else:
-                # Empty slot
+                # Hide empty slots
                 pixmap_widget.hide()
                 label_widget.setText('')
-                if event_widget is not None:
-                    event_widget.setText('')
-
-        # Keep existing selection frame logic
+        
+        # Update selection frame
         self.paintFrame()
     
     def paintFrame(self):
@@ -3212,6 +3115,19 @@ class IPAudioScreenGrid(Screen):
     def addErrback(self, error=None):
         pass
     
+    def getGuide(self):
+        url = 'http://ipkinstall.ath.cx/ipaudio/epg.json'
+        self.callUrl(url, self.parseGuide)
+    
+    def parseGuide(self, data):
+        if PY3:
+            data = data.decode("utf-8")
+        else:
+            data = data.encode("utf-8")
+        self.guide = json.loads(data)
+        if self.guide != {}:
+            self.setPlaylist()
+    
     def checkupdates(self):
         """Check for plugin updates from GitHub"""
         url = "https://raw.githubusercontent.com/popking159/ipaudio/main/installer-ipaudio.sh"
@@ -3269,6 +3185,8 @@ class IPAudioScreenGrid(Screen):
         cprint("[IPAudio] exit() called")
         
         # Stop all timers
+        if self.guideTimer.isActive():
+            self.guideTimer.stop()
         
         if self.statusTimer.isActive():
             self.statusTimer.stop()
@@ -3481,18 +3399,18 @@ class IPAudioHelp(Screen):
             "",
             "AUDIO CONTROLS:",
             "• GREEN: Reset/Stop audio",
-            "• 7: Decrease Audio delay (-1s)",
-            "• 9: Increase Audio delay (+1s)",
+            "• 7: Decrease Audio delay (-0.5s)",
+            "• 9: Increase Audio delay (+0.5s)",
             "• 8: Reset Audio delay",
             "  - Sync audio with video",
             "  - Range: -10s to +10s",
             "",
             "VIDEO SYNC:",
             "• PAUSE: Activate TimeShift delay",
-            "• CH+: Increase Video delay (+1s)",
-            "• CH-: Decrease Video delay (-1s)",
+            "• CH+: Increase Video delay (+0.5s)",
+            "• CH-: Decrease Video delay (-0.5s)",
             "  - Sync live TV with audio stream",
-            "  - Range: 0 to +300s",
+            "  - Range: 0 to +50s",
             "",
             "SETTINGS (MENU):",
             "• Change skin color (Orange/Teal/Lime)",
@@ -3520,14 +3438,6 @@ class IPAudioHelp(Screen):
             "• Files in: /etc/enigma2/ipaudio/",
             "• Format: ipaudio_<name>.json",
             "",
-            "GRID list support:",
-            "• Switch category using NEXT and PREVIOUS keys",
-            "• Picon size 200*120",
-            "",
-            "EPG support:",
-            "• EPG button to download epg from today 10:00AM to next day 09:59AM ",
-            "• Audio channel name must have 'SPORTS' to be linked with the correct epg",
-            "",            
             "TIPS:",
             "• Use audio delay for stream sync",
             "• Use TimeShift for live TV sync",

@@ -11,12 +11,20 @@
     },
     "Local Radio": {
         "cmds": [
-            "On Sport FM|http://carina.streamerr.co:8108/stream",
-            "Radio HITS|http://radiohits882.radioca.st:8957/stream/;",
+            "On Sport FM|https://carina.streamerr.co:2020/stream/OnSportFM",
+            "Radio HITS|https://radiohits882.radioca.st/;",
             "Nagham FM|https://ahmsamir.radioca.st/stream",
 			"Nogoom FM|https://audio.nrpstream.com/listen/nogoumfm/radio.mp3",
-			"Mega FM|http://nebula.shoutca.st:8211/stream",
-			"Radio 9090|http://9090streaming.mobtada.com/9090FMEGYPT"
+			"Mega FM|https://megafm927.radioca.st/stream",
+			"Radio 9090|http://9090streaming.mobtada.com/9090FMEGYPT",
+			"Nile FM|https://audio.nrpstream.com/listen/nile_fm/radio.mp3",
+			"Diab FM|https://stream.zeno.fm/xa4yhh4k838uv"
+        ]
+    },
+    "Quran Kareem": {
+        "cmds": [
+            "Quran Kareem|https://stream.radiojar.com/8s5u5tpdtwzuv"
+			"ALmenshawy|https://qurango.net/radio/mohammed_siddiq_alminshawi"
         ]
     }
 }

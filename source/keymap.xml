@@ -21,11 +21,12 @@
 		<key id="KEY_PLAYPAUSE" mapto="pause" flags="mr"/>
 		<key id="KEY_CHANNELUP" mapto="delayUP" flags="mr"/>
 		<key id="KEY_CHANNELDOWN" mapto="delayDown" flags="mr"/>
+		<key id="KEY_EPG" mapto="fetchEPG" flags="mr"/>
         <key id="KEY_7" mapto="audioDelayDown" flags="mr" />
         <key id="KEY_8" mapto="audioDelayReset" flags="mr" />
         <key id="KEY_9" mapto="audioDelayUp" flags="mr" />
 		<key id="KEY_0" mapto="clearVideoDelay" flags="mr" />
-		<key id="KEY_1" mapto="prevBouquet" flags="mr" />
-		<key id="KEY_3" mapto="nextBouquet" flags="mr" />
+		<key id="KEY_PREVIOUS" mapto="prevBouquet" flags="mr" />
+		<key id="KEY_NEXT" mapto="nextBouquet" flags="mr" />
 	</map>
 </keymap>
