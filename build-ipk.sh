@@ -117,9 +117,25 @@ fi
 exit 0
 EOF
 
+# Create postrm script (run after removal)
+echo "Creating postrm script..."
+
+cat > ${CONTROL_DIR}/postrm << 'EOF'
+#!/bin/sh
+echo "Post-removal cleanup for IPAudio..."
+
+# Remove plugin directory
+if [ -d /usr/lib/enigma2/python/Plugins/Extensions/IPAudio ]; then
+    rm -rf /usr/lib/enigma2/python/Plugins/Extensions/IPAudio
+fi
+
+exit 0
+EOF
+
 # Make scripts executable
 chmod 755 ${CONTROL_DIR}/postinst
 chmod 755 ${CONTROL_DIR}/prerm
+chmod 755 ${CONTROL_DIR}/postrm
 
 # Copy ALL plugin files (excluding .pyc and .sh)
 echo "Copying plugin files..."
