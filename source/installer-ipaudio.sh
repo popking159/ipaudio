@@ -1,156 +1,102 @@
 #!/bin/bash
 
-# IPAudio Auto-Update Installer
-# wget -q --no-check-certificate https://raw.githubusercontent.com/popking159/ipaudio/main/installer-ipaudio.sh -O - | bash
-
-# Version info (update these for each release)
-version="8.05"
+# Version info - UPDATE THESE for each release
+version="8.08"
 description="Adjust Grid list and build in EPG fetcher"
-ipk_url="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_${version}_all.ipk"
+ipkurl="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio-v${version}-all.ipk"
 
-# Display banner
-echo "======================================"
-echo " IPAudio Installer v${version}"
-echo "======================================"
 echo ""
+echo "IPAudio Installer v$version"
+echo "================================"
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then
-    echo "Error: Please run as root"
+    echo "Error: Please run as root!"
     exit 1
 fi
 
-# Function to remove ALL IPAudio config settings
-reset_ipaudio_config() {
-    local SETTINGS_FILE="/etc/enigma2/settings"
-    if [ ! -f "$SETTINGS_FILE" ]; then
-        return
-    fi
-    
-    echo "Resetting IPAudio configuration..."
-    
-    # Check if any IPAudio config exists
-    if grep -q "config.plugins.IPAudio" "$SETTINGS_FILE"; then
-        # Backup settings file first
-        cp "$SETTINGS_FILE" "${SETTINGS_FILE}.backup.$(date +%Y%m%d_%H%M%S)"
-        echo "Settings backed up"
-        
-        # Remove ALL IPAudio config lines
-        sed -i '/^config\.plugins\.IPAudio/d' "$SETTINGS_FILE"
-        echo "All IPAudio settings removed - will use fresh defaults"
-    else
-        echo "No previous IPAudio settings found"
-    fi
-}
+# CLEANUP FIRST - Remove ONLY IPAudio (preserve IPAudioPro)
+echo "=== Cleaning previous IPAudio installation ==="
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/IPAudio
+opkg remove enigma2-plugin-extensions-ipaudio --force-depends 2>/dev/null || true
 
-# Function to backup user playlists and delays
-backup_user_data() {
-    echo "Checking for user data..."
-    local BACKUP_DIR="/tmp/ipaudio_backup_$(date +%Y%m%d_%H%M%S)"
-    local HAS_BACKUP=false
-    
-    # Backup playlists and delays (keep these!)
-    if [ -d "/etc/enigma2/ipaudio" ]; then
-        mkdir -p "$BACKUP_DIR"
-        cp -r /etc/enigma2/ipaudio "$BACKUP_DIR/"
-        echo "Playlists and delays backed up to $BACKUP_DIR"
-        HAS_BACKUP=true
-    fi
-    
-    if [ "$HAS_BACKUP" = false ]; then
-        echo "No user data to backup"
-    fi
-}
+# Backup user data (playlists/delays)
+echo "=== Backing up user data ==="
+backup_dir="/tmp/ipaudiobackup-$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$backup_dir"
+if [ -d "/etc/enigma2/ipaudio" ]; then
+    cp -r /etc/enigma2/ipaudio "$backup_dir/" 2>/dev/null || true
+    echo "Playlists backed up to $backup_dir"
+fi
+
+# Reset ALL IPAudio config settings for clean install
+echo "=== Resetting IPAudio settings ==="
+settings_file="/etc/enigma2/settings"
+if [ -f "$settings_file" ]; then
+    cp "$settings_file" "${settings_file}.backup.$(date +%Y%m%d%H%M%S)"
+    sed -i '/^config.plugins.IPAudio/d' "$settings_file"
+    echo "Settings reset - fresh defaults will be used"
+fi
 
 # Create temp directory
-TMP_DIR="/tmp/ipaudio_install"
-mkdir -p "$TMP_DIR"
-cd "$TMP_DIR"
+tmp_dir="/tmp/ipaudio-install"
+mkdir -p "$tmp_dir"
+cd "$tmp_dir" || exit 1
 
-echo "Downloading IPAudio v${version}..."
-wget -q --show-progress "$ipk_url" -O ipaudio.ipk
-
+echo "=== Downloading IPAudio v$version ==="
+wget -q --show-progress "$ipkurl" -O ipaudio.ipk
 if [ $? -ne 0 ]; then
     echo "Error: Download failed!"
     echo "Please check your internet connection."
-    rm -rf "$TMP_DIR"
+    rm -rf "$tmp_dir"
     exit 1
 fi
 
 echo "Download complete!"
-echo ""
 
-# Check if plugin is already installed
-if opkg list-installed | grep -q "enigma2-plugin-extensions-ipaudio"; then
-    echo "IPAudio is already installed. Upgrading..."
-    
-    # Backup user playlists and delays (NOT settings)
-    backup_user_data
-    
-    # Remove ALL config settings for clean upgrade
-    reset_ipaudio_config
-    
-    # Remove old version
-    opkg remove enigma2-plugin-extensions-ipaudio --force-depends
-else
-    echo "Installing IPAudio for the first time..."
-    
-    # Clean any leftover config from previous installations
-    reset_ipaudio_config
-fi
-
-echo "Checking dependencies..."
-
-# Check for Python PIL/Pillow
-if python3 -c "import PIL" 2>/dev/null; then
-    echo "Python PIL/Pillow found"
-else
+# Check/install dependencies
+echo "=== Checking dependencies ==="
+if ! python3 -c "import PIL" 2>/dev/null; then
     echo "Installing Python PIL/Pillow for picon conversion..."
     opkg update
     opkg install python3-pillow
-    
-    if [ $? -eq 0 ]; then
-        echo "Python PIL/Pillow installed"
-    else
-        echo "Warning: Failed to install PIL/Pillow. Picon conversion will not work."
-    fi
 fi
 
-echo "Installing IPAudio v${version}..."
-opkg install ipaudio.ipk
+# Install/Upgrade
+echo "=== Installing IPAudio v$version ==="
+if opkg list-installed | grep -q "enigma2-plugin-extensions-ipaudio"; then
+    echo "Upgrading existing IPAudio... (IPAudioPro preserved)"
+else
+    echo "Fresh IPAudio installation... (IPAudioPro preserved)"
+fi
+
+opkg install --force-reinstall ipaudio.ipk
 
 if [ $? -eq 0 ]; then
     echo ""
-    echo "======================================"
-    echo " Installation Successful!"
-    echo "======================================"
-    echo "IPAudio v${version} installed"
-    echo "Changes: ${description}"
+    echo "=================================="
+    echo "Installation Successful!"
+    echo "=================================="
+    echo "IPAudio v$version installed"
+    echo "$description"
     echo ""
-    
-    # Create settings directory if it doesn't exist
-    mkdir -p /etc/enigma2/ipaudio
-    
     echo "Installation summary:"
-    echo " - Plugin installed"
-    echo " - Settings reset to defaults"
-    echo " - User playlists preserved (if any)"
+    echo "- IPAudio: CLEAN installed"
+    echo "- IPAudioPro: PRESERVED ✓"
+    echo "- Settings: Reset to defaults"
+    echo "- Playlists: Preserved in $backup_dir"
     echo ""
-    echo "======================================"
-    echo "Important: Please restart Enigma2"
-    echo "======================================"
-    echo ""
-    echo "Restart options:"
-    echo " 1. From GUI: Menu > Standby > Restart GUI"
-    echo " 2. Command: killall -9 enigma2"
-    echo ""
+    
+    # AUTO RESTART GUI
+    echo "=== Restarting Enigma2 GUI (5 seconds) ==="
+    sleep 5
+    killall -9 enigma2
+    echo "GUI restarted! Plugin ready."
 else
     echo "Installation failed!"
-    rm -rf "$TMP_DIR"
+    rm -rf "$tmp_dir"
     exit 1
 fi
 
-# Cleanup
-rm -rf "$TMP_DIR"
-echo "Done!"
+rm -rf "$tmp_dir"
 exit 0

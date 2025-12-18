@@ -452,8 +452,8 @@ def getGridSkinFHD(color_scheme):
     return """
     <screen name="IPAudioScreenGrid" position="80,24" size="1730,1020" title="IPAudio Grid" backgroundColor="#20383636" flags="wfNoBorder">
     <!-- Header -->
-    <widget name="title" position="1385,70" size="270,50" font="Regular;40" foregroundColor="#FFA500" transparent="1" halign="left" />
-    <widget name="server" position="110,65" size="600,50" font="Regular;32" foregroundColor="#FFFFFF" transparent="1" halign="left" />
+    <widget name="title" position="1438,10" size="270,50" font="Regular;40" foregroundColor="#FFA500" transparent="1" halign="left" />
+    <widget name="server" position="90,10" size="600,50" font="Regular;38" foregroundColor="#FFFFFF" transparent="1" halign="left" />
     <widget name="sync" position="830,120" size="250,40" font="Regular;28" foregroundColor="#00FF00" transparent="1" halign="left" />
     <widget name="audio_delay" position="1100,120" size="250,40" font="Regular;24" foregroundColor="#00FFFF" transparent="1" halign="left" />
     <widget name="network_status" position="95,120" size="400,40" font="Regular;24" foregroundColor="#FFFF00" transparent="1" />
@@ -461,6 +461,9 @@ def getGridSkinFHD(color_scheme):
 
     <!-- Selection frame -->
     <widget name="frame" position="95,175" size="290,260" zPosition="1" alphatest="blend" transparent="1" />
+    
+    <widget name="channelname" position="700,10" size="602,50" font="Regular;38" foregroundColor="#FFA500" transparent="1" halign="left" />
+<widget name="epginfo" position="163,73" size="1511,30" font="Regular;24" foregroundColor="#FFFFFF" transparent="1" halign="left" />
 
     <!-- Row 1 -->
     <widget name="label_1" position="105,190" size="270,30" font="Regular;24" halign="center" valign="center" transparent="1" foregroundColor="{primary}" />

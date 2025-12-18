@@ -1244,6 +1244,85 @@ class IPAudioScreen(Screen):
 
         self.onShown.append(self.onWindowShow)
 
+    def downloadPicon(self):
+        """Yellow button - open picon provider choice"""
+        providers = [
+            ("zalata_audio", "zalata_audio"),
+            ("haytham_audio", "haytham_audio"), 
+            ("mohamed_audio", "mohamed_audio")
+        ]
+        self.session.openWithCallback(self.providerChoiceCallback, ChoiceBox, 
+            title="Select Picon Provider", list=providers)
+
+    def providerChoiceCallback(self, choice):
+        """Callback for provider selection - show grid/simple choice"""
+        if not choice:
+            return
+        self.selected_provider = choice[1]
+        picon_types = [
+            ("Download Grid Picon", "grid"),
+            ("Download Simple Picon", "simple")
+        ]
+        self.session.openWithCallback(self.piconTypeCallback, ChoiceBox, 
+            title=f"Select Picon Type for {self.selected_provider}", list=picon_types)
+
+    def piconTypeCallback(self, choice):
+        """Callback for picon type - start download"""
+        if not choice:
+            return
+        picon_type = choice[1]  # "grid" or "simple"
+        self.downloadPiconArchive(self.selected_provider, picon_type)
+
+    def downloadPiconArchive(self, provider, picon_type):
+        """Download and extract specific picon tar.gz - FIXED path handling"""
+        base_url = f"https://raw.githubusercontent.com/popking159/ipaudio/main/{provider}"
+        filename = f"{picon_type}.tar.gz"
+        download_url = f"{base_url}/{filename}"
+        
+        # Target paths from config
+        if picon_type == "grid":
+            target_path = config.plugins.IPAudio.piconPathGrid.value
+        else:
+            target_path = config.plugins.IPAudio.piconPathSimple.value
+        
+        tmp_file = f"/tmp/{provider}_{filename}"
+        
+        try:
+            # Download tar.gz to /tmp/
+            import urllib.request
+            urllib.request.urlretrieve(download_url, tmp_file)
+            
+            # Ensure target directory exists
+            if not os.path.exists(target_path):
+                os.makedirs(target_path)
+            
+            # Clear existing picons in target path FIRST
+            for root, dirs, files in os.walk(target_path):
+                for file in files:
+                    if file.endswith('.png'):
+                        os.remove(os.path.join(root, file))
+            
+            # Extract tar.gz - FIXED: extract members one by one to target_path
+            import tarfile
+            with tarfile.open(tmp_file, 'r:gz') as tar:
+                for member in tar.getmembers():
+                    if member.isfile() and member.name.endswith('.png'):
+                        # Extract PNG files only, directly to target_path (strip subdirs)
+                        member_path = os.path.join(target_path, os.path.basename(member.name))
+                        tar.makefile(member, member_path)
+            
+            # Clean up tmp file
+            os.remove(tmp_file)
+            
+            self.session.open(MessageBox, 
+                f"{picon_type.title()} picons for {provider} downloaded to {target_path}!", 
+                MessageBox.TYPE_INFO, timeout=5)
+            
+        except Exception as e:
+            self.session.open(MessageBox, 
+                f"Download failed: {str(e)}", 
+                MessageBox.TYPE_ERROR, timeout=5)
+
     def downloadList(self):
         """Blue button: download provider M3U and convert to IPAudio JSON."""
         choices = [
@@ -1464,14 +1543,6 @@ class IPAudioScreen(Screen):
     def showHelp(self):
         """Open help screen"""
         self.session.open(IPAudioHelp)
-
-    def downloadPicon(self):
-        self.session.open(
-            MessageBox,
-            _("Coming soon"),
-            MessageBox.TYPE_INFO,
-            timeout=5
-        )
 
     def checkNetworkStatus(self):
         """Check if audio stream is still playing with bitrate info"""
@@ -2548,7 +2619,8 @@ class IPAudioScreenGrid(Screen):
         self['title'].setText('IPAudio v{}'.format(Ver))
         self['server'] = Label()
         self['sync'] = Label()
-        
+        self['channelname'] = Label()
+        self['epginfo'] = Label("No EPG")        
         # Load video delay
         current_service = self.session.nav.getCurrentlyPlayingServiceReference()
         current_delay = config.plugins.IPAudio.tsDelay.value
@@ -2679,13 +2751,114 @@ class IPAudioScreenGrid(Screen):
         else:
             cprint("[IPAudio] Frame image not found at: {}".format(frame_path))
 
+    def updateChannelInfo(self):
+        """Update channel name and EPG for current selection"""
+        try:
+            if self.radioList and self.index is not None and 0 <= self.index < len(self.radioList):
+                current = self.radioList[self.index]
+                channel_name = current[0]
+                self['channelname'].setText(channel_name)
+                
+                # FIXED EPG using grid's working method
+                epg_text = self.getEPGForChannel(channel_name)
+                self['epginfo'].setText(epg_text)
+                print(f"[DEBUG] {channel_name} -> EPG: {epg_text}")
+            else:
+                self['channelname'].setText("")
+                self['epginfo'].setText("No EPG")
+        except Exception as e:
+            print(f"[DEBUG] Error: {e}")
+            self['channelname'].setText("ERROR")
+            self['epginfo'].setText("No EPG")
+
+    def getEPGForChannel(self, channel_name):
+        """Get EPG using grid's existing helper function"""
+        try:
+            # Use the SAME EPG function grid already uses successfully!
+            chevents = buildEPGIndex()  # Build EPG cache
+            epg_title = findEPGTitleForAudioName(channel_name, chevents)
+            return epg_title[:60] + "..." if epg_title and len(epg_title) > 60 else epg_title or "No EPG"
+        except:
+            return "No EPG"
+
     def downloadPicon(self):
-        self.session.open(
-            MessageBox,
-            _("Coming soon"),
-            MessageBox.TYPE_INFO,
-            timeout=5
-        )
+        """Yellow button - open picon provider choice"""
+        providers = [
+            ("zalata_audio", "zalata_audio"),
+            ("haytham_audio", "haytham_audio"), 
+            ("mohamed_audio", "mohamed_audio")
+        ]
+        self.session.openWithCallback(self.providerChoiceCallback, ChoiceBox, 
+            title="Select Picon Provider", list=providers)
+
+    def providerChoiceCallback(self, choice):
+        """Callback for provider selection - show grid/simple choice"""
+        if not choice:
+            return
+        self.selected_provider = choice[1]
+        picon_types = [
+            ("Download Grid Picon", "grid"),
+            ("Download Simple Picon", "simple")
+        ]
+        self.session.openWithCallback(self.piconTypeCallback, ChoiceBox, 
+            title=f"Select Picon Type for {self.selected_provider}", list=picon_types)
+
+    def piconTypeCallback(self, choice):
+        """Callback for picon type - start download"""
+        if not choice:
+            return
+        picon_type = choice[1]  # "grid" or "simple"
+        self.downloadPiconArchive(self.selected_provider, picon_type)
+
+    def downloadPiconArchive(self, provider, picon_type):
+        """Download and extract specific picon tar.gz - FIXED path handling"""
+        base_url = f"https://raw.githubusercontent.com/popking159/ipaudio/main/{provider}"
+        filename = f"{picon_type}.tar.gz"
+        download_url = f"{base_url}/{filename}"
+        
+        # Target paths from config
+        if picon_type == "grid":
+            target_path = config.plugins.IPAudio.piconPathGrid.value
+        else:
+            target_path = config.plugins.IPAudio.piconPathSimple.value
+        
+        tmp_file = f"/tmp/{provider}_{filename}"
+        
+        try:
+            # Download tar.gz to /tmp/
+            import urllib.request
+            urllib.request.urlretrieve(download_url, tmp_file)
+            
+            # Ensure target directory exists
+            if not os.path.exists(target_path):
+                os.makedirs(target_path)
+            
+            # Clear existing picons in target path FIRST
+            for root, dirs, files in os.walk(target_path):
+                for file in files:
+                    if file.endswith('.png'):
+                        os.remove(os.path.join(root, file))
+            
+            # Extract tar.gz - FIXED: extract members one by one to target_path
+            import tarfile
+            with tarfile.open(tmp_file, 'r:gz') as tar:
+                for member in tar.getmembers():
+                    if member.isfile() and member.name.endswith('.png'):
+                        # Extract PNG files only, directly to target_path (strip subdirs)
+                        member_path = os.path.join(target_path, os.path.basename(member.name))
+                        tar.makefile(member, member_path)
+            
+            # Clean up tmp file
+            os.remove(tmp_file)
+            
+            self.session.open(MessageBox, 
+                f"{picon_type.title()} picons for {provider} downloaded to {target_path}!", 
+                MessageBox.TYPE_INFO, timeout=5)
+            
+        except Exception as e:
+            self.session.open(MessageBox, 
+                f"Download failed: {str(e)}", 
+                MessageBox.TYPE_ERROR, timeout=5)
 
     def downloadList(self):
         """Blue button: download provider M3U and convert to IPAudio JSON."""
@@ -2969,7 +3142,8 @@ class IPAudioScreenGrid(Screen):
 
         # Keep existing selection frame logic
         self.paintFrame()
-    
+        self.updateChannelInfo()    
+
     def paintFrame(self):
         """Move selection frame to current index"""
         if not self.radioList:
@@ -3026,6 +3200,7 @@ class IPAudioScreenGrid(Screen):
             self.index = 0
             self.page = 0
             self.updateGrid()
+        self.updateChannelInfo()
     
     def gridLeft(self):
         """Move selection left"""
@@ -3048,7 +3223,8 @@ class IPAudioScreenGrid(Screen):
             self.index = len(self.radioList) - 1
             self.page = self.index // self.ITEMS_PER_PAGE
             self.updateGrid()
-    
+        self.updateChannelInfo()
+        
     def gridUp(self):
         """Move selection up (5 items up in grid)"""
         if not self.radioList:
@@ -3080,7 +3256,8 @@ class IPAudioScreenGrid(Screen):
             self.updateGrid()
         else:
             self.paintFrame()
-    
+        self.updateChannelInfo()
+        
     def gridDown(self):
         """Move selection down (5 items down in grid)"""
         if not self.radioList:
@@ -3105,10 +3282,7 @@ class IPAudioScreenGrid(Screen):
             self.updateGrid()
         else:
             self.paintFrame()
-    
-    # Copy all other methods from IPAudioScreen class
-    # (getHosts, setPlaylist, changePlaylist, ok, pause, delayUP, delayDown, etc.)
-    # These are identical to list view, just navigation is different
+        self.updateChannelInfo()
     
     def getHosts(self):
         """Get all available playlists including custom categories"""
@@ -3184,11 +3358,6 @@ class IPAudioScreenGrid(Screen):
         
         self.radioList = []
         self.setPlaylist()
-    
-    # Include all other methods from IPAudioScreen:
-    # ok(), pause(), delayUP(), delayDown(), audioDelayUp(), audioDelayDown(),
-    # resetAudio(), exit(), checkNetworkStatus(), etc.
-    # Add these methods to IPAudioScreenGrid class (continued from previous)
     
     def ok(self, long=False):
         """Play selected channel"""
@@ -3829,6 +3998,8 @@ class IPAudioPlaylist(IPAudioScreen):
         else:
             self["list"].hide()
             self["server"].setText('Cannot load playlist')
+        self.updateGrid()  # Already there
+        self.updateChannelInfo()  # ADD THIS LINE
 
     def keyRed(self):
         playlist = getPlaylist()

@@ -5,7 +5,7 @@
 
 # Configuration
 PLUGIN_NAME="enigma2-plugin-extensions-ipaudio"
-VERSION="8.07"
+VERSION="8.08"
 MAINTAINER="popking159"
 DESCRIPTION="IPAudio - Multi-format audio streaming plugin with custom playlists"
 HOMEPAGE="https://github.com/popking159/ipaudio"
