@@ -4,7 +4,7 @@
 # wget -q --no-check-certificate https://raw.githubusercontent.com/popking159/ipaudio/main/installer-ipaudio.sh -O - | bash
 
 # Version info (update these for each release)
-version="8.06"
+version="8.07"
 description="Adjust Grid list and build in EPG fetcher"
 ipk_url="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_${version}_all.ipk"
 
