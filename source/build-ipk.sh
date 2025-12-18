@@ -5,7 +5,7 @@
 
 # Configuration
 PLUGIN_NAME="enigma2-plugin-extensions-ipaudio"
-VERSION="8.05"
+VERSION="8.07"
 MAINTAINER="popking159"
 DESCRIPTION="IPAudio - Multi-format audio streaming plugin with custom playlists"
 HOMEPAGE="https://github.com/popking159/ipaudio"
@@ -117,9 +117,25 @@ fi
 exit 0
 EOF
 
+# Create postrm script (run after removal)
+echo "Creating postrm script..."
+
+cat > ${CONTROL_DIR}/postrm << 'EOF'
+#!/bin/sh
+echo "Post-removal cleanup for IPAudio..."
+
+# Remove plugin directory
+if [ -d /usr/lib/enigma2/python/Plugins/Extensions/IPAudio ]; then
+    rm -rf /usr/lib/enigma2/python/Plugins/Extensions/IPAudio
+fi
+
+exit 0
+EOF
+
 # Make scripts executable
 chmod 755 ${CONTROL_DIR}/postinst
 chmod 755 ${CONTROL_DIR}/prerm
+chmod 755 ${CONTROL_DIR}/postrm
 
 # Copy ALL plugin files (excluding .pyc and .sh)
 echo "Copying plugin files..."
@@ -168,9 +184,10 @@ find "${DATA_DIR}" -type f -exec basename {} \; | sort
 echo ""
 echo "Creating conffiles list..."
 
+# No conffiles yet (directory only, no fixed files)
 cat > ${CONTROL_DIR}/conffiles << EOF
-/etc/enigma2/ipaudio
 EOF
+
 
 
 # Calculate installed size

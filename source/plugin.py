@@ -829,25 +829,110 @@ class IPAudioSetup(Screen, ConfigListScreen):
         ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
         
         # FIXED: Use separate ActionMaps
-        self["actions"] = ActionMap(["SetupActions"],
+        self["key_red"] = Button(_("Cancel"))
+        self["key_green"] = Button(_("Save"))
+        self["key_yellow"] = Button(_("Credentials"))
+        self["key_blue"] = Button(_("Convert Picons"))
+
+        self["actions"] = ActionMap(
+            ["SetupActions", "ColorActions"],
             {
                 "cancel": self.keyCancel,
-                "save": self.apply,
-                "ok": self.apply,
-            }, -2)
-        
-        # Add ColorActions for blue button
-        self["colorActions"] = ActionMap(["ColorActions"],
-            {
+                "red": self.keyCancel,
+                "green": self.apply,
+                "yellow": self.openCredentialsMenu,
                 "blue": self.openPiconConverter,
-            }, -2)
-        
-        self["key_green"] = StaticText(_("Save"))
-        self["key_red"] = StaticText(_("Cancel"))
-        self["key_blue"] = StaticText(_("Convert Picons"))
+            },
+            -2)
         
         self.configChanged = False
         self.createSetup()
+
+    def openCredentialsMenu(self):
+        choices = [
+            (_("Backup credentials"), "backup"),
+            (_("Restore credentials"), "restore"),
+        ]
+        self.session.openWithCallback(
+            self.credentialsAction,
+            ChoiceBox,
+            title=_("Credentials actions"),
+            list=choices
+        )
+
+    def getCredentialsPath(self):
+        base = config.plugins.IPAudio.settingsPath.value
+        if not os.path.exists(base):
+            try:
+                os.makedirs(base)
+            except Exception:
+                pass
+        return os.path.join(base, "credentials_ipaudio.json")
+
+    def credentialsAction(self, choice):
+        if not choice:
+            return
+        action = choice[1]
+        if action == "backup":
+            self.backupCredentials()
+        elif action == "restore":
+            self.restoreCredentials()
+
+    def backupCredentials(self):
+        path = self.getCredentialsPath()
+        data = {
+            "orange_user": config.plugins.IPAudio.orange_user.value,
+            "orange_pass": config.plugins.IPAudio.orange_pass.value,
+            "satfamily_user": config.plugins.IPAudio.satfamily_user.value,
+            "satfamily_pass": config.plugins.IPAudio.satfamily_pass.value,
+        }
+        try:
+            with open(path, "w") as f:
+                json.dump(data, f, indent=4)
+            self.session.open(
+                MessageBox,
+                _("Credentials saved successfully.\nFile: %s") % path,
+                MessageBox.TYPE_INFO, timeout=5
+            )
+        except Exception as e:
+            self.session.open(
+                MessageBox,
+                _("Error saving credentials:\n%s") % str(e),
+                MessageBox.TYPE_ERROR, timeout=5
+            )
+
+    def restoreCredentials(self):
+        path = self.getCredentialsPath()
+        if not os.path.exists(path):
+            self.session.open(
+                MessageBox,
+                _("No saved credentials found.\nFile: %s") % path,
+                MessageBox.TYPE_INFO, timeout=5
+            )
+            return
+        try:
+            with open(path, "r") as f:
+                data = json.load(f)
+            config.plugins.IPAudio.orange_user.value = data.get("orange_user", "")
+            config.plugins.IPAudio.orange_pass.value = data.get("orange_pass", "")
+            config.plugins.IPAudio.satfamily_user.value = data.get("satfamily_user", "")
+            config.plugins.IPAudio.satfamily_pass.value = data.get("satfamily_pass", "")
+
+            # Refresh config list and mark as changed
+            self["config"].invalidateCurrent()
+            self.createSetup()
+
+            self.session.open(
+                MessageBox,
+                _("Credentials restored.\nRemember to press GREEN (Save)."),
+                MessageBox.TYPE_INFO, timeout=6
+            )
+        except Exception as e:
+            self.session.open(
+                MessageBox,
+                _("Error restoring credentials:\n%s") % str(e),
+                MessageBox.TYPE_ERROR, timeout=5
+            )
 
     def openPiconConverter(self):
         """Open picon converter choice menu"""
@@ -1087,8 +1172,9 @@ class IPAudioScreen(Screen):
         
         self["key_red"] = Button(_("Exit"))
         self["key_green"] = Button(_("Reset Audio"))
-        self["key_yellow"] = Button(_("Help"))
+        self["key_yellow"] = Button(_("Download Picon"))
         self["key_blue"] = Button(_("Download List"))
+        self["key_help"] = Button(_("Help"))
         self["key_info"] = Button(_("Info"))
         self["key_menu"] = Button(_("Menu"))
         self["key_epg"] = Button(_("EPG"))
@@ -1100,7 +1186,8 @@ class IPAudioScreen(Screen):
                 "menu": self.openConfig,
                 "red": self.exit,        # ADD THIS - Red button exits
                 "green": self.resetAudio,
-                "yellow": self.showHelp,  # ADD THIS
+                "yellow": self.downloadPicon,
+                "help": self.showHelp,  # ADD THIS
                 "blue": self.downloadList,    # ADD THIS
                 "info": self.showInfo,
                 "right": self.right,
@@ -1377,6 +1464,14 @@ class IPAudioScreen(Screen):
     def showHelp(self):
         """Open help screen"""
         self.session.open(IPAudioHelp)
+
+    def downloadPicon(self):
+        self.session.open(
+            MessageBox,
+            _("Coming soon"),
+            MessageBox.TYPE_INFO,
+            timeout=5
+        )
 
     def checkNetworkStatus(self):
         """Check if audio stream is still playing with bitrate info"""
@@ -2471,9 +2566,10 @@ class IPAudioScreenGrid(Screen):
         # Buttons
         self["key_red"] = Button(_("Exit"))
         self["key_green"] = Button(_("Reset Audio"))
-        self["key_yellow"] = Button(_("Help"))
+        self["key_yellow"] = Button(_("Download Picon"))
         self["key_blue"] = Button(_("Download List"))
         self["key_info"] = Button(_("Info"))
+        self["key_help"] = Button(_("Help"))
         self["key_menu"] = Button(_("Menu"))
         self["key_epg"] = Button(_("EPG"))
         
@@ -2504,7 +2600,8 @@ class IPAudioScreenGrid(Screen):
             "menu": self.openConfig,
             "red": self.exit,
             "green": self.resetAudio,
-            "yellow": self.showHelp,
+            "yellow": self.downloadPicon,
+            "help": self.showHelp,
             "blue": self.downloadList,    # ADD THIS
             "info": self.showInfo,
             "right": self.gridRight,
@@ -2581,6 +2678,14 @@ class IPAudioScreenGrid(Screen):
                 cprint("[IPAudio] Error loading frame: {}".format(str(e)))
         else:
             cprint("[IPAudio] Frame image not found at: {}".format(frame_path))
+
+    def downloadPicon(self):
+        self.session.open(
+            MessageBox,
+            _("Coming soon"),
+            MessageBox.TYPE_INFO,
+            timeout=5
+        )
 
     def downloadList(self):
         """Blue button: download provider M3U and convert to IPAudio JSON."""
@@ -3466,10 +3571,6 @@ class IPAudioScreenGrid(Screen):
                 self.currentBitrate = None
         
         self.bitrateCheckTimer.stop()
-    
-    # Copy remaining utility methods from IPAudioScreen:
-    # getTimeshift, unpauseService, startCountdown, updateCountdown,
-    # pauseAudioProcess, showInfo, showHelp, openConfig, exit, etc.
     
     def getTimeshift(self):
         service = self.session.nav.getCurrentService()

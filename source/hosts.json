@@ -18,13 +18,17 @@
 			"Mega FM|https://megafm927.radioca.st/stream",
 			"Radio 9090|http://9090streaming.mobtada.com/9090FMEGYPT",
 			"Nile FM|https://audio.nrpstream.com/listen/nile_fm/radio.mp3",
-			"Diab FM|https://stream.zeno.fm/xa4yhh4k838uv"
+			"Diab FM|https://stream.zeno.fm/xa4yhh4k838uv",
+			"Elissa FM|https://stream.zeno.fm/v7n499m8ckhvv",
+			"Shaaby FM|http://radio95.radioca.st:9010/stream"
         ]
     },
     "Quran Kareem": {
         "cmds": [
             "Quran Kareem|https://stream.radiojar.com/8s5u5tpdtwzuv",
-			"ALmenshawy|https://qurango.net/radio/mohammed_siddiq_alminshawi"
+			"ALmenshawy|https://qurango.net/radio/mohammed_siddiq_alminshawi",
+			"Mishary Rashid Alafasy|https://qurango.net/radio/mishary_alafasi",
+			"Maher Al-Mu'aiqly|https://backup.qurango.net/radio/maher"
         ]
     }
 }
