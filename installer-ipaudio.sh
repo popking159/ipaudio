@@ -3,7 +3,7 @@
 # Version info - UPDATE THESE for each release
 version="8.08"
 description="Adjust Grid list and build in EPG fetcher"
-ipkurl="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_v${version}_all.ipk"
+ipkurl="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_${version}_all.ipk"
 
 echo ""
 echo "IPAudio Installer v$version"
