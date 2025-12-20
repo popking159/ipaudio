@@ -2,12 +2,12 @@
 
 # ╔══════════════════════════════════════════════════════════════════════╗
 # ║                          IPAUDIO IPK BUILDER                         ║
-# ║                             Version 8.09                             ║
+# ║                             Version 8.10                             ║
 # ╚══════════════════════════════════════════════════════════════════════╝
 
 # Configuration
 PLUGIN_NAME="enigma2-plugin-extensions-ipaudio"
-VERSION="8.09"
+VERSION="8.10"
 MAINTAINER="popking159"
 DESCRIPTION="IPAudio - Multi-format audio streaming plugin with custom playlists"
 HOMEPAGE="https://github.com/popking159/ipaudio"
