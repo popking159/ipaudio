@@ -237,6 +237,49 @@ def trace_error():
     except:
         pass
 
+def build_provider_url(provider, username, password):
+    """
+    Return a list of (url, format_tag) to try in order.
+    Supports both:
+      - token=<user>_<pass>
+      - token=<pass>
+      - (legacy) token=<user>
+    """
+    u = (username or "").strip()
+    p = (password or "").strip()
+
+    if not u or not p:
+        return []
+
+    # If user pasted full URL, use only that
+    if u.startswith("http://") or u.startswith("https://"):
+        return [(u, "direct")]
+
+    urls = []
+
+    if provider == "orange":
+        base = "http://goradio.top/tv/playlists"
+        # 1) token=user_pass
+        token_user_pass = "%s_%s" % (u, p)
+        urls.append(("%s/%s?token=%s&type=mpegts" % (base, u, token_user_pass), "user_pass"))
+        # 2) token=pass_only
+        urls.append(("%s/%s?token=%s&type=mpegts" % (base, u, p), "pass_only"))
+        # 3) token=user_only (legacy)
+        urls.append(("%s/%s?token=%s&type=mpegts" % (base, u, u), "user_only"))
+
+    elif provider == "satfamily":
+        base = "http://stereofm.live/tv/playlists"
+        # Example: http://stereofm.live/tv/playlists/adsxbamm?token=adsxbamm_TuzG9hAyZj&type=mpegts
+        token_user_pass = "%s_%s" % (u, p)
+        # 1) token=user_pass
+        urls.append(("%s/%s?token=%s&type=mpegts" % (base, u, token_user_pass), "user_pass"))
+        # 2) token=pass_only
+        urls.append(("%s/%s?token=%s&type=mpegts" % (base, u, p), "pass_only"))
+        # 3) token=user_only (if they ever used this)
+        urls.append(("%s/%s?token=%s&type=mpegts" % (base, u, u), "user_only"))
+
+    return urls
+
 def simpleDownloadM3U(url, timeout=10):
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
     req = urllib.request.Request(url, headers=headers)
@@ -1362,8 +1405,8 @@ class IPAudioScreen(Screen):
     def downloadList(self):
         """Blue button: download provider M3U and convert to IPAudio JSON."""
         choices = [
-            (_("Orange (beIN MENA)"), "orange"),
-            (_("SATFamily (beIN MENA)"), "satfamily"),
+            (_("Orange Audio"), "orange"),
+            (_("SATFamily Audio"), "satfamily"),
         ]
         self.session.openWithCallback(
             self.downloadListChoice,
@@ -1388,7 +1431,7 @@ class IPAudioScreen(Screen):
                     MessageBox.TYPE_ERROR, timeout=5
                 )
                 return
-            m3u_url = "https://goradio.top/tv/playlists/%s?token=%s&type=mpegts" % (username, password)
+
         elif provider == "satfamily":
             base_name = "satfamily"
             username = config.plugins.IPAudio.satfamily_user.value.strip()
@@ -1400,21 +1443,45 @@ class IPAudioScreen(Screen):
                     MessageBox.TYPE_ERROR, timeout=5
                 )
                 return
-            m3u_url = "https://stereofm.live/tv/playlists/%s?token=%s" % (username, password)
         else:
             return
 
-        cprint("[IPAudio] Downloading %s M3U from: %s" % (provider, m3u_url))
-        try:
-            m3u_text = simpleDownloadM3U(m3u_url)
-        except Exception as e:
+        # Direct URL
+        if username.startswith("http://") or username.startswith("https://"):
+            m3u_urls = [(username, "direct")]
+        else:
+            m3u_urls = build_provider_url(provider, username, password)
+            if not m3u_urls:
+                self.session.open(
+                    MessageBox,
+                    _("Could not build playlist URL.\nCheck username/password."),
+                    MessageBox.TYPE_ERROR, timeout=5
+                )
+                return
+
+        last_error = None
+        m3u_text = None
+
+        for url, fmt in m3u_urls:
+            cprint("[IPAudio] Trying %s URL (%s): %s" % (provider, fmt, url))
+            try:
+                m3u_text = simpleDownloadM3U(url)
+                cprint("[IPAudio] %s M3U download OK using %s" % (provider, fmt))
+                break
+            except Exception as e:
+                last_error = str(e)
+                cprint("[IPAudio] %s M3U download failed (%s): %s" % (provider, fmt, last_error))
+                m3u_text = None
+
+        if not m3u_text:
             self.session.open(
                 MessageBox,
-                _("Download failed:\n%s") % str(e),
+                _("Download failed.\nLast error:\n%s") % (last_error or _("Unknown error")),
                 MessageBox.TYPE_ERROR, timeout=5
             )
             return
 
+        # Rest of your code unchanged
         json_data, count = self.m3uToIPAudioJson(m3u_text, base_name)
         if count == 0:
             self.session.open(
@@ -1425,7 +1492,6 @@ class IPAudioScreen(Screen):
             return
 
         json_data = self.applyProviderRenames(json_data, base_name)
-
         out_dir = config.plugins.IPAudio.settingsPath.value
         try:
             if not os.path.exists(out_dir):
@@ -2699,8 +2765,8 @@ class IPAudioScreenGrid(Screen):
     def downloadList(self):
         """Blue button: download provider M3U and convert to IPAudio JSON."""
         choices = [
-            (_("Orange (beIN MENA)"), "orange"),
-            (_("SATFamily (beIN MENA)"), "satfamily"),
+            (_("Orange Audio"), "orange"),
+            (_("SATFamily Audio"), "satfamily"),
         ]
         self.session.openWithCallback(
             self.downloadListChoice,
@@ -2725,7 +2791,7 @@ class IPAudioScreenGrid(Screen):
                     MessageBox.TYPE_ERROR, timeout=5
                 )
                 return
-            m3u_url = "https://goradio.top/tv/playlists/%s?token=%s&type=mpegts" % (username, password)
+
         elif provider == "satfamily":
             base_name = "satfamily"
             username = config.plugins.IPAudio.satfamily_user.value.strip()
@@ -2737,21 +2803,45 @@ class IPAudioScreenGrid(Screen):
                     MessageBox.TYPE_ERROR, timeout=5
                 )
                 return
-            m3u_url = "https://stereofm.live/tv/playlists/%s?token=%s" % (username, password)
         else:
             return
 
-        cprint("[IPAudio] Downloading %s M3U from: %s" % (provider, m3u_url))
-        try:
-            m3u_text = simpleDownloadM3U(m3u_url)
-        except Exception as e:
+        # Direct URL
+        if username.startswith("http://") or username.startswith("https://"):
+            m3u_urls = [(username, "direct")]
+        else:
+            m3u_urls = build_provider_url(provider, username, password)
+            if not m3u_urls:
+                self.session.open(
+                    MessageBox,
+                    _("Could not build playlist URL.\nCheck username/password."),
+                    MessageBox.TYPE_ERROR, timeout=5
+                )
+                return
+
+        last_error = None
+        m3u_text = None
+
+        for url, fmt in m3u_urls:
+            cprint("[IPAudio] Trying %s URL (%s): %s" % (provider, fmt, url))
+            try:
+                m3u_text = simpleDownloadM3U(url)
+                cprint("[IPAudio] %s M3U download OK using %s" % (provider, fmt))
+                break
+            except Exception as e:
+                last_error = str(e)
+                cprint("[IPAudio] %s M3U download failed (%s): %s" % (provider, fmt, last_error))
+                m3u_text = None
+
+        if not m3u_text:
             self.session.open(
                 MessageBox,
-                _("Download failed:\n%s") % str(e),
+                _("Download failed.\nLast error:\n%s") % (last_error or _("Unknown error")),
                 MessageBox.TYPE_ERROR, timeout=5
             )
             return
 
+        # Rest of your code unchanged
         json_data, count = self.m3uToIPAudioJson(m3u_text, base_name)
         if count == 0:
             self.session.open(
@@ -2762,7 +2852,6 @@ class IPAudioScreenGrid(Screen):
             return
 
         json_data = self.applyProviderRenames(json_data, base_name)
-
         out_dir = config.plugins.IPAudio.settingsPath.value
         try:
             if not os.path.exists(out_dir):
@@ -3240,7 +3329,6 @@ class IPAudioScreenGrid(Screen):
             
             if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
                 # GStreamer path via wrapper
-                eq_filter = get_gst_eq_filter()
                 delaysec = config.plugins.IPAudio.audioDelay.value
                 vol_level = config.plugins.IPAudio.volLevel.value
 
@@ -3249,7 +3337,6 @@ class IPAudioScreenGrid(Screen):
                         url=self.url,
                         delay_sec=delaysec,
                         volume_level=vol_level,
-                        eq_filter=eq_filter,
                     )
                     self.runCmd(cmd)
                 except Exception as e:
@@ -3261,7 +3348,7 @@ class IPAudioScreenGrid(Screen):
                         timeout=5,
                     )
                     return
-                
+
             else:
                 # FFmpeg command with audio delay AND volume
                 delaysec = config.plugins.IPAudio.audioDelay.value

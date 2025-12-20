@@ -2,12 +2,12 @@
 
 # ╔══════════════════════════════════════════════════════════════════════╗
 # ║                          IPAUDIO IPK BUILDER                         ║
-# ║                             Version 8.09                             ║
+# ║                             Version 8.10                             ║
 # ╚══════════════════════════════════════════════════════════════════════╝
 
 # Configuration
 PLUGIN_NAME="enigma2-plugin-extensions-ipaudio"
-VERSION="8.09"
+VERSION="8.10"
 MAINTAINER="popking159"
 DESCRIPTION="IPAudio - Multi-format audio streaming plugin with custom playlists"
 HOMEPAGE="https://github.com/popking159/ipaudio"
@@ -35,32 +35,29 @@ mkdir -p "$DATA_DIR"
 mkdir -p "$BUILD_DIR/etc/enigma2/ipaudio"
 
 # Control file - MINIMAL GStreamer dependencies
-cat > "$CONTROL_DIR/control" << EOF
-Package: $PLUGIN_NAME
-Version: $VERSION
-Description: $DESCRIPTION
-Section: $SECTION
-Priority: $PRIORITY
-Maintainer: $MAINTAINER
-License: $LICENSE
-Architecture: $ARCHITECTURE
-OE: enigma2-plugin-extensions-ipaudio
-Homepage: $HOMEPAGE
-Depends: python3-core, python3-twisted-web, python3-pillow, python3-json, 
-         gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, 
-         gstreamer1.0-plugins-bad, ffmpeg
+cat > "$CONTROL_DIR/control" << 'EOF'
+Package: enigma2-plugin-extensions-ipaudio
+Version: 8.09
+Section: extra
+Priority: optional
+Maintainer: popking159
+Architecture: all
+Description: IPAudio - Multi-format audio streaming plugin with custom playlists
+Homepage: https://github.com/popking159/ipaudio
+License: GPL-2.0
+Depends: python3-core (>= 3.5), python3-twisted-web, python3-pillow, python3-json, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-plugins-bad, ffmpeg
 Installed-Size: 0
 EOF
 
 # Scripts (postinst, prerm)
-cat > "$CONTROL_DIR/postinst" << 'EOF'
+cat > "$CONTROL_DIR/postinst" << EOF
 #!/bin/sh
 mkdir -p /etc/enigma2/ipaudio
 mkdir -p /usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/simple
 mkdir -p /usr/lib/enigma2/python/Plugins/Extensions/IPAudio/picons/grid
 chmod 755 /usr/lib/enigma2/python/Plugins/Extensions/IPAudio
 chmod 644 /usr/lib/enigma2/python/Plugins/Extensions/IPAudio/*.py 2>/dev/null
-echo "IPAudio v8.08 installed! Restart Enigma2."
+echo "IPAudio v$VERSION installed! Restart Enigma2."
 exit 0
 EOF
 
