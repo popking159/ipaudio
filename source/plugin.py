@@ -1,51 +1,77 @@
-from Plugins.Plugin import PluginDescriptor
+# =====================================================
+#   IPAudio V8.09   |   Developed by Ziko
+#                   |   Maintained by MNASR
+# =====================================================
+
+# Core Enigma2 components
+from enigma import (
+    eConsoleAppContainer, eTimer, getDesktop, eListboxPythonMultiContent,
+    gFont, iPlayableService, loadPNG, RT_HALIGN_LEFT, RT_VALIGN_CENTER, RT_WRAP
+)
+
+# Screens and UI components
 from Screens.Screen import Screen
+from Screens.MessageBox import MessageBox
+from Screens.ChoiceBox import ChoiceBox
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.MenuList import MenuList
-from Tools.BoundFunction import boundFunction
 from Components.Pixmap import Pixmap, MovingPixmap
-from GlobalActions import globalActionMap
-import urllib.request
-import urllib.error
-try:
-    from keymapparser import readKeymap
-except:
-    from Components.ActionMap import loadKeymap as readKeymap
+from Components.ConfigList import ConfigListScreen
+from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest
+
+# Config and plugin system
+from Plugins.Plugin import PluginDescriptor
 from Components.Sources.StaticText import StaticText
 from Components.config import (
-    config, ConfigSelectionNumber, getConfigListEntry, ConfigSelection, 
-    ConfigYesNo, ConfigInteger, ConfigSubsection, ConfigText, configfile, 
-    NoSave
+    config, configfile, NoSave, ConfigSelectionNumber, ConfigSelection,
+    ConfigYesNo, ConfigInteger, ConfigSubsection, ConfigText,
+    getConfigListEntry
 )
-from Components.ConfigList import ConfigListScreen
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS
-from enigma import eConsoleAppContainer, getDesktop, eListboxPythonMultiContent, gFont, RT_HALIGN_LEFT, RT_VALIGN_CENTER, RT_WRAP
-from enigma import iPlayableService, eTimer, loadPNG
 from Components.ServiceEventTracker import ServiceEventTracker
-from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest
-from Tools.Directories import fileExists
+from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
+
+# Utilities and keymaps
+from Tools.BoundFunction import boundFunction
+from GlobalActions import globalActionMap
+try:
+    from keymapparser import readKeymap
+except ImportError:
+    from Components.ActionMap import loadKeymap as readKeymap
+
+# Standard library
+import json
+import os
+import re
+import signal
+import subprocess
+import urllib.error
+import urllib.request
+from collections import OrderedDict
+from datetime import datetime
+from sys import version_info
+
+# Optional imports
 try:
     from enigma import eAlsaOutput
     HAVE_EALSA = True
 except ImportError:
     HAVE_EALSA = False
+
+try:
+    from PIL import Image
+except ImportError:
+    pass  # Handle gracefully if PIL not available
+
+# IPAudio-specific imports (keep at bottom)
 from Plugins.Extensions.IPAudio.Console2 import Console2
-from Screens.MessageBox import MessageBox
-from Screens.ChoiceBox import ChoiceBox
-import json, os, re
-import subprocess
-import signal
-from datetime import datetime
+from Plugins.Extensions.IPAudio.ffmpeg_wrapper import build_ffmpeg_cmd
+from Plugins.Extensions.IPAudio.gst_wrapper import build_gst_cmd
 from .skin import *
-from sys import version_info
-from collections import OrderedDict
-from PIL import Image
+
 
 PY3 = version_info[0] == 3
-# ADD THIS LINE - Define maximum delay
-MAXDELAY = 200
 
 config.plugins.IPAudio = ConfigSubsection()
 config.plugins.IPAudio.currentService = ConfigText()
@@ -58,6 +84,9 @@ config.plugins.IPAudio.sync = ConfigSelection(default="alsasink", choices=[
                 ("osssink", _("osssink")),
                 ("autoaudiosink", _("autoaudiosink")),
             ])
+config.plugins.IPAudio.forceMuteHack = ConfigYesNo(
+    default=False
+)
 config.plugins.IPAudio.skin = ConfigSelection(default="orange", choices=[
     ("orange", _("Orange")),
     ("teal", _("Teal")),
@@ -66,7 +95,7 @@ config.plugins.IPAudio.skin = ConfigSelection(default="orange", choices=[
 config.plugins.IPAudio.update = ConfigYesNo(default=True)
 config.plugins.IPAudio.mainmenu = ConfigYesNo(default=False)
 config.plugins.IPAudio.keepaudio = ConfigYesNo(default=False)
-config.plugins.IPAudio.volLevel = ConfigSelectionNumber(default=1, stepwidth=1, min=1, max=100, wraparound=True)
+config.plugins.IPAudio.volLevel = ConfigSelectionNumber(default=40, stepwidth=1, min=1, max=100, wraparound=True)
 config.plugins.IPAudio.audioDelay = ConfigInteger(default=0, limits=(-10, 60))  # -10s to 60s
 config.plugins.IPAudio.tsDelay = ConfigInteger(default=5, limits=(0, 300))  # 0s to 300s (5 minutes)
 config.plugins.IPAudio.delay = NoSave(ConfigInteger(default=5, limits=(0, 300)))
@@ -191,9 +220,9 @@ def validateConfigValues():
 
 # Call on plugin load
 validateConfigValues()
-REDC = '\033[31m'
-ENDC = '\033[m'
 
+REDC = '**'
+ENDC = '**'
 
 def cprint(text):
     print(REDC + text + ENDC)
@@ -568,10 +597,16 @@ def getGridPositions(resolution="FHD"):
     return positions
 
 def isMutable():
-    if fileExists('/proc/stb/info/boxtype') and open('/proc/stb/info/boxtype').read().strip() in ('sf8008', 'sf8008m', 'viper4kv20', 'beyonwizv2', 'ustym4kpro', 'gbtrio4k', 'spider-x',):
-        return True
-    else:
+    """
+    Return True if this box supports the /dev/dvb/adapter0/audio0 hack.
+    Combined with user option to avoid breaking unknown models.
+    """
+    if not config.plugins.IPAudio.forceMuteHack.value:
         return False
+    if fileExists("/dev/dvb/adapter0/audio0"):
+        cprint("[IPAudio] Using DVB audio mute hack (audio0→audio10)")
+        return True
+    return False
 
 
 def getDesktopSize():
@@ -977,6 +1012,7 @@ class IPAudioSetup(Screen, ConfigListScreen):
         self.list.append(getConfigListEntry(_("Audio Equalizer"), config.plugins.IPAudio.equalizer))
         self.list.append(getConfigListEntry(_("External links volume level"), config.plugins.IPAudio.volLevel))
         self.list.append(getConfigListEntry(_("Keep original channel audio"), config.plugins.IPAudio.keepaudio))
+        self.list.append(getConfigListEntry(_("Force DVB audio mute hack"), config.plugins.IPAudio.forceMuteHack))
         self.list.append(getConfigListEntry(_("Video Delay"), config.plugins.IPAudio.tsDelay))
         self.list.append(getConfigListEntry(_("Audio Delay"), config.plugins.IPAudio.audioDelay))
         
@@ -1248,7 +1284,7 @@ class IPAudioScreen(Screen):
         """Yellow button - open picon provider choice"""
         providers = [
             ("zalata_audio", "zalata_audio"),
-            ("haytham_audio", "haytham_audio"), 
+            ("haitham_audio", "haitham_audio"), 
             ("mohamed_audio", "mohamed_audio")
         ]
         self.session.openWithCallback(self.providerChoiceCallback, ChoiceBox, 
@@ -2138,6 +2174,7 @@ class IPAudioScreen(Screen):
                     config.plugins.IPAudio.lastplayed.value = self.url
                     config.plugins.IPAudio.lastidx.value = '{},{}'.format(self.plIndex, index)
                     config.plugins.IPAudio.lastidx.save()
+
                     # NEW: Save last audio channel URL
                     config.plugins.IPAudio.lastAudioChannel.value = self.url
                     config.plugins.IPAudio.lastAudioChannel.save()
@@ -2148,69 +2185,50 @@ class IPAudioScreen(Screen):
                     return
             
             if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
-                # Build equalizer string
-                eq_filter = self.getEqualizerFilter()
-                
-                # FIXED: Calculate volume with better range
-                # Level 1 = 0.2 (20%), Level 5 = 1.0 (100%), Level 10 = 2.0 (200%)
-                volume = config.plugins.IPAudio.volLevel.value / 10.0
-                
-                # Use the WORKING GStreamer command
-                sink = config.plugins.IPAudio.sync.value
-                cmd = 'gst-launch-1.0 -e uridecodebin uri="{}" ! audioconvert ! audioresample ! '.format(self.url)
-                
-                # FIXED: Always add volume control (not just for Custom Playlist)
-                cmd += 'volume volume={} ! '.format(volume)
-                
-                # Add equalizer if enabled
-                if eq_filter:
-                    cmd += '{} ! '.format(eq_filter)
-                
-                # Add audio delay buffer if needed
-                delay_ms = config.plugins.IPAudio.audioDelay.value * 1000  # Convert seconds to ms
-                if delay_ms != 0:
-                    delay_ns = abs(delay_ms) * 1000000
-                    if delay_ms > 0:
-                        # Positive delay - buffer audio
-                        cmd += 'audiobuffersplit output-buffer-duration={} ! '.format(delay_ns)
-                    else:
-                        # Negative delay - minimal buffer
-                        cmd += 'queue max-size-buffers=1 max-size-time=1000000 ! '
-                
-                cmd += '{} sync=false'.format(sink)
-                
-                cprint("[IPAudio] GStreamer command: {}".format(cmd))
-                cprint("[IPAudio] Volume level: {} = {}x".format(config.plugins.IPAudio.volLevel.value, volume))
-                
+                # GStreamer path via wrapper
+                delaysec = config.plugins.IPAudio.audioDelay.value
+                vol_level = config.plugins.IPAudio.volLevel.value
+
+                try:
+                    cmd = build_gst_cmd(
+                        url=self.url,
+                        delay_sec=delaysec,
+                        volume_level=vol_level,
+                    )
+                    self.runCmd(cmd)
+                except Exception as e:
+                    cprint("IPAudio GStreamer build error: {}".format(str(e)))
+                    self.session.open(
+                        MessageBox,
+                        _("Cannot build GStreamer command!\n{}").format(str(e)),
+                        MessageBox.TYPE_ERROR,
+                        timeout=5,
+                    )
+                    return
+
             else:
                 # FFmpeg command with audio delay AND volume
-                delay_sec = config.plugins.IPAudio.audioDelay.value
-                
-                # FIXED: Calculate volume with better range
-                volume = config.plugins.IPAudio.volLevel.value / 10.0
-                
-                if delay_sec > 0:
-                    # Positive delay with volume
-                    delay_ms = delay_sec * 1000
-                    cmd = 'ffmpeg -i "{}" -af "adelay={}|{},volume={}" -vn -f alsa default'.format(
-                        self.url, delay_ms, delay_ms, volume)
-                elif delay_sec < 0:
-                    # Negative delay - skip start with volume
-                    trim_sec = abs(delay_sec)
-                    cmd = 'ffmpeg -ss {} -i "{}" -af "volume={}" -vn -f alsa default'.format(
-                        trim_sec, self.url, volume)
-                else:
-                    # No delay, just volume
-                    cmd = 'ffmpeg -i "{}" -af "volume={}" -vn -f alsa default'.format(self.url, volume)
-                
-                if currentAudioTrack > 0:
-                    # Add audio track selection
-                    cmd = cmd.replace('-i', '-i').replace('-vn', '-map 0:a:{} -vn'.format(currentAudioTrack))
-                
-                cprint("[IPAudio] FFmpeg command: {}".format(cmd))
-                cprint("[IPAudio] Volume level: {} = {}x".format(config.plugins.IPAudio.volLevel.value, volume))
+                delaysec = config.plugins.IPAudio.audioDelay.value
+                vol_level = config.plugins.IPAudio.volLevel.value  # 1–100 from config
+                track = currentAudioTrack if currentAudioTrack > 0 else None
 
-            self.runCmd(cmd)
+                try:
+                    cmd = build_ffmpeg_cmd(
+                        url=self.url,
+                        delay_sec=delaysec,
+                        volume_level=vol_level,
+                        track_index=track,
+                    )
+                    self.runCmd(cmd)
+                except Exception as e:
+                    cprint("IPAudio FFmpeg build error: {}".format(str(e)))
+                    self.session.open(
+                        MessageBox,
+                        "Cannot build FFmpeg command!\n{}".format(str(e)),
+                        MessageBox.TYPE_ERROR,
+                        timeout=5,
+                    )
+                    return
             # NEW: Check bitrate after starting audio
             # Wait 2 seconds for stream to stabilize, then check bitrate
             self.currentBitrate = None
@@ -2218,51 +2236,90 @@ class IPAudioScreen(Screen):
         else:
             self.session.open(MessageBox, _("Cannot play url, player is missing !!"), MessageBox.TYPE_ERROR, timeout=5)
 
-    def audioReStart(self):
-        cprint("[IPAudio] audioReStart called")
+    def restoreService(self):
+        """Restore video service after short delay"""
+        cprint("[IPAudio] Restoring service")
+        self.session.nav.playService(self.lastservice)
+
+    def runCmd(self, cmd):
+        cprint("[IPAudio] runCmd called with: {}".format(cmd))
         
-        # Kill audio process if running - aggressive approach
+        # Stop any existing process first
         if self.audio_process:
             try:
-                self.audio_process.kill()
-                self.audio_process.wait(timeout=1)
-                self.audio_process = None
+                self.audio_process.terminate()
+                try:
+                    self.audio_process.wait(timeout=1)
+                except:
+                    self.audio_process.kill()
             except:
                 pass
+            self.audio_process = None
         
-        # Fallback - kill all instances
-        os.system("killall -9 gst-launch-1.0 ffmpeg 2>/dev/null")
+        if IPAudioHandler.container.running():
+            IPAudioHandler.container.kill()
         
-        # Stop timeshift if active
-        ts = self.getTimeshift()
-        if ts and ts.isTimeshiftEnabled():
-            ts.stopTimeshift()
+        if self.alsa:
+            self.alsa.stop()
+            self.alsa.close()
+        else:
+            if not config.plugins.IPAudio.keepaudio.value:
+                if fileExists('/dev/dvb/adapter0/audio0') and not isMutable():
+                    self.session.nav.stopService()
+                    try:
+                        os.rename('/dev/dvb/adapter0/audio0', '/dev/dvb/adapter0/audio10')
+                    except:
+                        pass
+                    self.session.nav.playService(self.lastservice)
         
-        # Stop timeshift timer
-        if self.timeShiftTimer.isActive():
-            self.timeShiftTimer.stop()
+        # Run subprocess exactly like the working plugin
+        try:
+            cprint("[IPAudio] Executing subprocess...")
+            self.audio_process = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            cprint("[IPAudio] Process started with PID: {}".format(self.audio_process.pid))
+        except Exception as e:
+            cprint("[IPAudio] ERROR starting process: {}".format(str(e)))
+            trace_error()
+            self.audio_process = None
         
-        # Restore audio device
-        if fileExists('/dev/dvb/adapter0/audio10') and not isMutable():
-            try:
-                os.rename('/dev/dvb/adapter0/audio10', '/dev/dvb/adapter0/audio0')
-            except:
-                pass
-            
-            # Restart service to restore video
-            self.session.nav.stopService()
-            self.restoreTimer = eTimer()
-            try:
-                self.restoreTimer.callback.append(self.restoreService)
-            except:
-                self.restoreTimer_conn = self.restoreTimer.timeout.connect(self.restoreService)
-            self.restoreTimer.start(100, True)
-        elif config.plugins.IPAudio.running.value and isMutable():
-            if IPAudioHandler.container.running():
-                IPAudioHandler.container.kill()
-        
-        config.plugins.IPAudio.running.value = False
+        config.plugins.IPAudio.running.value = True
         config.plugins.IPAudio.running.save()
+        # Start status monitoring
+        if not self.statusTimer.isActive():
+            self.statusTimer.start(2000)  # Check every 2 seconds
+
+    def audioDelayUp(self):
+        """Increase audio delay by 1 second"""
+        # Safety check
+        if config.plugins.IPAudio.audioDelay.value is None:
+            config.plugins.IPAudio.audioDelay.value = 0
+        
+        if config.plugins.IPAudio.audioDelay.value < 60:  # Max 60 seconds
+            config.plugins.IPAudio.audioDelay.value += 1  # Add 1 second
+            config.plugins.IPAudio.audioDelay.save()
+            self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
+
+    def audioDelayDown(self):
+        """Decrease audio delay by 1 second"""
+        # Safety check
+        if config.plugins.IPAudio.audioDelay.value is None:
+            config.plugins.IPAudio.audioDelay.value = 0
+        
+        if config.plugins.IPAudio.audioDelay.value > -10:  # Min -10 seconds
+            config.plugins.IPAudio.audioDelay.value -= 1  # Subtract 1 second
+            config.plugins.IPAudio.audioDelay.save()
+            self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
+
+    def audioDelayReset(self):
+        """Reset audio delay to 0"""
+        config.plugins.IPAudio.audioDelay.value = 0
+        config.plugins.IPAudio.audioDelay.save()
+        self['audio_delay'].setText('Audio Delay: 0s')
 
     def resetAudio(self):
         cprint("[IPAudio] resetAudio called")
@@ -2342,233 +2399,12 @@ class IPAudioScreen(Screen):
         config.plugins.IPAudio.running.value = False
         config.plugins.IPAudio.running.save()
 
-    def restoreService(self):
-        """Restore video service after short delay"""
-        cprint("[IPAudio] Restoring service")
-        self.session.nav.playService(self.lastservice)
-
-    def runCmd(self, cmd):
-        cprint("[IPAudio] runCmd called with: {}".format(cmd))
-        
-        # Stop any existing process first
-        if self.audio_process:
-            try:
-                self.audio_process.terminate()
-                try:
-                    self.audio_process.wait(timeout=1)
-                except:
-                    self.audio_process.kill()
-            except:
-                pass
-            self.audio_process = None
-        
-        if IPAudioHandler.container.running():
-            IPAudioHandler.container.kill()
-        
-        if self.alsa:
-            self.alsa.stop()
-            self.alsa.close()
-        else:
-            if not config.plugins.IPAudio.keepaudio.value:
-                if fileExists('/dev/dvb/adapter0/audio0') and not isMutable():
-                    self.session.nav.stopService()
-                    try:
-                        os.rename('/dev/dvb/adapter0/audio0', '/dev/dvb/adapter0/audio10')
-                    except:
-                        pass
-                    self.session.nav.playService(self.lastservice)
-        
-        # Run subprocess exactly like the working plugin
-        try:
-            cprint("[IPAudio] Executing subprocess...")
-            self.audio_process = subprocess.Popen(
-                cmd,
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
-            )
-            cprint("[IPAudio] Process started with PID: {}".format(self.audio_process.pid))
-        except Exception as e:
-            cprint("[IPAudio] ERROR starting process: {}".format(str(e)))
-            trace_error()
-            self.audio_process = None
-        
-        config.plugins.IPAudio.running.value = True
-        config.plugins.IPAudio.running.save()
-        # Start status monitoring
-        if not self.statusTimer.isActive():
-            self.statusTimer.start(2000)  # Check every 2 seconds
-
-    def audioDelayUp(self):
-        """Increase audio delay by 1 second"""
-        # Safety check
-        if config.plugins.IPAudio.audioDelay.value is None:
-            config.plugins.IPAudio.audioDelay.value = 0
-        
-        if config.plugins.IPAudio.audioDelay.value < 60:  # Max 60 seconds
-            config.plugins.IPAudio.audioDelay.value += 1  # Add 1 second
-            config.plugins.IPAudio.audioDelay.save()
-            self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
-            
-            # If audio is playing, restart with new delay
-            if config.plugins.IPAudio.running.value:
-                self.restartAudioWithDelay()
-
-    def audioDelayDown(self):
-        """Decrease audio delay by 1 second"""
-        # Safety check
-        if config.plugins.IPAudio.audioDelay.value is None:
-            config.plugins.IPAudio.audioDelay.value = 0
-        
-        if config.plugins.IPAudio.audioDelay.value > -10:  # Min -10 seconds
-            config.plugins.IPAudio.audioDelay.value -= 1  # Subtract 1 second
-            config.plugins.IPAudio.audioDelay.save()
-            self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
-            
-            # If audio is playing, restart with new delay
-            if config.plugins.IPAudio.running.value:
-                self.restartAudioWithDelay()
-
-    def audioDelayReset(self):
-        """Reset audio delay to 0"""
-        config.plugins.IPAudio.audioDelay.value = 0
-        config.plugins.IPAudio.audioDelay.save()
-        self['audio_delay'].setText('Audio Delay: 0s')
-        
-        # If audio is playing, restart with no delay
-        if config.plugins.IPAudio.running.value:
-            self.restartAudioWithDelay()
-
-    def applyAudioDelay(self):
-        """Restart audio with new delay - smooth transition"""
-        if hasattr(self, 'url') and self.url:
-            # Remember current URL
-            current_url = self.url
-            
-            # Stop current audio
-            if self.audio_process:
-                try:
-                    self.audio_process.terminate()
-                    self.audio_process.wait(timeout=1)
-                except:
-                    try:
-                        self.audio_process.kill()
-                    except:
-                        pass
-                self.audio_process = None
-            
-            # Small delay before restarting
-            self.delayRestartTimer = eTimer()
-            try:
-                self.delayRestartTimer.callback.append(lambda: self.restartAudioWithDelay(current_url))
-            except:
-                self.delayRestartTimer_conn = self.delayRestartTimer.timeout.connect(lambda: self.restartAudioWithDelay(current_url))
-            self.delayRestartTimer.start(100, True)
-
-    def restartAudioWithDelay(self):
-        """Restart audio stream with new delay setting"""
-        if not (hasattr(self, 'url') and self.url):
-            return
-
-        delay_sec = int(config.plugins.IPAudio.audioDelay.value)  # seconds
-        cprint("[IPAudio] Restarting audio with new delay (Gst): {}s".format(delay_sec))
-
-        # Kill current audio
-        if self.audio_process:
-            try:
-                self.audio_process.terminate()
-                self.audio_process.wait(timeout=1)
-            except:
-                pass
-        if IPAudioHandler.container.running():
-            IPAudioHandler.container.kill()
-
-        if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
-            sink = config.plugins.IPAudio.sync.value
-
-            # Base decode path
-            # uridecodebin -> audioconvert -> audioresample -> (optional delay queue) -> sink
-            if delay_sec > 0:
-            # Use min-threshold-time to introduce latency without blocking forever
-                delay_ns = delay_sec * 1000000000
-                cmd = (
-                    'gst-launch-1.0 -e '
-                    'uridecodebin uri="{url}" ! audioconvert ! audioresample ! '
-                    'queue max-size-buffers=0 max-size-bytes=0 max-size-time=0 '
-                    'min-threshold-time={delay} ! '
-                    '{sink} sync=false'
-                ).format(url=self.url, delay=delay_ns, sink=sink)
-            elif delay_sec < 0:
-                # Negative delay: for now, just start immediately (no safe generic "cut" in pipeline)
-                # You can keep FFmpeg for cutting, but here stay simple to avoid mute.
-                cmd = (
-                    'gst-launch-1.0 -e '
-                    'uridecodebin uri="{url}" ! audioconvert ! audioresample ! '
-                    '{sink} sync=false'
-                ).format(url=self.url, sink=sink)
-            else:
-                # No delay
-                cmd = (
-                    'gst-launch-1.0 -e '
-                    'uridecodebin uri="{url}" ! audioconvert ! audioresample ! '
-                    '{sink} sync=false'
-                ).format(url=self.url, sink=sink)
-
-            # Apply volume for custom playlists (unchanged)
-            if hasattr(self, 'plIndex') and self.plIndex < len(self.choices):
-                if self.choices[self.plIndex] not in self.hosts:
-                    volume = config.plugins.IPAudio.volLevel.value / 10.0
-                    cmd = cmd.replace(
-                        'audioresample !',
-                        'audioresample ! volume volume={} !'.format(volume)
-                    )
-
-        else:
-            # FFmpeg path (keep as you already have, treat delay_sec as seconds)
-            delay_ms = delay_sec * 1000
-            if delay_ms > 0:
-                cmd = 'ffmpeg -i "{url}" -af "adelay={d}|{d}" -vn -f alsa default'.format(
-                    url=self.url, d=delay_ms
-                )
-            elif delay_ms < 0:
-                trim_sec = abs(delay_ms) / 1000.0
-                cmd = 'ffmpeg -ss {t} -i "{url}" -vn -f alsa default'.format(
-                    t=trim_sec, url=self.url
-                )
-            else:
-                cmd = 'ffmpeg -i "{url}" -vn -f alsa default'.format(url=self.url)
-
-        self.runCmd(cmd)
-
     def openConfig(self):
         self.session.openWithCallback(self.configClosed, IPAudioSetup)
 
     def configClosed(self, ret=None):
         # Callback after settings closed - do nothing, stay in main screen
         pass
-
-    def getEqualizerFilter(self):
-        """Get GStreamer equalizer filter based on preset"""
-        eq = config.plugins.IPAudio.equalizer.value
-        
-        if eq == "off":
-            return None
-        elif eq == "bass_boost":
-            return "equalizer-3bands band0=-6.0 band1=-3.0 band2=6.0"
-        elif eq == "treble_boost":
-            return "equalizer-3bands band0=6.0 band1=-3.0 band2=-6.0"
-        elif eq == "vocal":
-            return "equalizer-3bands band0=-3.0 band1=6.0 band2=-3.0"
-        elif eq == "rock":
-            return "equalizer-3bands band0=5.0 band1=3.0 band2=-2.0"
-        elif eq == "pop":
-            return "equalizer-3bands band0=-2.0 band1=5.0 band2=3.0"
-        elif eq == "classical":
-            return "equalizer-3bands band0=4.0 band1=0.0 band2=-4.0"
-        elif eq == "jazz":
-            return "equalizer-3bands band0=3.0 band1=2.0 band2=4.0"
-        
-        return None
 
     def exit(self, ret=False):
         # Stop all timers
@@ -2785,7 +2621,7 @@ class IPAudioScreenGrid(Screen):
         """Yellow button - open picon provider choice"""
         providers = [
             ("zalata_audio", "zalata_audio"),
-            ("haytham_audio", "haytham_audio"), 
+            ("haitham_audio", "haitham_audio"), 
             ("mohamed_audio", "mohamed_audio")
         ]
         self.session.openWithCallback(self.providerChoiceCallback, ChoiceBox, 
@@ -3288,6 +3124,7 @@ class IPAudioScreenGrid(Screen):
         """Get all available playlists including custom categories"""
         hosts = resolveFilename(SCOPE_PLUGINS, "Extensions/IPAudio/hosts.json")
         self.hosts = None
+        
         if fileExists(hosts):
             hosts = open(hosts, 'r').read()
             self.hosts = json.loads(hosts, object_pairs_hook=OrderedDict)
@@ -3402,114 +3239,94 @@ class IPAudioScreenGrid(Screen):
                     return
             
             if config.plugins.IPAudio.player.value == "gst1.0-ipaudio":
-                # Build equalizer string
-                eq_filter = self.getEqualizerFilter()
+                # GStreamer path via wrapper
+                eq_filter = get_gst_eq_filter()
+                delaysec = config.plugins.IPAudio.audioDelay.value
+                vol_level = config.plugins.IPAudio.volLevel.value
+
+                try:
+                    cmd = build_gst_cmd(
+                        url=self.url,
+                        delay_sec=delaysec,
+                        volume_level=vol_level,
+                        eq_filter=eq_filter,
+                    )
+                    self.runCmd(cmd)
+                except Exception as e:
+                    cprint("IPAudio GStreamer build error: {}".format(str(e)))
+                    self.session.open(
+                        MessageBox,
+                        _("Cannot build GStreamer command!\n{}").format(str(e)),
+                        MessageBox.TYPE_ERROR,
+                        timeout=5,
+                    )
+                    return
                 
-                # Calculate volume
-                volume = config.plugins.IPAudio.volLevel.value / 10.0
-                
-                # Use the WORKING GStreamer command
-                sink = config.plugins.IPAudio.sync.value
-                cmd = 'gst-launch-1.0 -e uridecodebin uri="{}" ! audioconvert ! audioresample ! '.format(self.url)
-                
-                # Always add volume control
-                cmd += 'volume volume={} ! '.format(volume)
-                
-                # Add equalizer if enabled
-                if eq_filter:
-                    cmd += '{} ! '.format(eq_filter)
-                
-                # Add audio delay buffer if needed
-                delay_ms = config.plugins.IPAudio.audioDelay.value * 1000
-                if delay_ms != 0:
-                    delay_ns = abs(delay_ms) * 1000000
-                    if delay_ms > 0:
-                        cmd += 'audiobuffersplit output-buffer-duration={} ! '.format(delay_ns)
-                    else:
-                        cmd += 'queue max-size-buffers=1 max-size-time=1000000 ! '
-                
-                cmd += '{} sync=false'.format(sink)
-                
-                cprint("[IPAudio] GStreamer command: {}".format(cmd))
-                cprint("[IPAudio] Volume level: {} = {}x".format(config.plugins.IPAudio.volLevel.value, volume))
             else:
                 # FFmpeg command with audio delay AND volume
-                delay_sec = config.plugins.IPAudio.audioDelay.value
-                volume = config.plugins.IPAudio.volLevel.value / 10.0
-                
-                if delay_sec > 0:
-                    delay_ms = delay_sec * 1000
-                    cmd = 'ffmpeg -i "{}" -af "adelay={}|{},volume={}" -vn -f alsa default'.format(
-                        self.url, delay_ms, delay_ms, volume)
-                elif delay_sec < 0:
-                    trim_sec = abs(delay_sec)
-                    cmd = 'ffmpeg -ss {} -i "{}" -af "volume={}" -vn -f alsa default'.format(
-                        trim_sec, self.url, volume)
-                else:
-                    cmd = 'ffmpeg -i "{}" -af "volume={}" -vn -f alsa default'.format(self.url, volume)
-                
-                if currentAudioTrack > 0:
-                    cmd = cmd.replace('-i', '-i').replace('-vn', '-map 0:a:{} -vn'.format(currentAudioTrack))
-                
-                cprint("[IPAudio] FFmpeg command: {}".format(cmd))
-                cprint("[IPAudio] Volume level: {} = {}x".format(config.plugins.IPAudio.volLevel.value, volume))
-            
-            self.runCmd(cmd)
-            
-            # Check bitrate after starting audio
+                delaysec = config.plugins.IPAudio.audioDelay.value
+                vol_level = config.plugins.IPAudio.volLevel.value  # 1–100 from config
+                track = currentAudioTrack if currentAudioTrack > 0 else None
+
+                try:
+                    cmd = build_ffmpeg_cmd(
+                        url=self.url,
+                        delay_sec=delaysec,
+                        volume_level=vol_level,
+                        track_index=track,
+                    )
+                    self.runCmd(cmd)
+                except Exception as e:
+                    cprint("IPAudio FFmpeg build error: {}".format(str(e)))
+                    self.session.open(
+                        MessageBox,
+                        "Cannot build FFmpeg command!\n{}".format(str(e)),
+                        MessageBox.TYPE_ERROR,
+                        timeout=5,
+                    )
+                    return
+            # NEW: Check bitrate after starting audio
+            # Wait 2 seconds for stream to stabilize, then check bitrate
             self.currentBitrate = None
-            self.bitrateCheckTimer.start(2000, True)
+            self.bitrateCheckTimer.start(2000, True)  # Single shot after 2 seconds
         else:
             self.session.open(MessageBox, _("Cannot play url, player is missing !!"), MessageBox.TYPE_ERROR, timeout=5)
     
-    def getEqualizerFilter(self):
-        """Build GStreamer equalizer filter string"""
-        eq_preset = config.plugins.IPAudio.equalizer.value
-        
-        if eq_preset == "off":
-            return ""
-        
-        # Equalizer presets (10-band equalizer)
-        presets = {
-            "bass_boost": "equalizer-10bands band0=12.0 band1=9.0 band2=7.0 band3=3.0 band4=0.0 band5=0.0 band6=0.0 band7=0.0 band8=0.0 band9=0.0",
-            "treble_boost": "equalizer-10bands band0=0.0 band1=0.0 band2=0.0 band3=0.0 band4=0.0 band5=0.0 band6=3.0 band7=7.0 band8=9.0 band9=12.0",
-            "vocal": "equalizer-10bands band0=-3.0 band1=-2.0 band2=0.0 band3=4.0 band4=5.0 band5=4.0 band6=0.0 band7=-2.0 band8=-3.0 band9=-3.0",
-            "rock": "equalizer-10bands band0=8.0 band1=6.0 band2=2.0 band3=-2.0 band4=-4.0 band5=-2.0 band6=2.0 band7=6.0 band8=8.0 band9=10.0",
-            "pop": "equalizer-10bands band0=-2.0 band1=2.0 band2=4.0 band3=6.0 band4=6.0 band5=6.0 band6=4.0 band7=2.0 band8=-2.0 band9=-2.0",
-            "classical": "equalizer-10bands band0=6.0 band1=5.0 band2=3.0 band3=0.0 band4=-2.0 band5=-2.0 band6=0.0 band7=3.0 band8=5.0 band9=6.0",
-            "jazz": "equalizer-10bands band0=4.0 band1=3.0 band2=1.0 band3=2.0 band4=-2.0 band5=-2.0 band6=0.0 band7=2.0 band8=4.0 band9=5.0"
-        }
-        
-        return presets.get(eq_preset, "")
-    
-    # Copy these methods from IPAudioScreen (identical functionality):
-    
     def pause(self):
         """Activate TimeShift with smart delay calculation"""
-        # COPY EXACTLY from IPAudioScreen
         if config.plugins.IPAudio.running.value:
             ts = self.getTimeshift()
+            
             if ts is None:
                 return
             
+            # Use real seconds directly (no conversion)
             self.targetDelaySeconds = config.plugins.IPAudio.tsDelay.value
             
             if not ts.isTimeshiftEnabled():
+                # First time activation - full delay
                 cprint("[IPAudio] Starting TimeShift with {}s delay".format(self.targetDelaySeconds))
+                
                 ts.startTimeshift()
                 ts.activateTimeshift()
+                
                 delay_ms = int(self.targetDelaySeconds * 1000)
                 self.timeShiftTimer.start(delay_ms, False)
+                
+                # Start countdown
                 self.startCountdown(self.targetDelaySeconds)
                 self.currentDelaySeconds = self.targetDelaySeconds
+                
             elif ts.isTimeshiftEnabled() and not self.timeShiftTimer.isActive():
+                # TimeShift already active - calculate difference
                 delay_difference = self.targetDelaySeconds - self.currentDelaySeconds
                 
-                if abs(delay_difference) < 0.5:
+                if abs(delay_difference) < 0.5:  # Already at target (tolerance 0.5s)
                     cprint("[IPAudio] Already at target delay {}s".format(self.targetDelaySeconds))
                     return
                 
                 if delay_difference > 0:
+                    # Need MORE delay - pause and wait for difference
                     cprint("[IPAudio] Increasing delay by {}s (from {}s to {}s)".format(
                         delay_difference, self.currentDelaySeconds, self.targetDelaySeconds))
                     
@@ -3518,144 +3335,166 @@ class IPAudioScreenGrid(Screen):
                     if pauseable:
                         pauseable.pause()
                     
+                    # Only wait for the additional time needed
                     additional_delay_ms = int(delay_difference * 1000)
                     self.timeShiftTimer.start(additional_delay_ms, False)
+                    
+                    # Countdown for additional delay only
                     self.startCountdown(delay_difference)
                     self.currentDelaySeconds = self.targetDelaySeconds
+                    
                 else:
+                    # Need LESS delay - restart TimeShift with new delay
                     cprint("[IPAudio] Decreasing delay to {}s (was {}s)".format(
                         self.targetDelaySeconds, self.currentDelaySeconds))
                     
                     ts.stopTimeshift()
                     ts.startTimeshift()
                     ts.activateTimeshift()
+                    
                     delay_ms = int(self.targetDelaySeconds * 1000)
                     self.timeShiftTimer.start(delay_ms, False)
+                    
+                    # Countdown for new delay
                     self.startCountdown(self.targetDelaySeconds)
                     self.currentDelaySeconds = self.targetDelaySeconds
     
     def delayUP(self):
         """Increase TimeShift delay by 1 second"""
+        # Safety check
         if config.plugins.IPAudio.tsDelay.value is None:
             config.plugins.IPAudio.tsDelay.value = 5
         
-        if config.plugins.IPAudio.tsDelay.value < 300:
-            config.plugins.IPAudio.tsDelay.value += 1
+        if config.plugins.IPAudio.tsDelay.value < 300:  # Max 300 seconds
+            config.plugins.IPAudio.tsDelay.value += 1  # Add 1 second
             config.plugins.IPAudio.tsDelay.save()
+            
+            # Display in seconds
             self['sync'].setText('Video Delay: {}s'.format(config.plugins.IPAudio.tsDelay.value))
             
+            # Save delay for current channel
             current_service = self.session.nav.getCurrentlyPlayingServiceReference()
             saveVideoDelayForChannel(current_service, config.plugins.IPAudio.tsDelay.value)
     
     def delayDown(self):
         """Decrease TimeShift delay by 1 second"""
+        # Safety check
         if config.plugins.IPAudio.tsDelay.value is None:
             config.plugins.IPAudio.tsDelay.value = 5
         
-        if config.plugins.IPAudio.tsDelay.value > 0:
-            config.plugins.IPAudio.tsDelay.value -= 1
+        if config.plugins.IPAudio.tsDelay.value > 0:  # Min 0 seconds
+            config.plugins.IPAudio.tsDelay.value -= 1  # Subtract 1 second
             config.plugins.IPAudio.tsDelay.save()
+            
+            # Display in seconds
             self['sync'].setText('Video Delay: {}s'.format(config.plugins.IPAudio.tsDelay.value))
             
+            # Save delay for current channel
             current_service = self.session.nav.getCurrentlyPlayingServiceReference()
             saveVideoDelayForChannel(current_service, config.plugins.IPAudio.tsDelay.value)
     
     def audioDelayUp(self):
         """Increase audio delay by 1 second"""
+        # Safety check
         if config.plugins.IPAudio.audioDelay.value is None:
             config.plugins.IPAudio.audioDelay.value = 0
         
-        if config.plugins.IPAudio.audioDelay.value < 60:
-            config.plugins.IPAudio.audioDelay.value += 1
+        if config.plugins.IPAudio.audioDelay.value < 60:  # Max 60 seconds
+            config.plugins.IPAudio.audioDelay.value += 1  # Add 1 second
             config.plugins.IPAudio.audioDelay.save()
             self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
-            
-            if config.plugins.IPAudio.running.value:
-                self.restartAudioWithDelay()
     
     def audioDelayDown(self):
         """Decrease audio delay by 1 second"""
+        # Safety check
         if config.plugins.IPAudio.audioDelay.value is None:
             config.plugins.IPAudio.audioDelay.value = 0
         
-        if config.plugins.IPAudio.audioDelay.value > -10:
-            config.plugins.IPAudio.audioDelay.value -= 1
+        if config.plugins.IPAudio.audioDelay.value > -10:  # Min -10 seconds
+            config.plugins.IPAudio.audioDelay.value -= 1  # Subtract 1 second
             config.plugins.IPAudio.audioDelay.save()
             self['audio_delay'].setText('Audio Delay: {}s'.format(config.plugins.IPAudio.audioDelay.value))
-            
-            if config.plugins.IPAudio.running.value:
-                self.restartAudioWithDelay()
     
     def audioDelayReset(self):
         """Reset audio delay to 0"""
         config.plugins.IPAudio.audioDelay.value = 0
         config.plugins.IPAudio.audioDelay.save()
         self['audio_delay'].setText('Audio Delay: 0s')
-        
-        if config.plugins.IPAudio.running.value:
-            self.restartAudioWithDelay()
-    
-    def restartAudioWithDelay(self):
-        """Restart audio stream with new delay setting"""
-        if hasattr(self, 'url') and self.url and config.plugins.IPAudio.running.value:
-            cprint("[IPAudio] Restarting audio with new delay: {}s".format(config.plugins.IPAudio.audioDelay.value))
-            
-            # Stop current audio
-            if self.audio_process:
-                try:
-                    self.audio_process.terminate()
-                    self.audio_process.wait(timeout=1)
-                except:
-                    pass
-                self.audio_process = None
-            
-            # Restart with ok() method
-            self.ok()
     
     def resetAudio(self):
-        """Reset audio playback"""
         cprint("[IPAudio] resetAudio called")
         
+        # Stop status monitoring
         if self.statusTimer.isActive():
             self.statusTimer.stop()
-        
+        # NEW: Stop bitrate check
         if self.bitrateCheckTimer.isActive():
             self.bitrateCheckTimer.stop()
         
-        self.currentBitrate = None
-        
+        self.currentBitrate = None  # Clear bitrate        
+        # Kill audio process if running - aggressive approach
         if self.audio_process:
             try:
+                cprint("[IPAudio] Terminating process PID: {}".format(self.audio_process.pid))
+                # Send SIGTERM first
                 self.audio_process.terminate()
                 try:
                     self.audio_process.wait(timeout=1)
-                except:
+                    cprint("[IPAudio] Process terminated gracefully")
+                except subprocess.TimeoutExpired:
+                    # Force kill if still running
+                    cprint("[IPAudio] Process not responding, force killing")
                     self.audio_process.kill()
-            except:
-                pass
-            self.audio_process = None
+                    self.audio_process.wait(timeout=1)
+                    cprint("[IPAudio] Process force killed")
+                self.audio_process = None
+            except Exception as e:
+                cprint("[IPAudio] Error killing process: {}".format(str(e)))
+                # Force kill using OS command as fallback
+                try:
+                    os.system("killall -9 gst-launch-1.0 ffmpeg 2>/dev/null")
+                except:
+                    pass
+                self.audio_process = None
+        else:
+            # No process tracked, try to kill any running instances
+            cprint("[IPAudio] No process tracked, killing all gst-launch and ffmpeg")
+            os.system("killall -9 gst-launch-1.0 ffmpeg 2>/dev/null")
         
-        os.system("killall -9 gst-launch-1.0 ffmpeg 2>/dev/null")
-        
+        # Kill container processes
         if IPAudioHandler.container.running():
             IPAudioHandler.container.kill()
         
+        # Update status
         self['network_status'].setText('')
         
+        # Restore original audio and VIDEO
         if not self.alsa:
             if fileExists('/dev/dvb/adapter0/audio10') and not isMutable():
+                # Restore audio device
                 try:
                     os.rename('/dev/dvb/adapter0/audio10', '/dev/dvb/adapter0/audio0')
+                    cprint("[IPAudio] Audio device restored")
                 except:
                     pass
-            
-            self.session.nav.stopService()
-            self.restoreTimer = eTimer()
-            try:
-                self.restoreTimer.callback.append(self.restoreService)
-            except:
-                self.restoreTimer_conn = self.restoreTimer.timeout.connect(self.restoreService)
-            self.restoreTimer.start(100, True)
+                
+                # IMPORTANT: Restart the service to restore VIDEO
+                self.session.nav.stopService()
+                self.restoreTimer = eTimer()
+                try:
+                    self.restoreTimer.callback.append(self.restoreService)
+                except:
+                    self.restoreTimer_conn = self.restoreTimer.timeout.connect(self.restoreService)
+                self.restoreTimer.start(100, True)
+            elif isMutable():
+                # For mutable boxes, just restart service to restore video
+                self.session.nav.stopService()
+                self.restoreTimer = eTimer()
+                try:
+                    self.restoreTimer.callback.append(self.restoreService)
+                except:
+                    self.restoreTimer_conn = self.restoreTimer.timeout.connect(self.restoreService)
+                self.restoreTimer.start(100, True)
         
         config.plugins.IPAudio.running.value = False
         config.plugins.IPAudio.running.save()
@@ -3998,8 +3837,6 @@ class IPAudioPlaylist(IPAudioScreen):
         else:
             self["list"].hide()
             self["server"].setText('Cannot load playlist')
-        self.updateGrid()  # Already there
-        self.updateChannelInfo()  # ADD THIS LINE
 
     def keyRed(self):
         playlist = getPlaylist()
@@ -4111,9 +3948,9 @@ class IPAudioHelp(Screen):
         
         self.skinName = "IPAudioHelp"
         
-        from Components.Sources.List import List
-        self.help_lines = []
-        self["help_text"] = List(self.help_lines)
+        # Use ScrollLabel for scrollable text instead of List
+        from Components.ScrollLabel import ScrollLabel
+        self["help_text"] = ScrollLabel()
         self["key_red"] = Button(_("Close"))
         
         self["actions"] = ActionMap(["ColorActions", "OkCancelActions", "DirectionActions"],
@@ -4121,91 +3958,85 @@ class IPAudioHelp(Screen):
                 "cancel": self.close,
                 "red": self.close,
                 "ok": self.close,
-                "up": self.scrollUp,
-                "down": self.scrollDown,
+                "up": self["help_text"].pageUp,
+                "down": self["help_text"].pageDown,
+                "pageUp": self["help_text"].pageUp,
+                "pageDown": self["help_text"].pageDown,
             }, -1)
         
         self.onLayoutFinish.append(self.showHelp)
     
     def showHelp(self):
-        """Display help instructions as scrollable list"""
-        help_lines = [
-            "BASIC CONTROLS:",
-            "• OK: Play selected channel",
-            "• LEFT/RIGHT: Switch between categories",
-            "• UP/DOWN: Navigate channel list",
-            "• EXIT: Close plugin (audio continues)",
-            "",
-            "AUDIO CONTROLS:",
-            "• GREEN: Reset/Stop audio",
-            "• 7: Decrease Audio delay (-1s)",
-            "• 9: Increase Audio delay (+1s)",
-            "• 8: Reset Audio delay",
-            "  - Sync audio with video",
-            "  - Range: -10s to +10s",
-            "",
-            "VIDEO SYNC:",
-            "• PAUSE: Activate TimeShift delay",
-            "• CH+: Increase Video delay (+1s)",
-            "• CH-: Decrease Video delay (-1s)",
-            "  - Sync live TV with audio stream",
-            "  - Range: 0 to +300s",
-            "",
-            "SETTINGS (MENU):",
-            "• Change skin color (Orange/Teal/Lime)",
-            "• Select player (GStreamer/FFmpeg)",
-            "• Configure audio output",
-            "• Enable/disable updates",
-            "• Adjust volume level",
-            "",
-            "WEB INTERFACE:",
-            "• Access: http://box-ip:8080/ipaudio",
-            "• Manage playlists",
-            "• Create categories",
-            "• Drag-and-drop channels",
-            "• Add/edit/delete channels",
-            "",
-            "BUTTONS:",
-            "• RED: Exit plugin",
-            "• GREEN: Reset audio",
-            "• YELLOW: Show this help",
-            "• BLUE: About/Info",
-            "",
-            "PLAYLIST MANAGEMENT:",
-            "• Create unlimited categories",
-            "• Each category has separate JSON file",
-            "• Files in: /etc/enigma2/ipaudio/",
-            "• Format: ipaudio_<name>.json",
-            "",
-            "GRID list support:",
-            "• Switch category using NEXT and PREVIOUS keys",
-            "• Picon size 200*120",
-            "",
-            "EPG support:",
-            "• EPG button to download epg from today 10:00AM to next day 09:59AM ",
-            "• Audio channel name must have 'SPORTS' to be linked with the correct epg",
-            "",            
-            "TIPS:",
-            "• Use audio delay for stream sync",
-            "• Use TimeShift for live TV sync",
-            "• Playlists auto-reload on change",
-            "• Web interface updates in real-time",
-            "",
-            "Press UP/DOWN to scroll",
-            "Press RED or EXIT to close",
-        ]
+        """Display updated help as scrollable text"""
+        help_text = """IPAudio Help
+
+    BASIC CONTROLS
+    • OK: Play selected channel
+    • LEFT/RIGHT: Switch categories (List mode)
+    • NEXT/PREV: Switch categories (Grid mode)
+    • UP/DOWN: Navigate channels
+    • EXIT: Close plugin (audio continues)
+
+    AUDIO CONTROLS (during playback)
+    • GREEN: Stop/Reset audio
+    • 7: Decrease Audio delay (-1s)
+    • 9: Increase Audio delay (+1s)
+    • 8: Reset Audio delay (0s)
+    • Range: -10s to +60s (GStreamer/FFmpeg)
+
+    VIDEO SYNC (with live TV)
+    • PAUSE: Activate TimeShift
+    • CH+: Increase Video delay (+1s)
+    • CH-: Decrease Video delay (-1s)
+    • Range: 0s to +300s
+
+    SETTINGS (MENU button)
+    • Skin: Orange/Teal/Lime
+    • Player: GStreamer 1.0 / FFmpeg
+    • Audio Sink: alsasink/osssink/autoaudiosink
+    • Volume: 1-100 (external links)
+    • Equalizer: Bass/Treble/Vocal/Rock/Pop/Classic/Jazz
+    • Mute: Force DVB audio mute hack
+    • Picons: Grid(200x120) or List(110x56)
+    • Updates/EPG Timezone/Credentials
+
+    WEB INTERFACE
+    • URL: http://box-ip:8080/ipaudio
+    • Mobile-friendly drag & drop
+    • Add/Edit/Delete channels
+    • Unlimited categories (separate JSON files)
+    • Auto-reload on changes
+
+    BUTTONS
+    • RED: Exit plugin
+    • GREEN: Reset audio
+    • YELLOW: Download Picons from many providers
+    • BLUE: Download audio list from many providers
+    • Menu: Plugin settings
+    • EPG: Download EPG from beIN official site
+    • INFO: Plugin info
+    • HELP: Plugin help
+
+    GRID MODE
+    • Picons: 200x120 pixels
+    • Navigation: NEXT/PREV for categories
+    • Better for HD screens
+
+    EPG SUPPORT
+    • EPG button: Download 10:00AM today → 09:59AM tomorrow
+    • Channel names MUST contain 'SPORTS' for EPG linking
+
+    TIPS & TROUBLESHOOTING
+    • Audio delay ≈ stream sync (not exact due to buffering)
+    • Video delay = live TV sync
+    • Playlists: /etc/enigma2/ipaudio/*.json and manu other paths
+    • ALSA: Check /etc/asound.conf for custom routing
+    • Mute hack: Enable for boxes with audio conflicts
+    • Logs: Check /tmp for gst-launch/ffmpeg output
+
+    ↑↓ Page Up/Down | RED/EXIT Close"""
         
-        # Convert to list format
-        self.help_lines = [(line,) for line in help_lines]
-        self["help_text"].setList(self.help_lines)
-    
-    def scrollUp(self):
-        """Scroll help text up"""
-        self["help_text"].up()
-    
-    def scrollDown(self):
-        """Scroll help text down"""
-        self["help_text"].down()
+        self["help_text"].setText(help_text)
 
 class IPAudioHandler(Screen):
     container = eConsoleAppContainer()

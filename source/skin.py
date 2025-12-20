@@ -201,30 +201,24 @@ def getHelpSkinFHD(color_scheme):
     b = BUTTON_COLORS
     
     return """
-    <screen name="IPAudioHelp" position="center,center" size="600,800" flags="wfNoBorder">
-        <!-- Border layer (bottom) -->
-        <eLabel name="" position="0,0" size="600,800" zPosition="-3" backgroundColor="{border}" />
-        <!-- Black background layer (top, 1px smaller on each side) -->
-        <eLabel name="" position="1,1" size="598,798" zPosition="-2" backgroundColor="{bg}" />
-        
-        <!-- Header -->
-        <eLabel position="10,10" size="580,50" text="IPAudio Help" font="Regular;32" foregroundColor="#000000" backgroundColor="{primary}" halign="center" valign="center" transparent="0" />
-        
-        <!-- Scrollable Help Text -->
-        <widget source="help_text" render="Listbox" position="10,70" size="580,660" backgroundColor="{bg}" foregroundColor="{text}" backgroundColorSelected="{primary}" scrollbarMode="showOnDemand" scrollbarBorderWidth="1" scrollbarBorderColor="{primary}" scrollbarForegroundColor="{primary}" transparent="1">
-            <convert type="TemplatedMultiContent">
-                {{"template": [
-                    MultiContentEntryText(pos=(5, 0), size=(580, 30), font=0, flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER|RT_WRAP, text=0)
-                ],
-                "fonts": [gFont("Regular", 26)],
-                "itemHeight": 30
-                }}
-            </convert>
-        </widget>
-        
-        <!-- Close Button -->
-        <widget name="key_red" position="10,740" size="160,50" font="Regular;24" foregroundColor="#000000" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
-    </screen>
+    <screen name="IPAudioHelp" position="center,center" size="1000,800" flags="wfNoBorder">
+    <!-- Border layer (bottom) -->
+    <eLabel name="" position="0,0" size="600,800" zPosition="-3" backgroundColor="{border}" />
+    <!-- Black background layer (top, 1px smaller on each side) -->
+    <eLabel name="" position="1,1" size="998,798" zPosition="-2" backgroundColor="{bg}" />
+    
+    <!-- Header -->
+    <eLabel position="10,10" size="980,50" text="IPAudio Help" font="Regular;32" foregroundColor="#ffffff" backgroundColor="{primary}" halign="center" valign="center" transparent="0" />
+    
+    <!-- Scrollable Help Text - FIXED ScrollLabel -->
+    <widget name="help_text" render="ScrollLabel" position="10,70" size="980,660" itemHeight="28" font="Regular;22" foregroundColor="{text}" backgroundColor="{bg}" backgroundColorSelected="{primary}" scrollbarMode="showOnDemand" scrollbarBorderWidth="2" scrollbarBorderColor="{primary}" scrollbarForegroundColor="{primary}" scrollbarBackgroundColor="{bg}" transparent="1" />
+    
+    <!-- Close Button -->
+    <widget name="key_red" position="10,740" size="160,50" font="Regular;24" foregroundColor="#ffffff" backgroundColor="{red}" halign="center" valign="center" transparent="0" />
+    
+    <!-- Key legend -->
+    <eLabel position="190,745" size="800,40" text="↑↓ Page Up/Down | RED/EXIT Close" font="Regular;20" foregroundColor="{text}" halign="left" valign="center" transparent="1" />
+</screen>
     """.format(
         bg=c['background'],
         border=c['border'],
