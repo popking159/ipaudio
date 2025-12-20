@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                          IPAUDIO IPK BUILDER                         ║
+# ║                             Version 8.09                             ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+
 # Configuration
 PLUGIN_NAME="enigma2-plugin-extensions-ipaudio"
-VERSION="8.08"
+VERSION="8.09"
 MAINTAINER="popking159"
 DESCRIPTION="IPAudio - Multi-format audio streaming plugin with custom playlists"
 HOMEPAGE="https://github.com/popking159/ipaudio"
@@ -29,7 +34,7 @@ mkdir -p "$CONTROL_DIR"
 mkdir -p "$DATA_DIR"
 mkdir -p "$BUILD_DIR/etc/enigma2/ipaudio"
 
-# Control file
+# Control file - MINIMAL GStreamer dependencies
 cat > "$CONTROL_DIR/control" << EOF
 Package: $PLUGIN_NAME
 Version: $VERSION
@@ -41,7 +46,9 @@ License: $LICENSE
 Architecture: $ARCHITECTURE
 OE: enigma2-plugin-extensions-ipaudio
 Homepage: $HOMEPAGE
-Depends: python3-core, python3-twisted-web, python3-pillow, python3-json, gstreamer1.0, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, ffmpeg
+Depends: python3-core, python3-twisted-web, python3-pillow, python3-json, 
+         gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, 
+         gstreamer1.0-plugins-bad, ffmpeg
 Installed-Size: 0
 EOF
 
@@ -73,25 +80,31 @@ if [ ! -f "$SCRIPT_DIR/plugin.py" ]; then
     exit 1
 fi
 
-rsync -av --exclude="*.pyc" --exclude="*.pyo" --exclude="*.sh" --exclude="*.ipk" --exclude="build-ipk.sh" "$SCRIPT_DIR/" "$DATA_DIR/"
+rsync -av \
+    --exclude="*.pyc" \
+    --exclude="*.pyo" \
+    --exclude="*.ipk" \
+    --exclude="*.sh" \
+    --exclude="build/" \
+    --exclude="build/*" \
+    "$SCRIPT_DIR/" "$DATA_DIR/"
 
 touch "$DATA_DIR/__init__.py"
-
 echo "Files copied: $(find "$DATA_DIR" -type f | wc -l)"
 
-# FIXED: Create archives with FULL PATHS
+# Create archives with FULL PATHS
 echo "Creating archives..."
 
 # 1. Data tar.gz
 tar --owner=0 --group=0 -czf "$SCRIPT_DIR/data.tar.gz" -C "$BUILD_DIR" usr etc
 
-# 2. Control tar.gz  
+# 2. Control tar.gz
 tar --owner=0 --group=0 -czf "$SCRIPT_DIR/control.tar.gz" -C "$CONTROL_DIR" .
 
 # 3. debian-binary
 echo "2.0" > "$SCRIPT_DIR/debian-binary"
 
-# 4. Build IPK with FULL PATHS
+# 4. Build IPK
 PKG_NAME="${PLUGIN_NAME}_${VERSION}_${ARCHITECTURE}.ipk"
 ar -r "$SCRIPT_DIR/$PKG_NAME" \
     "$SCRIPT_DIR/debian-binary" \
@@ -109,6 +122,7 @@ if [ -f "$SCRIPT_DIR/$PKG_NAME" ] && ar t "$SCRIPT_DIR/$PKG_NAME" | grep -q "deb
     echo "Package: $PKG_NAME"
     echo "Size: $(ls -lh "$SCRIPT_DIR/$PKG_NAME" | awk '{print $5}')"
     echo "Install: opkg install $PKG_NAME"
+    echo "Dependencies: ~10-15MB smaller (removed ugly/libav)"
 else
     echo "✗ Build FAILED!"
     rm -f "$SCRIPT_DIR/$PKG_NAME"
