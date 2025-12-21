@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # IPAudio Installer - Clean upgrade path
-version="8.10"
+version="8.11"
 ipkurl="https://github.com/popking159/ipaudio/releases/download/IPAudio/enigma2-plugin-extensions-ipaudio_${version}_all.ipk"
 
 echo ""
