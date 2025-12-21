@@ -1,6 +1,18 @@
 {
     "playlist": [
         {
+            "channel": "Anis AR MAX 1",
+            "url": "http://anisfm.pp.ua/Mx1"
+        },
+        {
+            "channel": "Anis AR MAX 2",
+            "url": "http://anisfm.pp.ua/Mx2"
+        },
+        {
+            "channel": "Anis FR MAX 1",
+            "url": "http://anisfm.pp.ua/MxFR"
+        },
+        {
             "channel": "Anis FM1 NEW",
             "url": "http://anisfm.pp.ua/1"
         },
@@ -85,11 +97,11 @@
             "url": "http://anisfm.xyz/4L"
         },
         {
-            "channel": "صوتية المعلق الكابتن فيصل الشاهر",
+            "channel": "\u0635\u0648\u062a\u064a\u0629 \u0627\u0644\u0645\u0639\u0644\u0642 \u0627\u0644\u0643\u0627\u0628\u062a\u0646 \u0641\u064a\u0635\u0644 \u0627\u0644\u0634\u0627\u0647\u0631",
             "url": "http://82.145.63.6:4289/stream"
         },
         {
-            "channel": "صوتية المحلل الأخ أحمد يحيى",
+            "channel": "\u0635\u0648\u062a\u064a\u0629 \u0627\u0644\u0645\u062d\u0644\u0644 \u0627\u0644\u0623\u062e \u0623\u062d\u0645\u062f \u064a\u062d\u064a\u0649",
             "url": "http://82.145.63.6:4776/yahia"
         },
         {
@@ -293,7 +305,7 @@
             "url": "http://anisfm4.ddns.net"
         },
         {
-           "channel": "audio A SPORTS 5",
+            "channel": "audio A SPORTS 5",
             "url": "http://anisfm5.ddns.net"
         },
         {
@@ -342,19 +354,19 @@
         },
         {
             "channel": "low A SPORTS 2",
-            "url":"http://anisfm2low.ddns.net"
+            "url": "http://anisfm2low.ddns.net"
         },
         {
             "channel": "low A SPORTS 3",
-            "url":"http://anisfm3low.ddns.net"
+            "url": "http://anisfm3low.ddns.net"
         },
         {
-           "channel": "low A SPORTS 4",
-            "url":"http://anisfm4low.ddns.net"
+            "channel": "low A SPORTS 4",
+            "url": "http://anisfm4low.ddns.net"
         },
         {
             "channel": "low A SPORTS 5",
-            "url":"http://anisfm5low.ddns.net"
+            "url": "http://anisfm5low.ddns.net"
         },
         {
             "channel": "low B SPORTS 1",
@@ -383,6 +395,18 @@
         {
             "channel": "abusaif2",
             "url": "http://radio.abusaif.work/abu-saif-sat-4K-2/mpegts"
+        },
+        {
+            "channel": "Anis FR MAX 1",
+            "url": "http://anisfm.pp.ua/MxFR"
+        },
+        {
+            "channel": "Anis AR MAX 1",
+            "url": "http://anisfm.pp.ua/Mx1"
+        },
+        {
+            "channel": "Anis AR MAX 2",
+            "url": "http://anisfm.pp.ua/Mx2"
         }
     ]
 }
