@@ -407,6 +407,26 @@
         {
             "channel": "Anis AR MAX 2",
             "url": "http://anisfm.pp.ua/Mx2"
+        },
+        {
+            "channel": "omarGber SPORTS 1",
+            "url": "http://tv.omargbr.shop/1/omar"
+        },
+        {
+            "channel": "omarGber SPORTS 2",
+            "url": "http://tv.omargbr.shop/2/omar"
+        },
+        {
+            "channel": "omarGber SPORTS 3",
+            "url": "http://tv.omargbr.shop/3/omar"
+        },
+        {
+            "channel": "omarGber SPORTS 4",
+            "url": "http://tv.omargbr.shop/4/omar"
+        },
+        {
+            "channel": "omarGber SPORTS 5",
+            "url": "http://tv.omargbr.shop/5/omar"
         }
     ]
 }
