@@ -1,18 +1,6 @@
 {
     "playlist": [
         {
-            "channel": "Anis AR MAX 1",
-            "url": "http://anisfm.pp.ua/Mx1"
-        },
-        {
-            "channel": "Anis AR MAX 2",
-            "url": "http://anisfm.pp.ua/Mx2"
-        },
-        {
-            "channel": "Anis FR MAX 1",
-            "url": "http://anisfm.pp.ua/MxFR"
-        },
-        {
             "channel": "Anis FM1 NEW",
             "url": "http://anisfm.pp.ua/1"
         },
